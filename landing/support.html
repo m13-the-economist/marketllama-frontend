@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accounts — Market Llama</title>
+  <meta name="description" content="Manage your Market Llama account, brokers, and preferences." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <link rel="stylesheet" href="styles/style.css" />
+
+  <!-- Minimal chat + page-specific styling -->
+  <style>
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    /* Support page specific styles */
+    .support-hero-right .kpi {
+      font-size: 0.85rem;
+      color: #cfd3dc;
+    }
+
+    .support-hero-right .kpi strong {
+      font-size: 0.95rem;
+      color: #7dffb3;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+        bottom: 88px;
+      }
+      .chat-panel {
+        right: 14px;
+        bottom: 148px;
+      }
+    }
+
+    /* MOBILE NAV: hide Our Services in hamburger; layout matches other pages */
+    @media (max-width: 768px) {
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav .brand {
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 0.9rem !important;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .auth-buttons a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      #navToggle {
+        order: 3;
+        margin-left: 0.5rem;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      .nav-links {
+        position: fixed !important;
+        top: var(--header-h, 60px);
+        left: 0;
+        height: calc(100vh - var(--header-h, 60px));
+        width: 260px;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.92);
+        border: none !important;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .65);
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        z-index: 1500;
+      }
+
+      .nav-links.open {
+        transform: translateX(0);
+      }
+
+      #navMenu a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+
+      /* hide Our Services in mobile */
+      .nav-services {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-support" id="screen2" aria-live="polite">
+    <!-- NAV -->
+    <nav id="mainNav" class="nav" role="navigation" aria-label="Primary">
+      <a href="index.html#home" class="brand" aria-label="Market Llama home">
+        <img src="assets/llama.webp" alt="Market Llama" class="nav-logo" />
+        <span class="brand-name">Market Llama</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        ☰
+      </button>
+      <ul class="nav-links" id="navMenu">
+        <!-- Our Services: desktop dropdown, hidden on mobile via .nav-services -->
+        <li id="services" class="has-dropdown nav-services">
+          <a href="#" class="dropdown" aria-haspopup="true" aria-expanded="false">Our Services</a>
+          <div class="dropdown-menu" role="menu">
+            <a href="index.html#broker">Broker Integration</a>
+            <a href="index.html#ai">AI Powered Trade Assistance</a>
+            <a href="index.html#tools">Comprehensive Trading Tools</a>
+            <a href="index.html#education">Educational Resources</a>
+            <a href="index.html#risk">Enterprise Risk Management</a>
+          </div>
+        </li>
+        <li><a href="plans.html" aria-current="page">Accounts</a></li>
+        <li><a href="broker.html">Brokers</a></li>
+        <li><a href="tools-education.html">Tools & Education</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <a href="#" class="sign-in" id="openLogin">Sign In</a>
+        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+      </div>
+    </nav>
+
+    <!-- Backdrop for mobile nav -->
+    <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
+
+    <!-- CONTENT -->
+    <main>
+      <section class="section support">
+        <div class="support-wrap">
+          <div class="support-hero">
+            <div class="support-hero-left">
+              <h3>Support</h3>
+              <p class="muted">We're here to help — 24/7.</p>
+            </div>
+            <div class="support-hero-right">
+              <span class="status-pill online"><span class="dot"></span> Operational</span>
+              <span class="kpi">Avg first response <strong>&lt; 1h</strong></span>
+            </div>
+          </div>
+
+          <div class="support-search">
+            <input id="supportSearch" type="search" placeholder="Search help & FAQs…" aria-label="Search Support" autocomplete="off">
+            <button id="supportSearchBtn" type="button" aria-label="Search">Search</button>
+          </div>
+
+          <div class="support-grid">
+            <div class="support-left">
+              <div class="contact-cards">
+                <a class="card" id="startChat" href="#chat" data-open-chat>
+                  <div class="card-icon">💬</div>
+                  <div>
+                    <h4>Live Chat</h4>
+                    <p class="muted">Quick questions, quick answers.</p>
+                  </div>
+                </a>
+                <a class="card" href="mailto:support@market-llama.example">
+                  <div class="card-icon">✉️</div>
+                  <div>
+                    <h4>Email Us</h4>
+                    <p class="muted">We reply within a business hour.</p>
+                  </div>
+                </a>
+                <a class="card" href="#">
+                  <div class="card-icon">📚</div>
+                  <div>
+                    <h4>Docs & Guides</h4>
+                    <p class="muted">Setup, troubleshooting, best practices.</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="faq" id="faq">
+                <h4 class="faq-title">Top FAQs</h4>
+
+                <div class="faq-item">
+                  <button class="faq-q">I can't sign in — what should I do?</button>
+                  <div class="faq-a" hidden>
+                    <p>Confirm your email and password. If forgotten, use Reset Password. Still stuck? Open a ticket and pick <strong>Account Access</strong>.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <button class="faq-q">How do I connect my broker account?</button>
+                  <div class="faq-a" hidden>
+                    <p>Go to <strong>Accounts → Add Broker</strong>, choose your broker, and follow OAuth. Some brokers require API keys—enter them in the secure fields.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <button class="faq-q">What are the funding/withdrawal timelines?</button>
+                  <div class="faq-a" hidden>
+                    <p>Funding is typically instant; withdrawals settle in 1–3 business days (bank/region dependent). High-value transfers may require verification.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <button class="faq-q">How do AI strategies manage risk?</button>
+                  <div class="faq-a" hidden>
+                    <p>We use portfolio caps, dynamic sizing, and configurable stops. Override defaults under <strong>Risk Controls</strong>.</p>
+                  </div>
+                </div>
+
+                <div class="faq-item">
+                  <button class="faq-q">What fees should I expect?</button>
+                  <div class="faq-a" hidden>
+                    <p>Basic platform usage is free. Broker commissions may apply. Premium analytics/automation via subscription—see <strong>Pricing</strong>.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="support-right">
+              <form id="supportForm" class="ticket-form" novalidate>
+                <h4>Create a Support Ticket</h4>
+                <div class="row">
+                  <div class="col">
+                    <label for="sfName">Full Name</label>
+                    <input id="sfName" name="name" type="text" placeholder="Your full name" autocomplete="name" required>
+                  </div>
+                  <div class="col">
+                    <label for="sfEmail">Email</label>
+                    <input id="sfEmail" name="email" type="email" placeholder="name@example.com" autocomplete="email" required>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <label for="sfTopic">Topic</label>
+                    <select id="sfTopic" required>
+                      <option value="" disabled selected>Select a topic</option>
+                      <option>Account Access</option>
+                      <option>Broker Integration</option>
+                      <option>AI Strategies</option>
+                      <option>Billing</option>
+                      <option>Bug Report</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div class="col">
+                    <label for="sfPriority">Priority</label>
+                    <select id="sfPriority" required>
+                      <option value="" disabled selected>Select priority</option>
+                      <option>Low</option>
+                      <option>Normal</option>
+                      <option>High</option>
+                      <option>Urgent</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col full">
+                    <label for="sfMsg">Describe the issue</label>
+                    <textarea id="sfMsg" rows="5" placeholder="Tell us what happened…" required></textarea>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col full">
+                    <label for="sfAttach">Attachment (optional)</label>
+                    <input id="sfAttach" type="file" />
+                  </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="sfSubmit" disabled>Submit Ticket</button>
+                <p class="form-feedback" id="supportFormMsg" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <footer class="footer">
+        <!-- FULL-WIDTH RISK DISCLAIMER ABOVE COLUMNS -->
+        <div class="footer-disclaimer-wrap">
+          <div class="risk-disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong><br><br>
+            Trading in financial markets carries inherent risks, including the potential for loss of capital.
+            Performance may vary based on market conditions, account size, risk tolerance, and execution
+            environment. While Market Llama is built to deliver consistent, data-driven performance through
+            advanced automation and professional account management, no trading environment is completely
+            without risk.
+            <br><br>
+            Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+            cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+            market fluctuations more effectively, but they are still subject to market risk and temporary
+            performance deviations.
+            <br><br>
+            Market Llama operates as a technology-enabled, professional account management platform — similar
+            to institutional asset managers — providing users with sophisticated trading systems, automated
+            execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+            capital, and deliver institutional-grade trading outcomes.
+            <br><br>
+            By connecting your trading account to Market Llama, you acknowledge that every investment activity
+            carries risk, and that results can vary across market conditions. We commit to operating
+            transparently, managing accounts responsibly, and applying disciplined, data-driven strategies
+            designed to achieve consistent long-term performance.
+          </div>
+        </div>
+
+        <!-- EXISTING FOOTER COLUMNS -->
+        <div class="footer-container">
+          <div class="col">
+            <h4>Company</h4>
+            <a href="abouts.html">About</a>
+          </div>
+          <div class="col">
+            <h4>Resources</h4>
+            <a href="support.html">Support</a>
+          </div>
+          <div class="col">
+            <h4>Legal</h4>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+          </div>
+          <div class="col">
+            <h4>Connect</h4>
+            <a href="#">Whatsapp</a>
+            <a href="#">Twitter</a>
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+          </div>
+        </div>
+
+        <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
+      </footer>
+
+      <!-- Chat -->
+      <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
+          <circle cx="9" cy="10" r="1.25"/><circle cx="12" cy="10" r="1.25"/><circle cx="15" cy="10" r="1.25"/>
+        </svg>
+      </button>
+
+      <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true" aria-hidden="true" inert>
+        <div class="chat-header">
+          <div class="chat-title">Assistant</div>
+          <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <div class="chat-msg bot">Hi! How can I help?</div>
+        </div>
+        <form id="chatForm" class="chat-input-row">
+          <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+          <button class="chat-send" type="submit">Send</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Back to top -->
+  <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z"/>
+    </svg>
+  </button>
+
+  <!-- Auth Overlay -->
+  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
+    aria-hidden="true">
+    <div class="auth-container" id="authContainer">
+      <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
+      <h2 id="authTitle">Create Account</h2>
+      <form id="authForm" novalidate>
+        <div class="form-group signup-field" id="firstNameGroup">
+          <label for="authFirstName">First Name</label>
+          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
+            autocomplete="given-name">
+        </div>
+        <div class="form-group signup-field" id="lastNameGroup">
+          <label for="authLastName">Last Name</label>
+          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
+            autocomplete="family-name">
+        </div>
+        <div class="form-group signup-field" id="dobGroup">
+          <label for="authDob">Date of Birth</label>
+          <input id="authDob" name="dob" type="date" required>
+        </div>
+        <div class="form-group signup-field" id="usernameGroup">
+          <label for="authUsername">Username</label>
+          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
+            autocomplete="username">
+        </div>
+        <div class="form-group signup-field" id="countryGroup">
+          <label for="authCountry">Select Country</label>
+          <select id="authCountry" name="country" required>
+            <option value="" disabled selected>Select your country</option>
+            <option value="NG">Nigeria</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+          </select>
+        </div>
+        <div class="form-group" id="emailGroup">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
+            inputmode="email">
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label for="authPassword">Password</label>
+          <div class="pw-field">
+            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
+              autocomplete="new-password" minlength="8" />
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
+              aria-label="Toggle password visibility">
+              <path
+                d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+            </svg>
+          </div>
+          <div class="hint" id="passwordHint" aria-live="polite"></div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+        <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="scripts/app.js" defer></script>
+
+  <!-- Page-specific: Our Services dropdown + auth init + mobile outside-close -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('[support] DOM loaded, init dropdown + auth + outside-close');
+
+      /* Our Services desktop dropdown */
+      const services = document.getElementById('services');
+      (function dropdown() {
+        const li = services;
+        if (!li) return;
+        const link = li.querySelector('.dropdown');
+        const menu = li.querySelector('.dropdown-menu');
+        if (!link || !menu) return;
+
+        link.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          const willShow = !menu.classList.contains('show');
+          menu.classList.toggle('show', willShow);
+          link.setAttribute('aria-expanded', String(willShow));
+        });
+
+        document.addEventListener('click', function (ev) {
+          if (!li.contains(ev.target)) {
+            menu.classList.remove('show');
+            link.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+
+      /* Auth buttons (Sign In / Sign Up) */
+      function initializeAuthButtons() {
+        const openSignup = document.getElementById('openSignup');
+        const openLogin = document.getElementById('openLogin');
+
+        function handleAuthClick(e, mode) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const authOverlay = document.getElementById('authOverlay');
+          const authTitle = document.getElementById('authTitle');
+          const authContainer = document.getElementById('authContainer');
+
+          if (!authOverlay || !authTitle || !authContainer) return;
+
+          if (mode === 'signup') {
+            authTitle.textContent = "Create Account";
+            authContainer.classList.add('bubble');
+            document.querySelectorAll('.signup-field').forEach(el => {
+              el.style.display = 'block';
+            });
+          } else {
+            authTitle.textContent = "Sign In";
+            authContainer.classList.remove('bubble');
+            document.querySelectorAll('.signup-field').forEach(el => {
+              el.style.display = 'none';
+            });
+          }
+
+          authOverlay.classList.add('active');
+          authOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        if (openSignup) {
+          openSignup.addEventListener('click', (e) => handleAuthClick(e, 'signup'));
+        }
+
+        if (openLogin) {
+          openLogin.addEventListener('click', (e) => handleAuthClick(e, 'login'));
+        }
+      }
+
+      setTimeout(initializeAuthButtons, 100);
+
+      /* Close hamburger when tapping outside (mobile only) */
+      (function enableOutsideClose() {
+        const nav = document.getElementById('mainNav');
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        const navBackdrop = document.getElementById('navBackdrop');
+
+        if (!nav || !navMenu || !navToggle) return;
+
+        function isMobile() {
+          return window.getComputedStyle(navToggle).display !== 'none';
+        }
+
+        function closeMenu() {
+          navMenu.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+          if (navBackdrop) {
+            navBackdrop.classList.remove('active');
+            navBackdrop.classList.remove('show');
+          }
+        }
+
+        document.addEventListener('click', function (e) {
+          if (!isMobile()) return;
+
+          const clickedInsideNav = nav.contains(e.target);
+          if (!clickedInsideNav && navMenu.classList.contains('open')) {
+            closeMenu();
+          }
+        });
+      })();
+    });
+  </script>
+</body>
+</html>

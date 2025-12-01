@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Performance — Market Llama</title>
+  <meta name="description" content="Performance analytics for your trading accounts." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <style>
+    :root {
+      --header-h: 60px;
+      --bg: #0b0b0c;
+      --panel: #121214;
+      --muted: #8f8f92;
+      --text: #ffffff;
+      --accent: #ffffff;
+      --accent-plain: #dadada;
+      --glow: rgba(255, 255, 255, .06);
+      --glass: rgba(255, 255, 255, .04);
+      --ring: rgba(255, 255, 255, .12);
+      --pill: #16171a;
+      --shadow: 0 18px 40px rgba(0, 0, 0, .6);
+      --green: #30c977;
+      --red: #ff4d6a;
+      --amber: #e6a23c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 14px;
+    }
+
+    body.app.dark {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: var(--header-h);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #0097b2;
+      border-bottom: 1px solid var(--ring);
+      backdrop-filter: blur(8px);
+    }
+
+    .site-header .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .brand-name {
+      letter-spacing: .2px;
+      font-size: 1rem;
+    }
+
+    .site-actions {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--ring);
+      color: var(--text);
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .icon-btn.sm {
+      padding: 5px;
+      border-radius: 9px;
+    }
+
+    .balance-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid var(--ring);
+      border-radius: 10px;
+      background: var(--glass);
+    }
+
+    .balance-amount {
+      letter-spacing: .2px;
+      font-size: .95rem;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+
+    .desktop-only {
+      display: inline-flex;
+    }
+
+    .ic {
+      font-size: 18px;
+      line-height: 1;
+      vertical-align: middle;
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+
+    .icon-btn:hover .ic {
+      opacity: 1;
+    }
+
+    /* Language Dropdown */
+    .language-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 120px;
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 160px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+    }
+
+    .language-dropdown[hidden] {
+      display: none;
+    }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .lang-option:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .flag {
+      font-size: 16px;
+    }
+
+    /* Layout */
+    .dashboard {
+      min-height: 100vh;
+      padding-top: var(--header-h);
+    }
+
+    .side {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: 240px;
+      overflow-y: auto;
+      border-right: 1px solid var(--ring);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
+      transition: left .3s ease, width .25s ease;
+    }
+
+    .side[data-state="collapsed"] {
+      width: 68px;
+    }
+
+    .side .label {
+      transition: opacity .2s ease;
+    }
+
+    .side[data-state="collapsed"] .label {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .side-toggle {
+      position: sticky;
+      bottom: 0;
+      width: 100%;
+      background: rgb(75, 75, 75);
+      margin-top: 6px;
+      border: none;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .side-menu {
+      list-style: none;
+      margin: 8px 0 48px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .side-menu a,
+    .accordion {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-decoration: none;
+      color: var(--accent-plain);
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .side-menu li.active > a {
+      background: var(--glass);
+      border-color: var(--ring);
+      color: var(--text);
+    }
+
+    .has-submenu {
+      position: relative;
+    }
+
+    .accordion {
+      background: none;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .accordion:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--ring);
+    }
+
+    .accordion .chevron {
+      margin-left: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .accordion[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion[aria-expanded="true"] {
+      background: var(--glass);
+      border-color: var(--ring);
+      color: var(--text);
+    }
+
+    .submenu {
+      list-style: none;
+      padding-left: 20px;
+      margin: 4px 0 0;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 2px solid #4169E1;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .submenu[hidden] {
+      display: none;
+    }
+
+    .side[data-state="collapsed"] .submenu {
+      display: none !important;
+    }
+
+    .submenu li {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .submenu li:last-child {
+      border-bottom: none;
+    }
+
+    .submenu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 6px;
+      margin: 2px 4px;
+      width: calc(100% - 8px);
+    }
+
+    .submenu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .content {
+      margin-left: 260px;
+      padding: 24px clamp(16px, 3vw, 32px);
+      transition: margin-left 0.25s ease;
+    }
+
+    .side[data-state="collapsed"] ~ .content {
+      margin-left: 84px;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 35;
+      backdrop-filter: blur(2px);
+    }
+
+    .backdrop[hidden] {
+      display: none;
+    }
+
+    /* Video background */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* PERFORMANCE SHELL */
+    .perf-shell {
+      max-width: 1480px;
+      margin: 8px auto 40px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .025));
+      border-radius: 28px;
+      border: 1px solid var(--ring);
+      padding: 32px 32px 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .perf-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .perf-title {
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 800;
+      letter-spacing: .3px;
+      margin-bottom: 6px;
+    }
+
+    .perf-sub {
+      max-width: 520px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .perf-chip {
+      align-self: flex-start;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--ring);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--accent-plain);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--accent-plain);
+      margin-bottom: 12px;
+    }
+
+    /* KPI ROW */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-radius: 22px;
+      border: 1px solid var(--ring);
+      padding: 22px 22px 26px;
+      min-height: 150px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.75);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--accent-plain);
+      margin-bottom: 10px;
+    }
+
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* WEEKLY + CALENDAR */
+    .mid-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.9fr);
+      gap: 28px;
+      margin-bottom: 32px;
+      margin-top: 8px;
+    }
+
+    .panel {
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 22px;
+      border: 1px solid var(--ring);
+      padding: 20px 20px 18px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.7);
+      min-height: 260px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--accent-plain);
+    }
+
+    .panel-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .week-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .week-card {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      padding: 16px 16px 14px;
+      min-height: 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .week-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .week-name {
+      font-weight: 600;
+    }
+
+    .week-range {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .week-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+
+    .week-pnl {
+      font-weight: 600;
+    }
+
+    .week-pnl.green {
+      color: var(--green);
+    }
+
+    .week-pnl.red {
+      color: var(--red);
+    }
+
+    .week-days {
+      color: var(--muted);
+    }
+
+    /* Calendar */
+    .calendar-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .calendar-main-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .calendar-btn {
+      background: rgba(0,0,0,.6);
+      border-radius: 999px;
+      border: 1px solid var(--ring);
+      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--accent-plain);
+    }
+
+    .calendar-select {
+      background: #101014;
+      border: 1px solid var(--ring);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--accent-plain);
+      outline: none;
+    }
+
+    .calendar-legend {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .calendar-legend span {
+      margin-left: 10px;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      margin-right: 4px;
+    }
+
+    .dot-green { background: rgba(48, 201, 119, 0.85); }
+    .dot-red { background: rgba(255, 77, 106, 0.9); }
+    .dot-gray { background: rgba(120, 120, 120, 0.7); }
+
+    .calendar-grid {
+      margin-top: 10px;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .calendar-weekdays div {
+      padding: 4px 0;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .day-cell {
+      border-radius: 14px;
+      min-height: 74px;
+      padding: 6px 6px 6px;
+      border: 1px solid rgba(255,255,255,.06);
+      background: rgba(10,10,12,.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+
+    .day-empty {
+      opacity: .35;
+      background: transparent;
+      border-style: dashed;
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+
+    .day-num {
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .day-trades {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .day-pnl {
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .day-positive {
+      background: rgba(48, 201, 119, 0.18);
+      border-color: rgba(48, 201, 119, 0.4);
+    }
+
+    .day-positive .day-pnl {
+      color: var(--green);
+    }
+
+    .day-negative {
+      background: rgba(255, 77, 106, 0.16);
+      border-color: rgba(255, 77, 106, 0.45);
+    }
+
+    .day-negative .day-pnl {
+      color: var(--red);
+    }
+
+    .day-neutral {
+      background: rgba(120, 120, 120, 0.16);
+      border-color: rgba(140, 140, 140, 0.35);
+    }
+
+    /* CHART CLUSTER (three charts in one box) */
+    .chart-cluster {
+      margin-bottom: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 22px;
+      border: 1px solid var(--ring);
+      padding: 20px 20px 18px;
+      box-shadow: 0 14px 32px rgba(0,0,0,.7);
+    }
+
+    .chart-cluster-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .chart-cluster-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--accent-plain);
+    }
+
+    .chart-cluster-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .chart-cluster-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .chart-card {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 14px 14px 12px;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--accent-plain);
+      margin-bottom: 4px;
+    }
+
+    .chart-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .chart-wrapper {
+      flex: 1;
+      position: relative;
+      height: 130px;
+    }
+
+    /* History table */
+    .history-shell {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 22px;
+      border: 1px solid var(--ring);
+      padding: 20px 20px 16px;
+      box-shadow: 0 16px 36px rgba(0,0,0,.75);
+    }
+
+    .history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .history-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--accent-plain);
+    }
+
+    .history-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .table-scroll {
+      max-height: 360px;
+      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: #101014;
+      z-index: 1;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    th {
+      font-weight: 500;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: #101014;
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255,255,255,.02);
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,.06);
+    }
+
+    .badge-type {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .badge-buy {
+      background: rgba(48, 201, 119, 0.16);
+      color: var(--green);
+    }
+
+    .badge-sell {
+      background: rgba(255, 77, 106, 0.16);
+      color: var(--red);
+    }
+
+    .pnl-pos { color: var(--green); }
+    .pnl-neg { color: var(--red); }
+
+    .share-icon {
+      cursor: pointer;
+      opacity: .8;
+    }
+
+    .share-icon:hover {
+      opacity: 1;
+    }
+
+    /* ===== Legal footer (aligned with sidebar/content) ===== */
+    .legal-footer {
+      margin-left: 260px;
+      margin-top: 24px;
+      padding: 18px clamp(16px, 3vw, 32px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .side[data-state="collapsed"] ~ .legal-footer {
+      margin-left: 84px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .footer-risk {
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .footer-links {
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-links a {
+      color: var(--accent-plain);
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* ===== Chat widget — EXACT same style as accounts/index ===== */
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .desktop-only { display: none; }
+      .mobile-only { display: inline-flex; }
+
+      .kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .chart-cluster-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .side[data-state="expanded"] {
+        width: 200px;
+      }
+      .content {
+        margin-left: 200px;
+      }
+      .legal-footer {
+        margin-left: 200px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .mid-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .chart-cluster-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --header-h: 56px;
+      }
+
+      .side {
+        left: -240px;
+        width: 240px;
+      }
+      .side.open {
+        left: 0;
+      }
+      .content {
+        margin-left: 0;
+        padding-inline: 12px;
+      }
+      .language-dropdown {
+        right: 10px;
+        min-width: 140px;
+      }
+
+      .perf-shell {
+        padding: 20px 14px 26px;
+      }
+
+      .kpi-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .kpi-card {
+        padding: 14px 14px 16px;
+        min-height: 110px;
+        border-radius: 18px;
+      }
+
+      .kpi-label {
+        font-size: 10px;
+        letter-spacing: .12em;
+        margin-bottom: 6px;
+      }
+
+      .kpi-value {
+        font-size: 20px;
+        margin-bottom: 2px;
+      }
+
+      .kpi-sub {
+        font-size: 10px;
+      }
+
+      .perf-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .legal-footer {
+        margin-left: 0;
+        padding-inline: 12px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .footer-links {
+        text-align: left;
+      }
+
+      /* MOBILE NAV CLEANUP */
+      .site-header {
+        padding: 6px 10px;
+        gap: 6px;
+      }
+
+      .site-actions {
+        gap: 6px;
+      }
+
+      .icon-btn {
+        padding: 4px 6px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+      }
+
+      /* HIDE QR, BALANCE + EYE ONLY ON MOBILE */
+      #qrBtn {
+        display: none;
+      }
+
+      .balance-wrap {
+        display: none !important;
+      }
+
+      .ic {
+        font-size: 16px;
+      }
+
+      .footer-risk strong {
+        display: block;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .content {
+        margin-left: 260px;
+      }
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+        bottom: 88px;
+      }
+
+      .chat-panel {
+        right: 14px;
+        bottom: 148px;
+      }
+    }
+  </style>
+
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="app dark">
+  <div class="video-background">
+    <!-- optional background video -->
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="left">
+      <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="false">
+        <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
+      </button>
+      <a href="accounts.html" class="brand">
+        <div class="logo">
+          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
+        </div>
+        <span class="brand-name">Market Llama</span>
+      </a>
+    </div>
+    <nav class="site-actions">
+      <button class="icon-btn" id="qrBtn" aria-label="QR">
+        <iconify-icon class="ic" icon="mdi:qrcode"></iconify-icon>
+      </button>
+
+      <div class="balance-wrap">
+        <span class="balance-amount" id="topBalance">$ 15 400.00</span>
+        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
+          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
+        </button>
+      </div>
+
+      <button class="icon-btn" id="languageBtn" aria-label="Language">
+        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
+      </button>
+      <div class="language-dropdown" id="languageDropdown" hidden>
+        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
+        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
+        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
+        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
+      </div>
+
+      <button class="icon-btn" aria-label="Notifications">
+        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
+      </button>
+      <button class="icon-btn" aria-label="Support">
+        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
+      </button>
+      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
+        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
+      </a>
+    </nav>
+  </header>
+
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <main class="dashboard">
+    <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
+      <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
+        <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
+      </div>
+      <ul class="side-menu">
+        <li>
+          <a href="accounts.html" data-link="accounts">
+            <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
+            <span class="label" data-i18n="accounts">Accounts</span>
+          </a>
+        </li>
+
+        <li class="has-submenu">
+          <button class="accordion" aria-expanded="false">
+            <iconify-icon class="ic" icon="mdi:wallet-outline"></iconify-icon>
+            <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
+            <iconify-icon class="ic chevron" icon="mdi:chevron-down"></iconify-icon>
+          </button>
+          <ul class="submenu" hidden>
+            <li>
+              <a href="subscriptionplan.html">
+                <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
+                <span data-i18n="subscription">Subscription Plan</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
+                <span data-i18n="transactionHistory">Transaction History</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="insight.html" data-link="insight">
+            <iconify-icon class="ic" icon="mdi:map-marker-outline"></iconify-icon>
+            <span class="label" data-i18n="insight">Insight</span>
+          </a>
+        </li>
+
+        <li class="active">
+          <a href="performance.html" data-link="performance">
+            <iconify-icon class="ic" icon="mdi:cpu-64-bit"></iconify-icon>
+            <span class="label" data-i18n="performance">Performance</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="chart.html" data-link="chart">
+            <iconify-icon class="ic" icon="mdi:chart-bar"></iconify-icon>
+            <span class="label" data-i18n="chart">Chart</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="instructions.html" data-link="instructions">
+            <iconify-icon class="ic" icon="mdi:book-open-outline"></iconify-icon>
+            <span class="label" data-i18n="instructions">Instructions</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="profile.html" data-link="profile">
+            <iconify-icon class="ic" icon="mdi:cog-outline"></iconify-icon>
+            <span class="label" data-i18n="settings">Settings</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <section class="content" id="content">
+      <div class="perf-shell">
+        <div class="perf-head">
+          <div>
+            <h1 class="perf-title" data-i18n="performance">Performance</h1>
+            <p class="perf-sub">
+              High-level performance KPIs for your linked trading accounts. This snapshot view uses
+              placeholder data — your live history, charts, and stats will plug in later.
+            </p>
+          </div>
+          <div class="perf-chip" data-i18n="last30Days">Last 30 Days</div>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="section-label" data-i18n="kpiSection">Key Performance Indicators</div>
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label" data-i18n="kpiTradingDays">Trading Days</div>
+            <div class="kpi-value" id="kpiDays">8</div>
+            <div class="kpi-sub" data-i18n="kpiUpdatedDaily">Updated daily.</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label" data-i18n="kpiTotalTrades">Total Trades Taken</div>
+            <div class="kpi-value" id="kpiTrades">48</div>
+            <div class="kpi-sub" data-i18n="kpiAllClosed">All closed positions.</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label" data-i18n="kpiTotalLots">Total Lots Used</div>
+            <div class="kpi-value" id="kpiLots">11.00</div>
+            <div class="kpi-sub" data-i18n="kpiCombinedExposure">Combined exposure across trades.</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label" data-i18n="kpiBiggestWin">Biggest Win</div>
+            <div class="kpi-value" id="kpiWin">$280.00</div>
+            <div class="kpi-sub" data-i18n="kpiBestTrade">Single best trade in the period.</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label" data-i18n="kpiBiggestLoss">Biggest Loss</div>
+            <div class="kpi-value" id="kpiLoss">-$150.30</div>
+            <div class="kpi-sub" data-i18n="kpiLargestDrawdown">Largest drawdown on a trade.</div>
+          </div>
+        </div>
+
+        <!-- WEEKLY + CALENDAR -->
+        <div class="mid-row">
+          <!-- Weekly summary -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title" data-i18n="weeklySummary">Weekly Summary</div>
+            </div>
+            <div class="week-list" id="weekList"></div>
+          </div>
+
+          <!-- Calendar -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title" data-i18n="dailyPnlCalendar">Daily PnL Calendar</div>
+            </div>
+
+            <div class="calendar-controls">
+              <button class="calendar-btn" id="prevMonthBtn">
+                <iconify-icon icon="mdi:chevron-left"></iconify-icon>
+              </button>
+              <div class="calendar-main-label" id="calendarLabel"></div>
+              <button class="calendar-btn" id="nextMonthBtn">
+                <iconify-icon icon="mdi:chevron-right"></iconify-icon>
+              </button>
+
+              <select class="calendar-select" id="monthSelect"></select>
+              <select class="calendar-select" id="yearSelect"></select>
+
+              <div class="calendar-legend">
+                <span data-i18n="legendGreen"><span class="legend-dot dot-green"></span>Green = profit</span>
+                <span data-i18n="legendRed"><span class="legend-dot dot-red"></span>Red = loss</span>
+                <span data-i18n="legendNone"><span class="legend-dot dot-gray"></span>No trades</span>
+              </div>
+            </div>
+
+            <div class="calendar-grid">
+              <div class="calendar-weekdays">
+                <div data-i18n="mon">Mon</div>
+                <div data-i18n="tue">Tue</div>
+                <div data-i18n="wed">Wed</div>
+                <div data-i18n="thu">Thu</div>
+                <div data-i18n="fri">Fri</div>
+                <div data-i18n="sat">Sat</div>
+                <div data-i18n="sun">Sun</div>
+              </div>
+              <div class="calendar-days" id="calendarDays"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHARTS CLUSTER: all three charts inside one box -->
+        <div class="chart-cluster">
+          <div class="chart-cluster-header">
+            <div class="chart-cluster-title">Strategy Breakdown</div>
+            <div class="chart-cluster-sub">
+              Profitability, short-side and long-side performance in a single, compact view.
+            </div>
+          </div>
+          <div class="chart-cluster-grid">
+            <div class="chart-card">
+              <div class="chart-title" data-i18n="chartProfitabilityTitle">Profitability</div>
+              <div class="chart-sub" data-i18n="chartProfitabilitySub">Win rate vs loss rate.</div>
+              <div class="chart-wrapper">
+                <canvas id="profitabilityChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title" data-i18n="chartShortTitle">Short Analysis</div>
+              <div class="chart-sub" data-i18n="chartShortSub">Profits, wins, and losses on short positions.</div>
+              <div class="chart-wrapper">
+                <canvas id="shortChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title" data-i18n="chartLongTitle">Long Analysis</div>
+              <div class="chart-sub" data-i18n="chartLongSub">Profits, wins, and losses on long positions.</div>
+              <div class="chart-wrapper">
+                <canvas id="longChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HISTORY TABLE -->
+        <div class="history-shell">
+          <div class="history-head">
+            <div class="history-title" data-i18n="tradeHistory">Trade History</div>
+            <div class="history-meta" data-i18n="historyMeta">Scrollable table — dummy rows for now.</div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="thShare">Share</th>
+                  <th data-i18n="thSymbol">Symbol</th>
+                  <th data-i18n="thType">Type</th>
+                  <th data-i18n="thOpenDate">Open Date</th>
+                  <th data-i18n="thOpen">Open</th>
+                  <th data-i18n="thCloseDate">Closed Date</th>
+                  <th data-i18n="thClose">Close</th>
+                  <th data-i18n="thTp">TP</th>
+                  <th data-i18n="thSl">SL</th>
+                  <th data-i18n="thPnl">PnL</th>
+                </tr>
+              </thead>
+              <tbody id="tradeBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEGAL FOOTER -->
+    <footer class="legal-footer">
+      <div class="footer-inner">
+        <p class="footer-risk">
+          <strong>⚠️ Risk Disclaimer:</strong><br><br>
+          Trading in financial markets carries inherent risks, including the potential for loss of capital.
+          Performance may vary based on market conditions, account size, risk tolerance, and execution
+          environment. While Market Llama is built to deliver consistent, data driven performance through
+          advanced automation and professional account management, no trading environment is completely
+          without risk.
+          <br><br>
+          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+          market fluctuations more effectively, but they are still subject to market risk and temporary
+          performance deviations.
+          <br><br>
+          Market Llama operates as a technology-enabled, professional account management platform  similar
+          to institutional asset managers providing users with sophisticated trading systems, automated
+          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+          capital, and deliver institutional-grade trading outcomes.
+          <br><br>
+          By connecting your trading account to Market Llama, you acknowledge that every investment activity
+          carries risk, and that results can vary across market conditions. We commit to operating
+          transparently, managing accounts responsibly, and applying disciplined, data driven strategies
+          designed to achieve consistent long-term performance.
+        </p>
+        <div class="footer-links">
+          <ul class="footer-links-list">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms &amp; Conditions</a></li>
+            <li><a href="#">Refund &amp; Billing Policy</a></li>
+            <li><a href="#">support</a></li>
+            <li><a href="#">Whatsapp</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">instagram</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- CHAT WIDGET -->
+  <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+      <circle cx="9" cy="10" r="1.25" />
+      <circle cx="12" cy="10" r="1.25" />
+      <circle cx="15" cy="10" r="1.25" />
+    </svg>
+  </button>
+
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat"
+       aria-modal="true" aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-title">Assistant</div>
+      <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">Hi! How can I help?</div>
+    </div>
+    <form id="chatForm" class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+      <button class="chat-send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('Performance page loaded');
+
+      const params = new URLSearchParams(window.location.search);
+      let currentLang = params.get('lang') || 'en';
+
+      const translations = {
+        en: {
+          accounts: "Accounts",
+          paymentsWallet: "Payments & Wallet",
+          subscription: "Subscription Plan",
+          transactionHistory: "Transaction History",
+          insight: "Insight",
+          performance: "Performance",
+          chart: "Chart",
+          settings: "Settings",
+          instructions: "Instructions",
+
+          last30Days: "Last 30 Days",
+          kpiSection: "Key Performance Indicators",
+          kpiTradingDays: "Trading Days",
+          kpiTotalTrades: "Total Trades Taken",
+          kpiTotalLots: "Total Lots Used",
+          kpiBiggestWin: "Biggest Win",
+          kpiBiggestLoss: "Biggest Loss",
+          kpiUpdatedDaily: "Updated daily.",
+          kpiAllClosed: "All closed positions.",
+          kpiCombinedExposure: "Combined exposure across trades.",
+          kpiBestTrade: "Single best trade in the period.",
+          kpiLargestDrawdown: "Largest drawdown on a trade.",
+
+          weeklySummary: "Weekly Summary",
+          dailyPnlCalendar: "Daily PnL Calendar",
+          legendGreen: "Green = profit",
+          legendRed: "Red = loss",
+          legendNone: "No trades",
+
+          mon: "Mon",
+          tue: "Tue",
+          wed: "Wed",
+          thu: "Thu",
+          fri: "Fri",
+          sat: "Sat",
+          sun: "Sun",
+
+          chartProfitabilityTitle: "Profitability",
+          chartProfitabilitySub: "Win rate vs loss rate.",
+          chartShortTitle: "Short Analysis",
+          chartShortSub: "Profits, wins, and losses on short positions.",
+          chartLongTitle: "Long Analysis",
+          chartLongSub: "Profits, wins, and losses on long positions.",
+
+          tradeHistory: "Trade History",
+          historyMeta: "Scrollable table — dummy rows for now.",
+          thShare: "Share",
+          thSymbol: "Symbol",
+          thType: "Type",
+          thOpenDate: "Open Date",
+          thOpen: "Open",
+          thCloseDate: "Closed Date",
+          thClose: "Close",
+          thTp: "TP",
+          thSl: "SL",
+          thPnl: "PnL"
+        },
+        de: {
+          accounts: "Konten",
+          paymentsWallet: "Zahlungen & Wallet",
+          subscription: "Abonnementplan",
+          transactionHistory: "Transaktionsverlauf",
+          insight: "Einblicke",
+          performance: "Leistung",
+          chart: "Diagramm",
+          settings: "Einstellungen",
+          instructions: "Anleitung",
+
+          last30Days: "Letzte 30 Tage",
+          kpiSection: "Wichtige Leistungskennzahlen",
+          kpiTradingDays: "Handelstage",
+          kpiTotalTrades: "Gesamtanzahl Trades",
+          kpiTotalLots: "Gesamt-Lots",
+          kpiBiggestWin: "Größter Gewinn",
+          kpiBiggestLoss: "Größter Verlust",
+          kpiUpdatedDaily: "Täglich aktualisiert.",
+          kpiAllClosed: "Alle geschlossenen Positionen.",
+          kpiCombinedExposure: "Gesamtexponierung über alle Trades.",
+          kpiBestTrade: "Bester Einzeltrade im Zeitraum.",
+          kpiLargestDrawdown: "Größter Verlust eines Trades.",
+
+          weeklySummary: "Wöchentliche Übersicht",
+          dailyPnlCalendar: "Täglicher PnL-Kalender",
+          legendGreen: "Grün = Gewinn",
+          legendRed: "Rot = Verlust",
+          legendNone: "Keine Trades",
+
+          mon: "Mo",
+          tue: "Di",
+          wed: "Mi",
+          thu: "Do",
+          fri: "Fr",
+          sat: "Sa",
+          sun: "So",
+
+          chartProfitabilityTitle: "Profitabilität",
+          chartProfitabilitySub: "Trefferquote vs. Verlustquote.",
+          chartShortTitle: "Short-Analyse",
+          chartShortSub: "Gewinne, Treffer und Verluste bei Short-Positionen.",
+          chartLongTitle: "Long-Analyse",
+          chartLongSub: "Gewinne, Treffer und Verluste bei Long-Positionen.",
+
+          tradeHistory: "Trade-Historie",
+          historyMeta: "Scrollbare Tabelle – aktuell Platzhalterdaten.",
+          thShare: "Teilen",
+          thSymbol: "Symbol",
+          thType: "Art",
+          thOpenDate: "Eröffnungsdatum",
+          thOpen: "Eröffnung",
+          thCloseDate: "Schlussdatum",
+          thClose: "Schluss",
+          thTp: "TP",
+          thSl: "SL",
+          thPnl: "PnL"
+        },
+        es: {
+          accounts: "Cuentas",
+          paymentsWallet: "Pagos & Cartera",
+          subscription: "Plan de suscripción",
+          transactionHistory: "Historial de transacciones",
+          insight: "Perspectiva",
+          performance: "Rendimiento",
+          chart: "Gráfico",
+          settings: "Configuración",
+          instructions: "Instrucciones",
+
+          last30Days: "Últimos 30 días",
+          kpiSection: "Indicadores clave de rendimiento",
+          kpiTradingDays: "Días operados",
+          kpiTotalTrades: "Total de operaciones",
+          kpiTotalLots: "Lotes totales",
+          kpiBiggestWin: "Mayor ganancia",
+          kpiBiggestLoss: "Mayor pérdida",
+          kpiUpdatedDaily: "Actualizado diariamente.",
+          kpiAllClosed: "Todas las posiciones cerradas.",
+          kpiCombinedExposure: "Exposición combinada de todas las operaciones.",
+          kpiBestTrade: "Mejor operación del período.",
+          kpiLargestDrawdown: "Mayor pérdida en una operación.",
+
+          weeklySummary: "Resumen semanal",
+          dailyPnlCalendar: "Calendario diario de PnL",
+          legendGreen: "Verde = beneficio",
+          legendRed: "Rojo = pérdida",
+          legendNone: "Sin operaciones",
+
+          mon: "Lun",
+          tue: "Mar",
+          wed: "Mié",
+          thu: "Jue",
+          fri: "Vie",
+          sat: "Sáb",
+          sun: "Dom",
+
+          chartProfitabilityTitle: "Rentabilidad",
+          chartProfitabilitySub: "Tasa de aciertos vs pérdidas.",
+          chartShortTitle: "Análisis de cortos",
+          chartShortSub: "Beneficios, aciertos y pérdidas en posiciones cortas.",
+          chartLongTitle: "Análisis de largos",
+          chartLongSub: "Beneficios, aciertos y pérdidas en posiciones largas.",
+
+          tradeHistory: "Historial de operaciones",
+          historyMeta: "Tabla desplazable — por ahora con filas de ejemplo.",
+          thShare: "Compartir",
+          thSymbol: "Símbolo",
+          thType: "Tipo",
+          thOpenDate: "Fecha de apertura",
+          thOpen: "Apertura",
+          thCloseDate: "Fecha de cierre",
+          thClose: "Cierre",
+          thTp: "TP",
+          thSl: "SL",
+          thPnl: "PnL"
+        },
+        fr: {
+          accounts: "Comptes",
+          paymentsWallet: "Paiements & Portefeuille",
+          subscription: "Plan d'abonnement",
+          transactionHistory: "Historique des transactions",
+          insight: "Aperçu",
+          performance: "Performance",
+          chart: "Graphique",
+          settings: "Paramètres",
+          instructions: "Instructions",
+
+          last30Days: "30 derniers jours",
+          kpiSection: "Indicateurs clés de performance",
+          kpiTradingDays: "Jours de trading",
+          kpiTotalTrades: "Nombre total de trades",
+          kpiTotalLots: "Lots totaux",
+          kpiBiggestWin: "Plus gros gain",
+          kpiBiggestLoss: "Plus grosse perte",
+          kpiUpdatedDaily: "Mis à jour quotidiennement.",
+          kpiAllClosed: "Toutes les positions clôturées.",
+          kpiCombinedExposure: "Exposition totale sur l'ensemble des trades.",
+          kpiBestTrade: "Meilleur trade de la période.",
+          kpiLargestDrawdown: "Plus forte perte sur un trade.",
+
+          weeklySummary: "Résumé hebdomadaire",
+          dailyPnlCalendar: "Calendrier quotidien du PnL",
+          legendGreen: "Vert = profit",
+          legendRed: "Rouge = perte",
+          legendNone: "Aucun trade",
+
+          mon: "Lun",
+          tue: "Mar",
+          wed: "Mer",
+          thu: "Jeu",
+          fri: "Ven",
+          sat: "Sam",
+          sun: "Dim",
+
+          chartProfitabilityTitle: "Rentabilité",
+          chartProfitabilitySub: "Taux de gains vs pertes.",
+          chartShortTitle: "Analyse des ventes",
+          chartShortSub: "Profits, gains et pertes sur les positions vendeuses.",
+          chartLongTitle: "Analyse des achats",
+          chartLongSub: "Profits, gains et pertes sur les positions acheteuses.",
+
+          tradeHistory: "Historique des trades",
+          historyMeta: "Tableau défilant — données fictives pour l’instant.",
+          thShare: "Partager",
+          thSymbol: "Symbole",
+          thType: "Type",
+          thOpenDate: "Date d'ouverture",
+          thOpen: "Ouverture",
+          thCloseDate: "Date de clôture",
+          thClose: "Clôture",
+          thTp: "TP",
+          thSl: "SL",
+          thPnl: "PnL"
+        },
+        ar: {
+          accounts: "الحسابات",
+          paymentsWallet: "المدفوعات والمحفظة",
+          subscription: "خطة الاشتراك",
+          transactionHistory: "سجل المعاملات",
+          insight: "الرؤى",
+          performance: "الأداء",
+          chart: "الرسم البياني",
+          settings: "الإعدادات",
+          instructions: "التعليمات",
+
+          last30Days: "آخر 30 يومًا",
+          kpiSection: "مؤشرات الأداء الرئيسية",
+          kpiTradingDays: "أيام التداول",
+          kpiTotalTrades: "إجمالي الصفقات",
+          kpiTotalLots: "إجمالي اللوتات",
+          kpiBiggestWin: "أكبر صفقة رابحة",
+          kpiBiggestLoss: "أكبر صفقة خاسرة",
+          kpiUpdatedDaily: "يتم التحديث يوميًا.",
+          kpiAllClosed: "جميع المراكز المغلقة.",
+          kpiCombinedExposure: "إجمالي التعرّض عبر جميع الصفقات.",
+          kpiBestTrade: "أفضل صفقة خلال الفترة.",
+          kpiLargestDrawdown: "أكبر تراجع في صفقة واحدة.",
+
+          weeklySummary: "الملخص الأسبوعي",
+          dailyPnlCalendar: "تقويم الأرباح والخسائر اليومي",
+          legendGreen: "الأخضر = ربح",
+          legendRed: "الأحمر = خسارة",
+          legendNone: "لا توجد صفقات",
+
+          mon: "الاثنين",
+          tue: "الثلاثاء",
+          wed: "الأربعاء",
+          thu: "الخميس",
+          fri: "الجمعة",
+          sat: "السبت",
+          sun: "الأحد",
+
+          chartProfitabilityTitle: "الربحية",
+          chartProfitabilitySub: "نسبة الصفقات الرابحة مقابل الخاسرة.",
+          chartShortTitle: "تحليل صفقات البيع",
+          chartShortSub: "الأرباح، والصفقات الرابحة، والخاسرة في صفقات البيع.",
+          chartLongTitle: "تحليل صفقات الشراء",
+          chartLongSub: "الأرباح، والصفقات الرابحة، والخاسرة في صفقات الشراء.",
+
+          tradeHistory: "سجل الصفقات",
+          historyMeta: "جدول قابل للتمرير — بيانات تجريبية حاليًا.",
+          thShare: "مشاركة",
+          thSymbol: "الرمز",
+          thType: "النوع",
+          thOpenDate: "تاريخ الفتح",
+          thOpen: "سعر الفتح",
+          thCloseDate: "تاريخ الإغلاق",
+          thClose: "سعر الإغلاق",
+          thTp: "جني الربح",
+          thSl: "إيقاف الخسارة",
+          thPnl: "الربح/الخسارة"
+        }
+      };
+
+      if (!translations[currentLang]) currentLang = 'en';
+
+      function updateNavLinks() {
+        const map = {
+          accounts: 'plans.html',
+          insight: 'insight.html',
+          performance: 'performance.html',
+          chart: 'chart.html',
+          instructions: 'instructions.html',
+          profile: 'profile.html'
+        };
+
+        Object.keys(map).forEach(key => {
+          const links = document.querySelectorAll(`[data-link="${key}"]`);
+          links.forEach(a => {
+            const href = a.getAttribute('href') || map[key];
+            const url = new URL(href, window.location.origin + window.location.pathname);
+            url.searchParams.set('lang', currentLang);
+            a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+          });
+        });
+      }
+
+      function applyLanguage(lang) {
+        const t = translations[lang] || translations.en;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (t[key]) {
+            if (el.querySelector('.legend-dot')) {
+              const dot = el.querySelector('.legend-dot');
+              const text = t[key].replace(/^[^=]*=\s*/, '');
+              el.innerHTML = '';
+              el.appendChild(dot);
+              el.appendChild(document.createTextNode(text));
+            } else {
+              el.textContent = t[key];
+            }
+          }
+        });
+
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
+
+        updateNavLinks();
+      }
+
+      const accordion = document.querySelector('.accordion');
+      const submenu = document.querySelector('.submenu');
+      const chevron = document.querySelector('.chevron');
+
+      function closeDropdown() {
+        if (submenu && !submenu.hidden) {
+          submenu.hidden = true;
+          if (accordion) accordion.setAttribute('aria-expanded', 'false');
+          if (chevron) chevron.setAttribute('icon', 'mdi:chevron-down');
+        }
+      }
+
+      if (accordion && submenu && chevron) {
+        accordion.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
+          accordion.setAttribute('aria-expanded', String(!isExpanded));
+          submenu.hidden = isExpanded;
+          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
+        });
+      }
+
+      const mobileSideTrigger = document.getElementById('mobileSideTrigger');
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+
+      if (mobileSideTrigger && sidebar && backdrop) {
+        mobileSideTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isExpanded = mobileSideTrigger.getAttribute('aria-expanded') === 'true';
+          mobileSideTrigger.setAttribute('aria-expanded', String(!isExpanded));
+          sidebar.classList.toggle('open');
+          backdrop.hidden = isExpanded;
+          if (!sidebar.classList.contains('open')) closeDropdown();
+        });
+
+        backdrop.addEventListener('click', () => {
+          mobileSideTrigger.setAttribute('aria-expanded', 'false');
+          sidebar.classList.remove('open');
+          backdrop.hidden = true;
+          closeDropdown();
+        });
+      }
+
+      const sideToggle = document.getElementById('sideToggle');
+      if (sideToggle && sidebar) {
+        sideToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
+          sideToggle.setAttribute('aria-expanded', String(!isExpanded));
+          sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
+          const chevronIcon = sideToggle.querySelector('iconify-icon');
+          if (chevronIcon) {
+            chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
+          }
+          if (isExpanded) closeDropdown();
+        });
+      }
+
+      const toggleBalance = document.getElementById('toggleBalance');
+      const topBalance = document.getElementById('topBalance');
+      const topEye = document.getElementById('topEye');
+      let balanceHidden = false;
+
+      if (toggleBalance && topBalance && topEye) {
+        toggleBalance.addEventListener('click', (e) => {
+          e.stopPropagation();
+          balanceHidden = !balanceHidden;
+          if (balanceHidden) {
+            topBalance.textContent = '•••••';
+            topEye.setAttribute('icon', 'mdi:eye-off-outline');
+          } else {
+            topBalance.textContent = '$ 15 400.00';
+            topEye.setAttribute('icon', 'mdi:eye-outline');
+          }
+        });
+      }
+
+      const languageBtn = document.getElementById('languageBtn');
+      const languageDropdown = document.getElementById('languageDropdown');
+
+      function toggleLanguageDropdown() {
+        if (!languageDropdown) return;
+        languageDropdown.hidden = !languageDropdown.hidden;
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleLanguageDropdown();
+        });
+
+        languageDropdown.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+
+        const langOptions = languageDropdown.querySelectorAll('.lang-option');
+        langOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            const lang = option.getAttribute('data-lang');
+            if (!translations[lang]) return;
+            currentLang = lang;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', currentLang);
+            window.history.replaceState({}, '', url.pathname + '?' + url.searchParams.toString());
+
+            applyLanguage(currentLang);
+            languageDropdown.hidden = true;
+          });
+        });
+
+        document.addEventListener('click', () => {
+          languageDropdown.hidden = true;
+        });
+      }
+
+      document.addEventListener('click', () => {
+        closeDropdown();
+      });
+
+      const kpiData = {
+        days: 8,
+        total_trades: 48,
+        lots_used: 11.0,
+        biggest_win: 280.0,
+        biggest_loss: -150.30
+      };
+      document.getElementById('kpiDays').textContent = kpiData.days;
+      document.getElementById('kpiTrades').textContent = kpiData.total_trades;
+      document.getElementById('kpiLots').textContent = kpiData.lots_used.toFixed(2);
+      document.getElementById('kpiWin').textContent = '$' + kpiData.biggest_win.toFixed(2);
+      document.getElementById('kpiLoss').textContent = (kpiData.biggest_loss < 0 ? '-$' : '$') + Math.abs(kpiData.biggest_loss).toFixed(2);
+
+      const weeklyData = [
+        { "week": "Week One", "pnl": 0, "days": 0,  "range": "Jan 1 – Jan 7" },
+        { "week": "Week Two", "pnl": -140.61, "days": 2, "range": "Jan 8 – Jan 14" },
+        { "week": "Week Three", "pnl": 729.00, "days": 5, "range": "Jan 15 – Jan 21" },
+        { "week": "Week Four", "pnl": 238.10, "days": 1, "range": "Jan 22 – Jan 31" }
+      ];
+      const weekListEl = document.getElementById('weekList');
+      weeklyData.forEach(w => {
+        const card = document.createElement('div');
+        card.className = 'week-card';
+        const pnlClass = w.pnl > 0 ? 'green' : (w.pnl < 0 ? 'red' : '');
+        card.innerHTML = `
+          <div class="week-top">
+            <div class="week-name">${w.week}</div>
+            <div class="week-range">${w.range}</div>
+          </div>
+          <div class="week-bottom">
+            <div class="week-pnl ${pnlClass}">
+              ${w.pnl === 0 ? '$ 0.00' : (w.pnl > 0 ? '$ ' + w.pnl.toFixed(2) : '-$ ' + Math.abs(w.pnl).toFixed(2))}
+            </div>
+            <div class="week-days">Days: ${w.days}</div>
+          </div>
+        `;
+        weekListEl.appendChild(card);
+      });
+
+      const calendarData = {
+        "2024-01-22": { "pnl": 350.20, "trades": 6 },
+        "2024-01-23": { "pnl": 271.40, "trades": 8 },
+        "2024-01-24": { "pnl": -12.00, "trades": 4 },
+        "2024-01-25": { "pnl": 206.40, "trades": 3 }
+      };
+
+      const calendarLabel = document.getElementById('calendarLabel');
+      const calendarDays = document.getElementById('calendarDays');
+      const monthSelect = document.getElementById('monthSelect');
+      const yearSelect = document.getElementById('yearSelect');
+      const prevMonthBtn = document.getElementById('prevMonthBtn');
+      const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+      const monthNames = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+      ];
+
+      let current = new Date(2024, 0, 1);
+
+      monthNames.forEach((m, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = m;
+        monthSelect.appendChild(opt);
+      });
+
+      const startYear = 2020;
+      const endYear = 2030;
+      for (let y = startYear; y <= endYear; y++) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        yearSelect.appendChild(opt);
+      }
+
+      function renderCalendar() {
+        const year = current.getFullYear();
+        const month = current.getMonth();
+        calendarLabel.textContent = `${monthNames[month]} ${year}`;
+        monthSelect.value = month;
+        yearSelect.value = year;
+
+        calendarDays.innerHTML = '';
+
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const firstWeekday = (firstDay.getDay() + 6) % 7;
+        const daysInMonth = lastDay.getDate();
+
+        for (let i = 0; i < firstWeekday; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'day-cell day-empty';
+          calendarDays.appendChild(cell);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const data = calendarData[dateStr];
+          const cell = document.createElement('div');
+          let cls = 'day-cell';
+          if (data) {
+            if (data.pnl > 0) cls += ' day-positive';
+            else if (data.pnl < 0) cls += ' day-negative';
+            else cls += ' day-neutral';
+          } else {
+            cls += ' day-neutral';
+          }
+          cell.className = cls;
+          const trades = data ? data.trades : 0;
+          const pnl = data ? data.pnl : 0;
+          cell.innerHTML = `
+            <div class="day-header">
+              <span class="day-num">${d}</span>
+              <span class="day-trades">${trades > 0 ? trades + ' trades' : 'No trades'}</span>
+            </div>
+            <div class="day-pnl">
+              ${trades === 0 ? '' :
+                (pnl > 0 ? '+$' + pnl.toFixed(2) :
+                  (pnl < 0 ? '-$' + Math.abs(pnl).toFixed(2) : '$0.00'))}
+            </div>
+          `;
+          calendarDays.appendChild(cell);
+        }
+      }
+
+      renderCalendar();
+
+      monthSelect.addEventListener('change', () => {
+        const m = parseInt(monthSelect.value, 10);
+        current.setMonth(m);
+        renderCalendar();
+      });
+
+      yearSelect.addEventListener('change', () => {
+        const y = parseInt(yearSelect.value, 10);
+        current.setFullYear(y);
+        renderCalendar();
+      });
+
+      prevMonthBtn.addEventListener('click', () => {
+        current.setMonth(current.getMonth() - 1);
+        renderCalendar();
+      });
+
+      nextMonthBtn.addEventListener('click', () => {
+        current.setMonth(current.getMonth() + 1);
+        renderCalendar();
+      });
+
+      const chartPayload = {
+        win_rate: 45.83,
+        loss_rate: 54.17,
+        short: { profit: 826.49, wins: 17, losses: 23 },
+        long: { profit: 826.49, wins: 5, losses: 3 }
+      };
+
+      const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#dadada',
+              boxWidth: 10
+            }
+          }
+        }
+      };
+
+      const profitabilityCtx = document.getElementById('profitabilityChart').getContext('2d');
+      new Chart(profitabilityCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Wins', 'Losses'],
+          datasets: [{
+            data: [chartPayload.win_rate, chartPayload.loss_rate],
+            borderWidth: 0
+          }]
+        },
+        options: commonOptions
+      });
+
+      const shortCtx = document.getElementById('shortChart').getContext('2d');
+      new Chart(shortCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Profit', 'Wins', 'Losses'],
+          datasets: [{
+            data: [chartPayload.short.profit, chartPayload.short.wins, chartPayload.short.losses],
+            borderWidth: 0
+          }]
+        },
+        options: commonOptions
+      });
+
+      const longCtx = document.getElementById('longChart').getContext('2d');
+      new Chart(longCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Profit', 'Wins', 'Losses'],
+          datasets: [{
+            data: [chartPayload.long.profit, chartPayload.long.wins, chartPayload.long.losses],
+            borderWidth: 0
+          }]
+        },
+        options: commonOptions
+      });
+
+      const trades = [
+        {
+          "symbol": "XAUUSD",
+          "type": "Sell",
+          "open_date": "1/29/2024, 15:22",
+          "open": 2033.97,
+          "closed_date": "1/29/2024, 15:36",
+          "closed": 2028.37,
+          "tp": 2028.37,
+          "sl": 2036,
+          "pnl": 205.11
+        },
+        {
+          "symbol": "XAUUSD",
+          "type": "Buy",
+          "open_date": "1/24/2024, 10:14",
+          "open": 2018.40,
+          "closed_date": "1/24/2024, 10:45",
+          "closed": 2022.10,
+          "tp": 2023.00,
+          "sl": 2014.00,
+          "pnl": 180.42
+        },
+        {
+          "symbol": "NAS100",
+          "type": "Sell",
+          "open_date": "1/23/2024, 13:03",
+          "open": 17839.40,
+          "closed_date": "1/23/2024, 13:40",
+          "closed": 17892.10,
+          "tp": 17790.00,
+          "sl": 17920.00,
+          "pnl": -95.30
+        },
+        {
+          "symbol": "EURUSD",
+          "type": "Buy",
+          "open_date": "1/22/2024, 09:12",
+          "open": 1.08340,
+          "closed_date": "1/22/2024, 10:02",
+          "closed": 1.08510,
+          "tp": 1.08600,
+          "sl": 1.08100,
+          "pnl": 64.80
+        }
+      ];
+
+      const tradeBody = document.getElementById('tradeBody');
+      trades.forEach(t => {
+        const tr = document.createElement('tr');
+        const isBuy = t.type.toLowerCase() === 'buy';
+        const pnlClass = t.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
+        const pnlText = (t.pnl >= 0 ? '$ ' : '-$ ') + Math.abs(t.pnl).toFixed(2);
+        tr.innerHTML = `
+          <td><iconify-icon class="ic share-icon" icon="mdi:share-variant-outline"></iconify-icon></td>
+          <td>${t.symbol}</td>
+          <td><span class="badge-type ${isBuy ? 'badge-buy' : 'badge-sell'}">${t.type}</span></td>
+          <td>${t.open_date}</td>
+          <td>${t.open}</td>
+          <td>${t.closed_date}</td>
+          <td>${t.closed}</td>
+          <td>${t.tp}</td>
+          <td>${t.sl}</td>
+          <td class="${pnlClass}">${pnlText}</td>
+        `;
+        tradeBody.appendChild(tr);
+      });
+
+      applyLanguage(currentLang);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatFab   = document.getElementById('chatFab');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      const chatForm  = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatBody  = document.getElementById('chatBody');
+
+      if (!chatFab || !chatPanel) return;
+
+      function openChat() {
+        chatPanel.classList.add('open');
+        chatPanel.setAttribute('aria-hidden', 'false');
+        if (chatInput) {
+          setTimeout(() => chatInput.focus(), 80);
+        }
+      }
+
+      function closeChat() {
+        chatPanel.classList.remove('open');
+        chatPanel.setAttribute('aria-hidden', 'true');
+      }
+
+      chatFab.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (chatPanel.classList.contains('open')) {
+          closeChat();
+        } else {
+          openChat();
+        }
+      });
+
+      chatPanel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      if (chatClose) {
+        chatClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeChat();
+        });
+      }
+
+      document.addEventListener('click', function (e) {
+        if (!chatPanel.classList.contains('open')) return;
+        const onFab = chatFab.contains(e.target);
+        const insidePanel = chatPanel.contains(e.target);
+        if (!onFab && !insidePanel) {
+          closeChat();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeChat();
+        }
+      });
+
+      function appendMsg(text, role) {
+        if (!chatBody) return;
+        const div = document.createElement('div');
+        div.className = 'chat-msg ' + (role === 'user' ? 'user' : 'bot');
+        div.textContent = text;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      if (chatForm && chatInput) {
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const msg = chatInput.value.trim();
+          if (!msg) return;
+          appendMsg(msg, 'user');
+          chatInput.value = '';
+
+          setTimeout(() => {
+            appendMsg("This is a preview assistant on the performance page. Your real AI trading assistant will be wired here later.", 'bot');
+          }, 400);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

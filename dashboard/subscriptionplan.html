@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subscription Plan — Market Llama</title>
+  <meta name="description"
+        content="Manage your Market Llama subscription plans and compare account tiers." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <!-- Keep landing stylesheet so auth overlay/back-to-top etc remain styled -->
+  <link rel="stylesheet" href="../landing/styles/style.css" />
+
+  <style>
+    :root {
+      --header-h: 60px;
+      --bg: #0b0b0c;
+      --panel: #121214;
+      --muted: #8f8f92;
+      --text: #ffffff;
+      --accent: #ffffff;
+      --accent-plain: #dadada;
+      --glow: rgba(255, 255, 255, .06);
+      --glass: rgba(255, 255, 255, .04);
+      --ring: rgba(255, 255, 255, .12);
+      --pill: #16171a;
+      --shadow: 0 8px 24px rgba(0, 0, 0, .45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 14px;
+    }
+
+    body.app.dark {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .profile-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      z-index: -1;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: var(--header-h);
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #0097b2;
+      border-bottom: 1px solid var(--ring);
+      backdrop-filter: blur(8px);
+    }
+
+    .site-header .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .brand-name {
+      letter-spacing: .2px;
+      font-size: 1rem;
+    }
+
+    .site-actions {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--ring);
+      color: var(--text);
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .balance-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid var(--ring);
+      border-radius: 10px;
+      background: var(--glass);
+    }
+
+    .balance-amount {
+      letter-spacing: .2px;
+      font-size: .95rem;
+    }
+
+    .language-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 120px;
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 160px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+    }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .lang-option:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .flag {
+      font-size: 16px;
+    }
+
+    .mobile-only {
+      display: none;
+    }
+
+    .desktop-only {
+      display: inline-flex;
+    }
+
+    .ic {
+      font-size: 18px;
+      line-height: 1;
+      vertical-align: middle;
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+
+    .icon-btn:hover .ic {
+      opacity: 1;
+    }
+
+    .side .ic {
+      font-size: 18px;
+    }
+
+    .dashboard {
+      min-height: 100vh;
+      padding-top: var(--header-h);
+    }
+
+    .side {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: 240px;
+      overflow-y: auto;
+      border-right: 1px solid var(--ring);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
+      transition: left .3s ease, width .25s ease;
+    }
+
+    .side[data-state="collapsed"] {
+      width: 68px;
+    }
+
+    .side .label {
+      transition: opacity .2s ease;
+    }
+
+    .side[data-state="collapsed"] .label {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .side-toggle {
+      position: sticky;
+      bottom: 0;
+      width: 100%;
+      background: rgb(75, 75, 75);
+      margin-top: 6px;
+      border: none;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .side-menu {
+      list-style: none;
+      margin: 8px 0 48px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .side-menu a,
+    .accordion {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-decoration: none;
+      color: var(--accent-plain);
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .side-menu li.active > a {
+      background: var(--glass);
+      border-color: var(--ring);
+      color: var(--text);
+    }
+
+    .has-submenu {
+      position: relative;
+    }
+
+    .accordion {
+      background: none;
+      border: none;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .accordion:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--ring);
+    }
+
+    .accordion .chevron {
+      margin-left: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .accordion[aria-expanded="true"] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion[aria-expanded="true"] {
+      background: var(--glass);
+      border-color: var(--ring);
+      color: var(--text);
+    }
+
+    .submenu {
+      list-style: none;
+      padding-left: 20px;
+      margin: 4px 0 0;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 2px solid #4169E1;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .side[data-state="collapsed"] .submenu {
+      display: none !important;
+    }
+
+    .submenu li {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .submenu li:last-child {
+      border-bottom: none;
+    }
+
+    .submenu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 6px;
+      margin: 2px 4px;
+      width: calc(100% - 8px);
+    }
+
+    .submenu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .content {
+      margin-left: 240px;
+      padding: 18px clamp(12px, 2vw, 24px);
+      transition: margin-left 0.25s ease;
+    }
+
+    .side[data-state="collapsed"] ~ .content {
+      margin-left: 68px;
+    }
+
+    .content-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 8px 0 16px;
+    }
+
+    .page-title {
+      font-size: clamp(22px, 3vw, 42px);
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 35;
+      backdrop-filter: blur(2px);
+    }
+
+    .legal-footer {
+      margin-left: 240px;
+      margin-top: 24px;
+      padding: 18px clamp(12px, 2vw, 24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .side[data-state="collapsed"] ~ .legal-footer {
+      margin-left: 68px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .footer-risk {
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .footer-links {
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-links a {
+      color: var(--accent-plain);
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* ===== Chat widget — SAME as other dashboard pages ===== */
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .94);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    /* ===== PLANS / COMPARISON FROM YOUR SECOND FILE ===== */
+
+    .pricing {
+      padding: 2rem 4rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pricing h2 {
+      text-align: center;
+      color: #dfe3ec;
+      font-size: 4rem;
+      letter-spacing: .03em;
+      margin-bottom: 1rem;
+      text-transform: capitalize;
+      font-weight: 400;
+    }
+
+    .billing-toggle {
+      width: max-content;
+      margin: .25rem auto 1.5rem;
+      display: flex;
+      gap: 4px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .10);
+      padding: 6px;
+      border-radius: 999px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      backdrop-filter: blur(8px);
+    }
+
+    .bill-btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      padding: .55rem 1.1rem;
+      border-radius: 999px;
+      font: 600 .95rem/1 "Poppins", system-ui;
+      color: #e6e9f2;
+      background: transparent;
+      transition: all .18s ease;
+    }
+
+    .bill-btn[aria-pressed="true"] {
+      background: #1f2536;
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+    }
+
+    .pricing-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .plan {
+      grid-column: span 3;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(10, 10, 10, .8));
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-radius: 22px;
+      color: #fff;
+      padding: 1.25rem 1.25rem 1.4rem;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, .45);
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan:before {
+      content: "";
+      position: absolute;
+      inset: auto -20% -20% auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(65, 105, 225, .28), rgba(65, 105, 225, 0) 70%);
+      pointer-events: none;
+      filter: blur(18px);
+    }
+
+    .plan .name {
+      font-weight: 700;
+      text-align: center;
+      margin-top: .25rem;
+      margin-bottom: 1.25rem;
+      opacity: .95;
+    }
+
+    .price {
+      text-align: center;
+      margin: .25rem 0 1rem;
+    }
+
+    .amount {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: .01em;
+    }
+
+    .old-price {
+      font-size: .95rem;
+      margin-left: .35rem;
+      color: #9aa3b2;
+      text-decoration: line-through;
+      opacity: .8;
+    }
+
+    .per {
+      display: block;
+      font-size: .85rem;
+      opacity: .8;
+      margin-top: .25rem;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+      margin: .5rem 0 1.2rem;
+    }
+
+    .features li {
+      list-style: none;
+      display: flex;
+      align-items: flex-start;
+      gap: .55rem;
+      color: #cfd3dc;
+    }
+
+    .features li:before {
+      content: "✓";
+      color: #7df5c3;
+      margin-top: .1rem;
+    }
+
+    .cta {
+      display: flex;
+      justify-content: center;
+    }
+
+    .select-plan {
+      border-radius: 999px;
+      border: 1px solid #1a6d72;
+      background: #1a6d72;
+      color: #fff;
+      padding: .7rem 1.15rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all .18s ease;
+      width: 100%;
+      max-width: 220px;
+    }
+
+    .select-plan:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .compare {
+      position: relative;
+      max-width: 1220px;
+      margin: 24px auto 40px;
+      padding: 0 16px;
+      color: #fff;
+    }
+
+    .compare h3 {
+      text-align: center;
+      margin-top: 4rem;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      font-size: 4rem;
+      letter-spacing: .02em;
+    }
+
+    .compare-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 14px;
+      background: rgba(10, 10, 10, .65);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, .45);
+    }
+
+    .table-compare {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      color: #e9edf7;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .table-compare thead th {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 17, 22, .95);
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .table-compare thead th:first-child {
+      text-align: left;
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .table-compare thead th:not(:first-child) {
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .table-compare td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      text-align: center;
+    }
+
+    .table-compare td:first-child {
+      text-align: left;
+      color: #cfd3dc;
+    }
+
+    .table-compare .strong {
+      font-weight: 800;
+    }
+
+    .table-compare tfoot td {
+      padding: 16px;
+      background: rgba(255, 255, 255, .02);
+      border-top: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .compare .cta-btn {
+      width: 100%;
+      cursor: pointer;
+      border: 1px solid #1a6d72;
+      background: #1a6d72;
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: filter .18s ease, transform .18s ease;
+    }
+
+    .compare .cta-btn:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .compare-foot {
+      text-align: center;
+      color: #9aa3b2;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    /* Back-to-top button (simple) */
+    .back-to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(0, 0, 0, 0.65);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1050;
+    }
+
+    .back-to-top svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+    }
+
+    @media (max-width: 1100px) {
+      .desktop-only {
+        display: none;
+      }
+
+      .mobile-only {
+        display: inline-flex;
+      }
+
+      .plan {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .side[data-state="expanded"] {
+        width: 200px;
+      }
+
+      .content {
+        margin-left: 200px;
+      }
+
+      .legal-footer {
+        margin-left: 200px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .side {
+        left: -240px;
+        width: 240px;
+      }
+
+      .side.open {
+        left: 0;
+      }
+
+      .content {
+        margin-left: 0;
+      }
+
+      .language-dropdown {
+        right: 10px;
+        min-width: 140px;
+      }
+
+      .legal-footer {
+        margin-left: 0;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .footer-links {
+        text-align: left;
+      }
+
+      .pricing {
+        padding: 1.25rem 1.25rem .75rem;
+      }
+
+      .compare {
+        padding: 0 12px;
+      }
+
+      .compare h3 {
+        font-size: 2.6rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .compare-wrap {
+        border-radius: 10px;
+      }
+
+      .table-compare {
+        font-size: 0.85rem;
+      }
+
+      .table-compare thead th,
+      .table-compare td {
+        padding: 10px 8px;
+      }
+
+      .table-compare thead th:first-child {
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+      }
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+        bottom: 88px;
+      }
+
+      .chat-panel {
+        right: 14px;
+        bottom: 148px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .content {
+        margin-left: 240px;
+      }
+    }
+  </style>
+
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+</head>
+
+<body class="app dark">
+  <div class="profile-background"></div>
+
+  <!-- DASHBOARD HEADER WITH RESPONSES (LANGUAGE, BALANCE, ETC.) -->
+  <header class="site-header" id="siteHeader">
+    <div class="left">
+      <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar"
+              aria-expanded="false">
+        <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
+      </button>
+      <a href="plans.html" class="brand" data-link="accounts">
+        <div class="logo">
+          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
+        </div>
+        <span class="brand-name">Market Llama</span>
+      </a>
+    </div>
+    <nav class="site-actions">
+      <button class="icon-btn" id="qrBtn" aria-label="Scan QR">
+        <iconify-icon class="ic" icon="mdi:qrcode-scan"></iconify-icon>
+      </button>
+      <div class="balance-wrap">
+        <span class="balance-amount" id="topBalance">$ 15 400.00</span>
+        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
+          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
+        </button>
+      </div>
+
+      <button class="icon-btn" id="languageBtn" aria-label="Language">
+        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
+      </button>
+      <div class="language-dropdown" id="languageDropdown" hidden>
+        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
+        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
+        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
+        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
+      </div>
+
+      <button class="icon-btn" aria-label="Notifications">
+        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
+      </button>
+      <button class="icon-btn" aria-label="Support">
+        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
+      </button>
+      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
+        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
+      </a>
+    </nav>
+  </header>
+
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <main class="dashboard">
+    <!-- SIDEBAR NAV (SAME STRUCTURE AS PROFILE) -->
+    <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
+      <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
+        <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
+      </div>
+      <ul class="side-menu">
+        <li>
+          <a href="plans.html" data-link="accounts">
+            <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
+            <span class="label" data-i18n="accounts">Accounts</span>
+          </a>
+        </li>
+
+        <li class="has-submenu active">
+          <button class="accordion" aria-expanded="true">
+            <iconify-icon class="ic" icon="mdi:wallet-outline"></iconify-icon>
+            <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
+            <iconify-icon class="ic chevron" icon="mdi:chevron-up"></iconify-icon>
+          </button>
+          <ul class="submenu" hidden>
+            <li>
+              <a href="subscriptionplan.html" data-link="subscription">
+                <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
+                <span data-i18n="subscription">Subscription Plan</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
+                <span data-i18n="transactionHistory">Transaction History</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="insight.html" data-link="insight">
+            <iconify-icon class="ic" icon="mdi:map-marker-outline"></iconify-icon>
+            <span class="label" data-i18n="insight">Insight</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="performance.html" data-link="performance">
+            <iconify-icon class="ic" icon="mdi:cpu-64-bit"></iconify-icon>
+            <span class="label" data-i18n="performance">Performance</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="chart.html" data-link="chart">
+            <iconify-icon class="ic" icon="mdi:chart-bar"></iconify-icon>
+            <span class="label" data-i18n="chart">Chart</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="instructions.html" data-link="instructions">
+            <iconify-icon class="ic" icon="mdi:book-open-outline"></iconify-icon>
+            <span class="label" data-i18n="instructions">Instructions</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="profile.html" data-link="profile">
+            <iconify-icon class="ic" icon="mdi:cog-outline"></iconify-icon>
+            <span class="label" data-i18n="settings">Settings</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- PAGE CONTENT: YOUR PLANS + COMPARISON -->
+    <section class="content" id="content">
+      <div class="content-top">
+        <h1 class="page-title" data-i18n="subscription">Subscription Plan</h1>
+      </div>
+
+      <!-- Pricing section from your second file -->
+      <section class="pricing" id="plans">
+        <h2>Plans</h2>
+
+        <div class="billing-toggle" role="group" aria-label="Billing period">
+          <button class="bill-btn" id="billMonthly" aria-pressed="true">Monthly</button>
+          <button class="bill-btn" id="billAnnually" aria-pressed="false">Annually</button>
+        </div>
+
+        <div class="pricing-grid">
+          <!-- Basic -->
+          <article class="plan" data-plan="Basic">
+            <div>
+              <div class="name">Basic</div>
+              <div class="price">
+                <span class="amount" data-price data-monthly="14.99"
+                      data-annually="144.99">$ 19.99</span>
+                <span class="old-price" data-old-monthly="19.99"
+                      data-old-annually="199.99">$ 19.99</span>
+                <span class="per" data-per>/ month</span>
+              </div>
+              <ul class="features">
+                <li>1 Managed Account</li>
+                <li>Conservative Managed Portfolio</li>
+                <li>Minimum Deposit Limit ($20)</li>
+                <li>Maximum Deposit Limit ($500)</li>
+              </ul>
+            </div>
+            <div class="cta">
+              <button class="select-plan" data-select-plan="Basic">Select Plan</button>
+            </div>
+          </article>
+
+          <!-- Pro -->
+          <article class="plan" data-plan="Pro">
+            <div>
+              <div class="name">Pro</div>
+              <div class="price">
+                <span class="amount" data-price data-monthly="19.99"
+                      data-annually="199.99">$ 19.99</span>
+                <span class="old-price" data-old-monthly="49.99"
+                      data-old-annually="499.99">$ 49.99</span>
+                <span class="per" data-per>/ month</span>
+              </div>
+              <ul class="features">
+                <li>Up To 2 Accounts</li>
+                <li>Advanced Managed Portfolio</li>
+                <li>Minimum Deposit Limit ($100)</li>
+                <li>Maximum Deposit Limit ($1000)</li>
+              </ul>
+            </div>
+            <div class="cta">
+              <button class="select-plan" data-select-plan="Pro">Select Plan</button>
+            </div>
+          </article>
+
+          <!-- Premium -->
+          <article class="plan" data-plan="Premium">
+            <div>
+              <div class="name">Premium</div>
+              <div class="price">
+                <span class="amount" data-price data-monthly="99.99"
+                      data-annually="999.99">$ 99.99</span>
+                <span class="old-price" data-old-monthly="149.99"
+                      data-old-annually="1499.99">$ 149.99</span>
+                <span class="per" data-per>/ month</span>
+              </div>
+              <ul class="features">
+                <li>AI signals &amp; automation</li>
+                <li>Priority routing</li>
+                <li>Risk templates</li>
+              </ul>
+            </div>
+            <div class="cta">
+              <button class="select-plan">Coming Soon</button>
+            </div>
+          </article>
+
+          <!-- Elite -->
+          <article class="plan" data-plan="Elite">
+            <div>
+              <div class="name">Elite</div>
+              <div class="price">
+                <span class="amount" data-price data-monthly="499.99"
+                      data-annually="4999.99">$ 499.99</span>
+                <span class="old-price" data-old-monthly="699.99"
+                      data-old-annually="6999.99">$ 699.99</span>
+                <span class="per" data-per>/ month</span>
+              </div>
+              <ul class="features">
+                <li>All Pro features</li>
+                <li>Enterprise SLAs</li>
+                <li>Dedicated success manager</li>
+              </ul>
+            </div>
+            <div class="cta">
+              <button class="select-plan">Coming Soon</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Comparison table from your second file -->
+      <section class="compare" id="plan-compare">
+        <h3>COMPARE SUBSCRIPTIONS?</h3>
+
+        <div class="compare-wrap">
+          <table class="table-compare" role="table" aria-label="Plan comparison">
+            <caption class="sr-only">Plan features and pricing comparison</caption>
+            <thead>
+              <tr>
+                <th>Features</th>
+                <th>Basic</th>
+                <th>Pro</th>
+                <th>Premium</th>
+                <th>Elite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Price (monthly)</td>
+                <td class="strong">$ 14.99</td>
+                <td class="strong">$ 19.99</td>
+                <td class="strong">$ 99.99</td>
+                <td class="strong">$ 499.99</td>
+              </tr>
+              <tr>
+                <td>Accounts</td>
+                <td>1</td>
+                <td>2</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+              </tr>
+              <tr>
+                <td>Management Style</td>
+                <td>Conservative</td>
+                <td>Advanced</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+              </tr>
+              <tr>
+                <td>Minimum Deposit limit</td>
+                <td>$20</td>
+                <td>$100</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+              </tr>
+              <tr>
+                <td>Maximum Deposit Limit</td>
+                <td>$500</td>
+                <td>$1000</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+              </tr>
+              <tr>
+                <td>AI Manager</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+                <td>Coming Soon</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td class="strong">Choose your plan</td>
+                <td><button type="button" class="cta-btn" data-select-plan="Basic">Select Basic</button></td>
+                <td><button type="button" class="cta-btn" data-select-plan="Pro">Select Pro</button></td>
+                <td><button type="button" class="cta-btn">Coming Soon</button></td>
+                <td><button type="button" class="cta-btn">Coming Soon</button></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="compare-foot">
+          Prices shown are monthly. Annual billing available at checkout with savings.
+        </div>
+      </section>
+    </section>
+
+    <!-- DASHBOARD FOOTER USING YOUR RISK DISCLAIMER + LINKS -->
+    <footer class="legal-footer">
+      <div class="footer-inner">
+        <p class="footer-risk">
+          <strong>⚠️ Risk Disclaimer:</strong><br><br>
+          Trading in financial markets carries inherent risks, including the potential for loss of capital.
+          Performance may vary based on market conditions, account size, risk tolerance, and execution
+          environment. While Market Llama is built to deliver consistent, data-driven performance through
+          advanced automation and professional account management, no trading environment is completely
+          without risk.
+          <br><br>
+          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+          market fluctuations more effectively, but they are still subject to market risk and temporary
+          performance deviations.
+          <br><br>
+          Market Llama operates as a technology-enabled, professional account management platform — similar
+          to institutional asset managers — providing users with sophisticated trading systems, automated
+          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+          capital, and deliver institutional-grade trading outcomes.
+          <br><br>
+          By connecting your trading account to Market Llama, you acknowledge that every investment activity
+          carries risk, and that results can vary across market conditions. We commit to operating
+          transparently, managing accounts responsibly, and applying disciplined, data-driven strategies
+          designed to achieve consistent long-term performance.
+        </p>
+        <div class="footer-links">
+          <ul class="footer-links-list">
+            <li><a href="abouts.html">About</a></li>
+            <li><a href="support.html">Support</a></li>
+            <li><a href="terms.html">Terms &amp; Conditions</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="#">Whatsapp</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- CHAT WIDGET -->
+  <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+      <circle cx="9" cy="10" r="1.25" />
+      <circle cx="12" cy="10" r="1.25" />
+      <circle cx="15" cy="10" r="1.25" />
+    </svg>
+  </button>
+
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat"
+       aria-modal="true" aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-title">Assistant</div>
+      <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">Hi! How can I help?</div>
+    </div>
+    <form id="chatForm" class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+      <button class="chat-send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <!-- SIMPLE BACK-TO-TOP BUTTON FOR THIS PAGE -->
+  <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
+    </svg>
+  </button>
+
+  <!-- AUTH OVERLAY (for plan selection sign-up) -->
+  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
+       aria-hidden="true">
+    <div class="auth-container" id="authContainer">
+      <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
+      <h2 id="authTitle">Create Account</h2>
+      <form id="authForm" novalidate>
+        <div class="form-group signup-field" id="firstNameGroup">
+          <label for="authFirstName">First Name</label>
+          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
+                 autocomplete="given-name">
+        </div>
+        <div class="form-group signup-field" id="lastNameGroup">
+          <label for="authLastName">Last Name</label>
+          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
+                 autocomplete="family-name">
+        </div>
+        <div class="form-group signup-field" id="dobGroup">
+          <label for="authDob">Date of Birth</label>
+          <input id="authDob" name="dob" type="date" required>
+        </div>
+        <div class="form-group signup-field" id="usernameGroup">
+          <label for="authUsername">Username</label>
+          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
+                 autocomplete="username">
+        </div>
+        <div class="form-group signup-field" id="countryGroup">
+          <label for="authCountry">Select Country</label>
+          <select id="authCountry" name="country" required>
+            <option value="" disabled selected>Select your country</option>
+            <option value="NG">Nigeria</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="emailGroup">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required
+                 autocomplete="email" inputmode="email">
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label for="authPassword">Password</label>
+          <div class="pw-field">
+            <input id="authPassword" name="password" type="password" placeholder="Enter your password"
+                   required autocomplete="new-password" minlength="8" />
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
+                 aria-label="Toggle password visibility">
+              <path
+                d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a 4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+            </svg>
+          </div>
+          <div class="hint" id="passwordHint" aria-live="polite"></div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+        <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- LANGUAGE + SIDEBAR + BALANCE LOGIC (FROM PROFILE PAGE) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      let currentLang = params.get('lang') || 'en';
+
+      const translations = {
+        en: {
+          profile: "Profile",
+          accounts: "Accounts",
+          paymentsWallet: "Payments & Wallet",
+          subscription: "Subscription Plan",
+          deposit: "Deposit",
+          withdrawal: "Withdrawal",
+          transactionHistory: "Transaction History",
+          insight: "Insight",
+          performance: "Performance",
+          chart: "Chart",
+          settings: "Settings",
+          instructions: "Instructions"
+        },
+        de: {
+          profile: "Profil",
+          accounts: "Konten",
+          paymentsWallet: "Zahlungen & Wallet",
+          subscription: "Abonnementplan",
+          deposit: "Einzahlung",
+          withdrawal: "Auszahlung",
+          transactionHistory: "Transaktionsverlauf",
+          insight: "Einblicke",
+          performance: "Leistung",
+          chart: "Diagramm",
+          settings: "Einstellungen",
+          instructions: "Anleitung"
+        },
+        es: {
+          profile: "Perfil",
+          accounts: "Cuentas",
+          paymentsWallet: "Pagos & Cartera",
+          subscription: "Plan de Suscripción",
+          deposit: "Depositar",
+          withdrawal: "Retirar",
+          transactionHistory: "Historial de Transacciones",
+          insight: "Perspectiva",
+          performance: "Rendimiento",
+          chart: "Gráfico",
+          settings: "Configuración",
+          instructions: "Instrucciones"
+        },
+        fr: {
+          profile: "Profil",
+          accounts: "Comptes",
+          paymentsWallet: "Paiements & Portefeuille",
+          subscription: "Plan d'abonnement",
+          deposit: "Dépôt",
+          withdrawal: "Retrait",
+          transactionHistory: "Historique des transactions",
+          insight: "Aperçu",
+          performance: "Performance",
+          chart: "Graphique",
+          settings: "Paramètres",
+          instructions: "Instructions"
+        },
+        ar: {
+          profile: "الملف الشخصي",
+          accounts: "الحسابات",
+          paymentsWallet: "المدفوعات والمحفظة",
+          subscription: "خطة الاشتراك",
+          deposit: "إيداع",
+          withdrawal: "سحب",
+          transactionHistory: "سجل المعاملات",
+          insight: "رؤى",
+          performance: "الأداء",
+          chart: "الرسم البياني",
+          settings: "الإعدادات",
+          instructions: "التعليمات"
+        }
+      };
+
+      if (!translations[currentLang]) currentLang = 'en';
+
+      function updateNavLinks() {
+        const pages = ['accounts', 'insight', 'performance', 'chart', 'instructions', 'profile'];
+        pages.forEach(type => {
+          document.querySelectorAll('[data-link="' + type + '"]').forEach(a => {
+            a.href = type + '.html?lang=' + currentLang;
+          });
+        });
+
+        // explicit link for subscription plan in submenu
+        document.querySelectorAll('[href^="subscriptionplan.html"]').forEach(a => {
+          const url = new URL(window.location.href);
+          url.pathname = 'subscriptionplan.html';
+          url.searchParams.set('lang', currentLang);
+          a.href = url.pathname + '?' + url.searchParams.toString();
+        });
+      }
+
+      function applyLanguage(lang) {
+        const t = translations[lang] || translations.en;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (t[key]) el.textContent = t[key];
+        });
+
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
+
+        updateNavLinks();
+      }
+
+      const accordion = document.querySelector('.accordion');
+      const submenu = document.querySelector('.submenu');
+      const chevron = document.querySelector('.chevron');
+
+      function closeDropdown() {
+        if (submenu && !submenu.hidden) {
+          submenu.hidden = true;
+          if (accordion) accordion.setAttribute('aria-expanded', 'false');
+          if (chevron) chevron.setAttribute('icon', 'mdi:chevron-down');
+        }
+      }
+
+      if (accordion && submenu && chevron) {
+        accordion.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
+          accordion.setAttribute('aria-expanded', String(!isExpanded));
+          submenu.hidden = isExpanded;
+          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
+        });
+      }
+
+      const mobileSideTrigger = document.getElementById('mobileSideTrigger');
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+
+      if (mobileSideTrigger && sidebar && backdrop) {
+        mobileSideTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isExpanded = mobileSideTrigger.getAttribute('aria-expanded') === 'true';
+          mobileSideTrigger.setAttribute('aria-expanded', String(!isExpanded));
+          sidebar.classList.toggle('open');
+          backdrop.hidden = isExpanded;
+          if (!sidebar.classList.contains('open')) closeDropdown();
+        });
+
+        backdrop.addEventListener('click', () => {
+          mobileSideTrigger.setAttribute('aria-expanded', 'false');
+          sidebar.classList.remove('open');
+          backdrop.hidden = true;
+          closeDropdown();
+        });
+      }
+
+      const sideToggle = document.getElementById('sideToggle');
+      if (sideToggle && sidebar) {
+        sideToggle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
+          sideToggle.setAttribute('aria-expanded', String(!isExpanded));
+          sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
+          const chevronIcon = sideToggle.querySelector('iconify-icon');
+          if (chevronIcon) {
+            chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
+          }
+          if (isExpanded) closeDropdown();
+        });
+      }
+
+      const toggleBalance = document.getElementById('toggleBalance');
+      const topBalance = document.getElementById('topBalance');
+      const topEye = document.getElementById('topEye');
+      let balanceHidden = false;
+
+      if (toggleBalance && topBalance && topEye) {
+        toggleBalance.addEventListener('click', (e) => {
+          e.stopPropagation();
+          balanceHidden = !balanceHidden;
+          if (balanceHidden) {
+            topBalance.textContent = '•••••';
+            topEye.setAttribute('icon', 'mdi:eye-off-outline');
+          } else {
+            topBalance.textContent = '$ 15 400.00';
+            topEye.setAttribute('icon', 'mdi:eye-outline');
+          }
+        });
+      }
+
+      const languageBtn = document.getElementById('languageBtn');
+      const languageDropdown = document.getElementById('languageDropdown');
+
+      function toggleLanguageDropdown() {
+        if (!languageDropdown) return;
+        languageDropdown.hidden = !languageDropdown.hidden;
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleLanguageDropdown();
+        });
+
+        languageDropdown.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+
+        const langOptions = languageDropdown.querySelectorAll('.lang-option');
+        langOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            const lang = option.getAttribute('data-lang');
+            if (!translations[lang]) return;
+            currentLang = lang;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', currentLang);
+            window.location.href = url.pathname + '?' + url.searchParams.toString();
+          });
+        });
+
+        document.addEventListener('click', () => {
+          languageDropdown.hidden = true;
+        });
+      }
+
+      document.addEventListener('click', () => {
+        closeDropdown();
+      });
+
+      applyLanguage(currentLang);
+    });
+  </script>
+
+  <!-- CHAT WIDGET LOGIC -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatFab = document.getElementById('chatFab');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatBody = document.getElementById('chatBody');
+
+      if (!chatFab || !chatPanel) return;
+
+      function openChat() {
+        chatPanel.classList.add('open');
+        chatPanel.setAttribute('aria-hidden', 'false');
+        if (chatInput) {
+          setTimeout(() => chatInput.focus(), 80);
+        }
+      }
+
+      function closeChat() {
+        chatPanel.classList.remove('open');
+        chatPanel.setAttribute('aria-hidden', 'true');
+      }
+
+      chatFab.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (chatPanel.classList.contains('open')) {
+          closeChat();
+        } else {
+          openChat();
+        }
+      });
+
+      chatPanel.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      if (chatClose) {
+        chatClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeChat();
+        });
+      }
+
+      document.addEventListener('click', function (e) {
+        if (!chatPanel.classList.contains('open')) return;
+        const onFab = chatFab.contains(e.target);
+        const insidePanel = chatPanel.contains(e.target);
+        if (!onFab && !insidePanel) {
+          closeChat();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeChat();
+        }
+      });
+
+      function appendMsg(text, role) {
+        if (!chatBody) return;
+        const div = document.createElement('div');
+        div.className = 'chat-msg ' + (role === 'user' ? 'user' : 'bot');
+        div.textContent = text;
+        chatBody.appendChild(div);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      if (chatForm && chatInput) {
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const msg = chatInput.value.trim();
+          if (!msg) return;
+          appendMsg(msg, 'user');
+          chatInput.value = '';
+
+          setTimeout(() => {
+            appendMsg("This is a preview assistant on the subscription page. Your real AI trading assistant will be wired here later.", 'bot');
+          }, 400);
+        });
+      }
+    });
+  </script>
+
+  <!-- PRICING + AUTH + BACK-TO-TOP LOGIC -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      /* ---------- Plans / Pricing ---------- */
+      const billMonthlyBtn = document.getElementById('billMonthly');
+      const billAnnuallyBtn = document.getElementById('billAnnually');
+      const priceEls = document.querySelectorAll('[data-price]');
+      const perEls = document.querySelectorAll('[data-per]');
+      const oldPriceEls = document.querySelectorAll('[data-old-monthly]');
+
+      function setBilling(mode) {
+        priceEls.forEach(el => {
+          const monthly = el.getAttribute('data-monthly');
+          const annually = el.getAttribute('data-annually');
+          const val = (mode === 'annually') ? annually : monthly;
+          if (val) el.textContent = `$ ${val}`;
+        });
+
+        oldPriceEls.forEach(el => {
+          const oldMonthly = el.getAttribute('data-old-monthly');
+          const oldAnnually = el.getAttribute('data-old-annually');
+          const val = (mode === 'annually') ? oldAnnually : oldMonthly;
+          if (val) el.textContent = `$ ${val}`;
+        });
+
+        perEls.forEach(el => {
+          el.textContent = (mode === 'annually') ? '20% off' : '/ month';
+        });
+
+        if (billMonthlyBtn) billMonthlyBtn.setAttribute('aria-pressed', String(mode === 'monthly'));
+        if (billAnnuallyBtn) billAnnuallyBtn.setAttribute('aria-pressed', String(mode === 'annually'));
+
+        try { sessionStorage.setItem('billingMode', mode); } catch (_) { }
+      }
+
+      if (billMonthlyBtn) billMonthlyBtn.addEventListener('click', () => setBilling('monthly'));
+      if (billAnnuallyBtn) billAnnuallyBtn.addEventListener('click', () => setBilling('annually'));
+
+      const storedMode = (() => {
+        try { return sessionStorage.getItem('billingMode'); } catch (_) { return null; }
+      })();
+      setBilling(storedMode || 'monthly');
+
+      /* ---------- Auth buttons / plan selection ---------- */
+      function handleAuthClick(e, mode, planName) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const authOverlay = document.getElementById('authOverlay');
+        const authTitle = document.getElementById('authTitle');
+        const authContainer = document.getElementById('authContainer');
+
+        if (!authOverlay || !authTitle || !authContainer) return;
+
+        if (mode === 'signup') {
+          authTitle.textContent = planName ? `Create Account — ${planName}` : "Create Account";
+          authContainer.classList.add('bubble');
+          document.querySelectorAll('.signup-field').forEach(el => {
+            el.style.display = 'block';
+          });
+        } else {
+          authTitle.textContent = "Sign In";
+          authContainer.classList.remove('bubble');
+          document.querySelectorAll('.signup-field').forEach(el => {
+            el.style.display = 'none';
+          });
+        }
+
+        authOverlay.classList.add('active');
+        authOverlay.setAttribute('aria-hidden', 'false');
+      }
+
+      document.querySelectorAll('[data-select-plan]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const plan = e.currentTarget.getAttribute('data-select-plan') || 'Plan';
+          if (plan === 'Basic' || plan === 'Pro') {
+            handleAuthClick(e, 'signup', plan);
+            const fb = document.getElementById('formFeedback');
+            if (fb) {
+              fb.textContent = `Selected plan: ${plan}`;
+              fb.style.color = '#7dffb3';
+              setTimeout(() => fb.textContent = '', 2500);
+            }
+          } else {
+            e.preventDefault();
+          }
+        });
+      });
+
+      /* ---------- Close auth overlay ---------- */
+      const authOverlay = document.getElementById('authOverlay');
+      const closeAuth = document.getElementById('closeAuth');
+
+      function closeAuthOverlay() {
+        if (!authOverlay) return;
+        authOverlay.classList.remove('active');
+        authOverlay.setAttribute('aria-hidden', 'true');
+      }
+
+      if (closeAuth && authOverlay) {
+        closeAuth.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeAuthOverlay();
+        });
+
+        authOverlay.addEventListener('click', (e) => {
+          if (e.target === authOverlay) {
+            closeAuthOverlay();
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            closeAuthOverlay();
+          }
+        });
+      }
+
+      /* ---------- Simple back-to-top ---------- */
+      const backToTop = document.getElementById('backToTop');
+      if (backToTop) {
+        backToTop.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

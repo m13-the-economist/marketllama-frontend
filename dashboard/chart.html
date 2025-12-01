@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chart — Market Llama</title>
+  <meta name="description" content="Chart module — coming soon." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <style>
+    :root {
+      --header-h: 60px;
+      --bg: #0b0b0c;
+      --text: #ffffff;
+      --ring: rgba(255,255,255,.12);
+      --glass: rgba(255,255,255,.04);
+      --muted: #8f8f92;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+    body.app.dark {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header (copied from plans.html, no menu bar) */
+    .site-header {
+      height: var(--header-h);
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--ring);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0097b2;
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+    .brand-name {
+      font-size: 1rem;
+      letter-spacing: .2px;
+    }
+    .site-actions {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--ring);
+      color: var(--text);
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-1px);
+    }
+    .ic {
+      font-size: 18px;
+      line-height: 1;
+      vertical-align: middle;
+      opacity: 0.9;
+      transition: opacity 0.2s ease;
+    }
+    .icon-btn:hover .ic { opacity: 1; }
+
+    .balance-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid var(--ring);
+      border-radius: 10px;
+      background: var(--glass);
+    }
+    .balance-amount {
+      letter-spacing: .2px;
+      font-size: .95rem;
+    }
+
+    /* Language dropdown */
+    .language-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 120px;
+      background: rgba(20,20,20,0.95);
+      border: 1px solid var(--ring);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 160px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.45);
+      z-index: 1000;
+    }
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      font-size: 14px;
+      text-align: left;
+    }
+    .lang-option:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    .flag { font-size: 16px; }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+    .coming-card {
+      background: var(--glass);
+      border: 1px solid var(--ring);
+      border-radius: 20px;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .coming-pill {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--ring);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      opacity: .85;
+    }
+    .coming-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .coming-text {
+      font-size: 13px;
+      opacity: .9;
+      line-height: 1.6;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text);
+      text-decoration: none;
+      opacity: .9;
+    }
+  </style>
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+</head>
+<body class="app dark">
+  <header class="site-header" id="siteHeader">
+    <div class="left">
+      <a href="accounts.html" class="brand">
+        <div class="logo">
+          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
+        </div>
+        <span class="brand-name">Market Llama</span>
+      </a>
+    </div>
+    <nav class="site-actions">
+      <button class="icon-btn" id="qrBtn" aria-label="QR">
+        <iconify-icon class="ic" icon="mdi:qrcode"></iconify-icon>
+      </button>
+      <div class="balance-wrap">
+        <span class="balance-amount" id="topBalance">$ 15 400.00</span>
+        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
+          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
+        </button>
+      </div>
+
+      <button class="icon-btn" id="languageBtn" aria-label="Language">
+        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
+      </button>
+      <div class="language-dropdown" id="languageDropdown" hidden>
+        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
+        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
+        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
+        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
+      </div>
+
+      <button class="icon-btn" aria-label="Notifications">
+        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
+      </button>
+      <button class="icon-btn" aria-label="Support">
+        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
+      </button>
+      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
+        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="coming-card">
+      <div class="coming-pill" data-i18n="chartLabel">Chart</div>
+      <h1 class="coming-title" data-i18n="comingSoon">Coming Soon</h1>
+      <p class="coming-text" data-i18n="chartDescription">
+        Advanced charting, strategy overlays, and Market Llama’s custom views will all be live here. 
+        For now, you can manage accounts while we finish the chart module.
+      </p>
+      <a href="accounts.html" class="back-link" data-link="accounts">
+        <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+        <span data-i18n="backToAccounts">Back to Accounts</span>
+      </a>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const params = new URLSearchParams(window.location.search);
+      let currentLang = params.get('lang') || 'en';
+
+      const translations = {
+        en: {
+          chartLabel: "Chart",
+          comingSoon: "Coming Soon",
+          chartDescription: "Advanced charting, strategy overlays, and Market Llama’s custom views will live here. For now, you can manage accounts while we finish the chart module.",
+          backToAccounts: "Back to Accounts"
+        },
+        de: {
+          chartLabel: "Chart",
+          comingSoon: "Demnächst verfügbar",
+          chartDescription: "Erweiterte Charts, Strategie-Overlays und die benutzerdefinierten Market Llama-Ansichten werden hier verfügbar sein. Bis dahin können Sie Ihre Konten weiter verwalten, während wir das Chart-Modul fertigstellen.",
+          backToAccounts: "Zurück zu Konten"
+        },
+        es: {
+          chartLabel: "Gráfico",
+          comingSoon: "Próximamente",
+          chartDescription: "Aquí vivirán las funciones avanzadas de gráficos, superposiciones de estrategias y las vistas personalizadas de Market Llama. Por ahora puedes gestionar tus cuentas mientras terminamos el módulo de gráficos.",
+          backToAccounts: "Volver a Cuentas"
+        },
+        fr: {
+          chartLabel: "Graphique",
+          comingSoon: "Bientôt disponible",
+          chartDescription: "Le module de graphiques avancés, les superpositions de stratégie et les vues personnalisées de Market Llama seront disponibles ici. Pour l’instant, vous pouvez gérer vos comptes pendant que nous finalisons le module graphique.",
+          backToAccounts: "Retour aux comptes"
+        },
+        ar: {
+          chartLabel: "الرسم البياني",
+          comingSoon: "قريباً",
+          chartDescription: "ستتواجد هنا أدوات الرسم البياني المتقدمة وطبقات الاستراتيجية وعروض Market Llama المخصصة. في الوقت الحالي يمكنك إدارة حساباتك بينما ننهي وحدة الرسوم البيانية.",
+          backToAccounts: "العودة إلى الحسابات"
+        }
+      };
+
+      if (!translations[currentLang]) currentLang = 'en';
+
+      function updateNavLinks() {
+  // profile
+  const profileLinks = document.querySelectorAll('[data-link="profile"]');
+  profileLinks.forEach(a => {
+    const href = a.getAttribute('href') || 'profile.html';
+    const url = new URL(href, window.location.origin + window.location.pathname);
+    url.searchParams.set('lang', currentLang);
+    a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+  });
+
+  // accounts (back link)
+  const accountLinks = document.querySelectorAll('[data-link="accounts"]');
+  accountLinks.forEach(a => {
+    const href = 'accounts.html';    // ✅ FIXED
+    const url = new URL(href, window.location.origin + window.location.pathname);
+    url.searchParams.set('lang', currentLang);
+    a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+  });
+}
+
+      function applyLanguage(lang) {
+        const t = translations[lang] || translations.en;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (t[key]) el.textContent = t[key];
+        });
+
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
+
+        updateNavLinks();
+      }
+
+      // Balance toggle (same behaviour as accounts header)
+      const toggleBalance = document.getElementById('toggleBalance');
+      const topBalance = document.getElementById('topBalance');
+      const topEye = document.getElementById('topEye');
+      let balanceHidden = false;
+
+      if (toggleBalance && topBalance && topEye) {
+        toggleBalance.addEventListener('click', (e) => {
+          e.stopPropagation();
+          balanceHidden = !balanceHidden;
+          if (balanceHidden) {
+            topBalance.textContent = '•••••';
+            topEye.setAttribute('icon', 'mdi:eye-off-outline');
+          } else {
+            topBalance.textContent = '$ 15 400.00';
+            topEye.setAttribute('icon', 'mdi:eye-outline');
+          }
+        });
+      }
+
+      // Language dropdown
+      const languageBtn = document.getElementById('languageBtn');
+      const languageDropdown = document.getElementById('languageDropdown');
+
+      function toggleLanguageDropdown() {
+        if (!languageDropdown) return;
+        languageDropdown.hidden = !languageDropdown.hidden;
+      }
+
+      if (languageBtn && languageDropdown) {
+        languageBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleLanguageDropdown();
+        });
+
+        languageDropdown.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+
+        const langOptions = languageDropdown.querySelectorAll('.lang-option');
+        langOptions.forEach(option => {
+          option.addEventListener('click', () => {
+            const lang = option.getAttribute('data-lang');
+            if (!translations[lang]) return;
+            currentLang = lang;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', currentLang);
+            window.history.replaceState({}, '', url.pathname + '?' + url.searchParams.toString());
+
+            applyLanguage(currentLang);
+            languageDropdown.hidden = true;
+          });
+        });
+
+        document.addEventListener('click', () => {
+          languageDropdown.hidden = true;
+        });
+      }
+
+      applyLanguage(currentLang);
+      console.log('Chart language set to', currentLang);
+    });
+  </script>
+</body>
+</html>

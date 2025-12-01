@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Terms &amp; Conditions — Market Llama</title>
+  <meta name="description"
+    content="Terms & Conditions governing your use of the Market Llama platform, services, and managed account features." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <link rel="stylesheet" href="styles/style.css" />
+
+  <style>
+    /* Force scroll on legal pages even if global CSS disables it */
+    html,
+    body {
+      height: 100%;
+      overflow-y: auto !important;
+    }
+
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+        bottom: 88px;
+      }
+
+      .chat-panel {
+        right: 14px;
+        bottom: 148px;
+      }
+    }
+
+    /* Mobile nav overrides (same as index/accounts) */
+    @media (max-width: 768px) {
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav .brand {
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 0.9rem !important;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .auth-buttons a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      #navToggle {
+        order: 3;
+        margin-left: 0.5rem;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      .nav-links {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      #navMenu a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+
+      .nav-links .has-dropdown {
+        position: static;
+      }
+
+      .nav-links .has-dropdown .dropdown-menu {
+        position: fixed !important;
+        top: 110px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(92vw, 420px);
+        display: none;
+        flex-direction: column;
+        padding: 0 !important;
+        margin: 0;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        z-index: 2000;
+      }
+
+      .nav-links .has-dropdown.is-open .dropdown-menu {
+        display: flex;
+      }
+
+      .nav-links .has-dropdown .dropdown-menu a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.6rem 0 !important;
+        font-size: 0.9rem !important;
+        text-align: center;
+      }
+    }
+
+    /* LEGAL PAGE LAYOUT */
+    .legal-shell {
+      min-height: calc(100vh - 200px);
+      padding: 96px 5vw 56px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .legal-inner {
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .legal-header-eyebrow {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9aa0b5;
+      margin-bottom: 8px;
+    }
+
+    .legal-title {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+    }
+
+    .legal-subtitle {
+      font-size: 0.95rem;
+      color: #a3adc4;
+      max-width: 640px;
+      margin-bottom: 12px;
+    }
+
+    .legal-meta {
+      font-size: 0.82rem;
+      color: #7c859b;
+      margin-bottom: 18px;
+    }
+
+    .legal-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.86rem;
+      color: #00c8ff;
+      text-decoration: none;
+      margin-bottom: 28px;
+    }
+
+    .legal-back-link span {
+      font-size: 1.05rem;
+      transform: translateY(1px);
+    }
+
+    .legal-card {
+      background: radial-gradient(circle at top left, rgba(0, 200, 255, 0.12), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.12), transparent 60%),
+        linear-gradient(145deg, rgba(10, 16, 26, 0.98), rgba(3, 7, 18, 0.98));
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      box-shadow: 0 22px 70px rgba(15, 23, 42, 0.9);
+      padding: 26px 22px 30px;
+    }
+
+    @media (min-width: 768px) {
+      .legal-card {
+        padding: 28px 30px 32px;
+      }
+    }
+
+    .legal-card h1 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .legal-card em {
+      color: #9aa0b5;
+      font-style: normal;
+      font-size: 0.9rem;
+    }
+
+    .legal-divider {
+      border: none;
+      border-top: 1px dashed rgba(148, 163, 184, 0.4);
+      margin: 18px 0;
+    }
+
+    .legal-card h2 {
+      font-size: 1.08rem;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .legal-card h3 {
+      font-size: 0.98rem;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .legal-card p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #d4d7e4;
+      margin-bottom: 10px;
+    }
+
+    .legal-card ul,
+    .legal-card ol {
+      padding-left: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .legal-card li {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #d4d7e4;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 540px) {
+      .legal-shell {
+        padding: 82px 4vw 54px;
+      }
+
+      .legal-card {
+        padding-inline: 16px;
+      }
+    }
+  </style>
+</head>
+
+<!-- 🔥 KEY CHANGE: give body the same id used as scroll container in plans.html -->
+<body id="screen2">
+  <!-- NAV -->
+  <nav id="mainNav" class="nav" role="navigation" aria-label="Primary">
+    <a href="index.html#home" class="brand" aria-label="Market Llama home">
+      <img src="assets/llama.webp" alt="Market Llama" class="nav-logo" />
+      <span class="brand-name">Market Llama</span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+      ☰
+    </button>
+
+    <ul class="nav-links" id="navMenu">
+      <li id="services" class="has-dropdown">
+        <a href="#" class="dropdown" aria-haspopup="true" aria-expanded="false">Our Services</a>
+        <div class="dropdown-menu" role="menu">
+          <a href="index.html#broker" role="menuitem">Broker Integration</a>
+          <a href="index.html#ai" role="menuitem">AI Powered Trade Assistance</a>
+          <a href="index.html#tools" role="menuitem">Comprehensive Trading Tools</a>
+          <a href="index.html#education" role="menuitem">Educational Resources</a>
+          <a href="index.html#risk" role="menuitem">Enterprise Risk Management</a>
+        </div>
+      </li>
+      <li><a href="plans.html">Accounts</a></li>
+      <li><a href="broker.html">Brokers</a></li>
+      <li><a href="tools-education.html">Tools &amp; Education</a></li>
+      
+      <li><a href="support.html">Support</a></li>
+    </ul>
+
+    <div class="auth-buttons">
+      <a href="#" class="sign-in" id="openLogin">Sign In</a>
+      <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+    </div>
+  </nav>
+  <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
+
+  <!-- MAIN -->
+  <main class="legal-shell">
+    <div class="legal-inner">
+      <header>
+        <div class="legal-header-eyebrow">Legal</div>
+        <h1 class="legal-title">Terms &amp; Conditions</h1>
+        <p class="legal-subtitle">
+          Please read this document carefully before using Market Llama. It governs your access to the platform and all
+          managed account services.
+        </p>
+        <div class="legal-meta">Last Updated: [Insert Date]</div>
+        <!-- Back to DASHBOARD → Hero section on index -->
+        <a href="index.html#hero" class="legal-back-link">
+          <span>←</span> Back to Home
+        </a>
+      </header>
+
+      <article class="legal-card">
+        <h1>MARKET LLAMA — TERMS &amp; CONDITIONS (FULL LEGAL DOCUMENT)</h1>
+        <p><em>Last Updated: [Insert Date]</em></p>
+
+        <hr class="legal-divider">
+
+        <h2>1. Introduction</h2>
+        <p>
+          These Terms &amp; Conditions (“Terms”) govern your access to and use of the Market Llama platform
+          (“Platform”), including all applications, dashboards, systems, managed-account features, automation modules,
+          and related services (“Services”) provided under Lee Henry Inc.
+        </p>
+        <p>
+          By creating a Market Llama account, connecting a broker account, subscribing to any plan, or using the
+          Platform in any capacity, you acknowledge that you have read, understood, and agreed to be bound by these
+          Terms, our Privacy Policy, and our Risk Disclosure.
+        </p>
+        <p>If you do not agree to these Terms, you must discontinue use of the Platform immediately.</p>
+
+        <hr class="legal-divider">
+
+        <h2>2. Definitions</h2>
+        <p>For purposes of clarity:</p>
+        <ul>
+          <li><strong>“Company”, “We”, “Us”, “Our”</strong> — Market Llama, operated under Lee Henry Inc.</li>
+          <li><strong>“User”, “You”, “Your”</strong> — Any individual or entity accessing or using the Platform.</li>
+          <li><strong>“Platform”</strong> — The Market Llama website, dashboard, software, APIs, automation systems,
+            tools, mobile components, and all technical infrastructure.</li>
+          <li><strong>“Services”</strong> — Automated trading execution, account management, AI analytics, risk
+            systems, and portfolio tools provided by Market Llama.</li>
+          <li><strong>“Managed Account”</strong> — A third-party trading account (e.g., Deriv account) connected to
+            Market Llama using API keys or access credentials.</li>
+          <li><strong>“Broker”</strong> — Any third-party trading provider supported by the Platform (e.g., Deriv).
+          </li>
+          <li><strong>“Subscription”</strong> — Monthly or recurring payments for access to Market Llama Services.</li>
+        </ul>
+
+        <hr class="legal-divider">
+
+        <h2>3. Eligibility for Use</h2>
+        <p>To access the Platform, you must:</p>
+        <ul>
+          <li>Be at least 18 years of age.</li>
+          <li>Possess full legal capacity to authorize automated trading.</li>
+          <li>Maintain a valid supported broker account.</li>
+          <li>Not be prohibited from using such technology under your local laws.</li>
+          <li>Agree that your use of the Platform is voluntary and fully at your discretion.</li>
+        </ul>
+
+        <hr class="legal-divider">
+
+        <h2>4. Nature of Market Llama Services</h2>
+        <p>Market Llama provides technology-enabled, automated account management, including:</p>
+        <ul>
+          <li>Execution of trades via user-authorized API keys</li>
+          <li>Algorithmic automation</li>
+          <li>Advanced market analytics</li>
+          <li>Systematic risk controls</li>
+          <li>Portfolio insights</li>
+          <li>Strategy-based account optimization</li>
+        </ul>
+        <p>Market Llama does NOT:</p>
+        <ul>
+          <li>Hold or custody user funds</li>
+          <li>Act as a broker, exchange, or financial advisor</li>
+          <li>Execute withdrawals or deposits on your behalf</li>
+          <li>Guarantee profits, outcomes, or specific monthly returns</li>
+          <li>Provide individualized investment advice</li>
+        </ul>
+        <p>All funds remain fully under the custody of the user’s connected broker account.</p>
+
+        <hr class="legal-divider">
+
+        <h2>5. Account Connection &amp; Authorization</h2>
+        <p>When you provide your broker Login ID and API Token, you:</p>
+        <ol>
+          <li>Authorize Market Llama to execute trades on your behalf.</li>
+          <li>Confirm that you fully understand the implications of automated execution.</li>
+          <li>Accept all trade outcomes generated by the system.</li>
+          <li>Acknowledge that the Platform requires this access to perform its Services.</li>
+        </ol>
+        <p>You acknowledge that:</p>
+        <ul>
+          <li>Market Llama cannot trade if your token expires or is revoked.</li>
+          <li>Market Llama is not responsible for downtime caused by your broker.</li>
+          <li>Incorrect credentials provided by you may lead to failure of service.</li>
+          <li>You may disconnect your account at any time.</li>
+        </ul>
+
+        <hr class="legal-divider">
+
+        <h2>6. Account Security &amp; User Obligations</h2>
+        <p>You agree to:</p>
+        <ul>
+          <li>Maintain confidentiality of your Market Llama login credentials.</li>
+          <li>Not share your credentials with anyone.</li>
+          <li>Use accurate information when connecting broker accounts.</li>
+          <li>Ensure your broker account maintains adequate margin and balance.</li>
+          <li>Immediately notify us of any unauthorized access.</li>
+        </ul>
+        <p>You understand that account size influences risk, and that smaller accounts face higher volatility.</p>
+
+        <hr class="legal-divider">
+
+        <h2>7. Subscription, Billing &amp; Payments</h2>
+        <p>Market Llama operates via recurring subscription plans.</p>
+        <p>By subscribing, you acknowledge that:</p>
+        <ul>
+          <li>Fees are charged monthly or annually depending on your plan.</li>
+          <li>Payments are processed by approved third-party partners (Flutterwave, Paystack, Stripe, etc.).</li>
+          <li>All fees are non-refundable, except where required by applicable law.</li>
+          <li>Failure to complete payment may result in suspension of automated trading.</li>
+          <li>You must maintain an active subscription to continue using managed account services.</li>
+        </ul>
+        <p>Chargebacks or fraudulent claims will result in immediate service termination.</p>
+
+        <hr class="legal-divider">
+
+        <h2>8. Performance &amp; Market Risk</h2>
+        <p>You acknowledge the following:</p>
+        <ol>
+          <li>All trading carries financial risk, including potential loss of capital.</li>
+          <li>
+            Performance may vary based on market volatility, liquidity, time of day, account size, and system
+            execution.
+          </li>
+          <li>
+            Small accounts are more sensitive to:
+            <ul>
+              <li>High volatility</li>
+              <li>Margin pressure</li>
+              <li>Rapid drawdowns</li>
+              <li>Slippage and spikes</li>
+            </ul>
+          </li>
+          <li>
+            Larger accounts can withstand fluctuations better but remain exposed to all market risks.
+          </li>
+          <li>
+            Market Llama applies disciplined, data-driven strategies, but risk cannot be eliminated.
+          </li>
+        </ol>
+        <p>By using the Platform, you accept full responsibility for risk exposure associated with your account.</p>
+
+        <hr class="legal-divider">
+
+        <h2>9. No Financial or Investment Advice</h2>
+        <p>Market Llama does not provide:</p>
+        <ul>
+          <li>Financial advice</li>
+          <li>Investment recommendations</li>
+          <li>Personalized asset allocation</li>
+          <li>Profit guarantees</li>
+          <li>Financial planning services</li>
+        </ul>
+        <p>
+          All tools, insights, and automated executions are provided on an as-is basis and should not be interpreted as
+          personal financial advice.
+        </p>
+
+        <hr class="legal-divider">
+
+        <h2>10. Technology &amp; System Limitations</h2>
+        <p>You acknowledge that:</p>
+        <ul>
+          <li>Technology may experience downtime, bugs, delays, or errors.</li>
+          <li>System performance may rely on the stability of your broker.</li>
+          <li>Internet connectivity issues may impact execution.</li>
+          <li>Market Llama cannot guarantee uninterrupted service.</li>
+          <li>Updates or maintenance may temporarily affect performance.</li>
+        </ul>
+        <p>We are not liable for losses resulting from technical interruptions.</p>
+
+        <hr class="legal-divider">
+
+        <h2>11. Privacy &amp; Data Protection</h2>
+        <p>
+          Market Llama collects and processes user data in accordance with our Privacy Policy.
+        </p>
+        <p>We:</p>
+        <ul>
+          <li>Encrypt sensitive information</li>
+          <li>Do not store your API Token in plain text</li>
+          <li>Do not sell or distribute your trading data</li>
+          <li>Comply with relevant data protection regulations (including NDPR/GDPR principles)</li>
+        </ul>
+        <p>You are responsible for protecting your account password and access devices.</p>
+
+        <hr class="legal-divider">
+
+        <h2>12. Prohibited Activities</h2>
+        <p>You agree not to:</p>
+        <ul>
+          <li>Use the Platform for illegal activity</li>
+          <li>Reverse engineer or tamper with Market Llama systems</li>
+          <li>Create multiple fraudulent accounts</li>
+          <li>Share or distribute platform content without permission</li>
+          <li>Provide misleading or false information</li>
+          <li>Circumvent subscription payments</li>
+        </ul>
+        <p>Violations may result in termination of service and possible legal action.</p>
+
+        <hr class="legal-divider">
+
+        <h2>13. Limitation of Liability</h2>
+        <p>To the fullest extent permitted by law:</p>
+        <ul>
+          <li>
+            Market Llama is not liable for indirect, incidental, special, or consequential damages.
+          </li>
+          <li>
+            We are not responsible for losses related to market events, broker issues, API disconnections, slippage,
+            latency, or liquidation.
+          </li>
+          <li>
+            The maximum liability of Market Llama shall not exceed the total subscription fees paid by you in the last
+            90 days.
+          </li>
+        </ul>
+        <p>You agree to indemnify and hold Market Llama harmless from claims arising from your use of the Platform.</p>
+
+        <hr class="legal-divider">
+
+        <h2>14. Suspension &amp; Termination</h2>
+        <p>We may suspend or terminate your account for:</p>
+        <ul>
+          <li>Violation of these Terms</li>
+          <li>Fraud or suspicious activity</li>
+          <li>Chargebacks or failed payments</li>
+          <li>Misuse of automated systems</li>
+          <li>Abusive or harmful conduct</li>
+        </ul>
+        <p>You may terminate your account at any time by contacting support or discontinuing use.</p>
+
+        <hr class="legal-divider">
+
+        <h2>15. Modifications to Terms</h2>
+        <p>
+          Market Llama reserves the right to update, modify, or revise these Terms at any time. Notices may be provided
+          by email or via Platform announcements. Continued use of the Platform after changes constitutes acceptance of
+          updated Terms.
+        </p>
+
+        <hr class="legal-divider">
+
+        <h2>16. Governing Law</h2>
+        <p>
+          These Terms are governed by the laws of your operating jurisdiction.
+          Any disputes shall be resolved under the applicable legal framework of that jurisdiction.
+        </p>
+
+        <hr class="legal-divider">
+
+        <h2>17. Contact Information</h2>
+        <p>For support, legal inquiries, or account issues, contact:</p>
+        <p>
+          <strong>Market Llama Legal Team</strong><br />
+          Email: support@marketllama.com<br />
+          Website: www.marketllama.com
+        </p>
+      </article>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <!-- FULL-WIDTH RISK DISCLAIMER ABOVE COLUMNS -->
+      <div class="footer-disclaimer-wrap">
+        <div class="risk-disclaimer">
+          <strong>⚠️ Risk Disclaimer:</strong><br><br>
+          Trading in financial markets carries inherent risks, including the potential for loss of capital.
+          Performance may vary based on market conditions, account size, risk tolerance, and execution
+          environment. While Market Llama is built to deliver consistent, data-driven performance through
+          advanced automation and professional account management, no trading environment is completely
+          without risk.
+          <br><br>
+          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+          market fluctuations more effectively, but they are still subject to market risk and temporary
+          performance deviations.
+          <br><br>
+          Market Llama operates as a technology-enabled, professional account management platform — similar
+          to institutional asset managers — providing users with sophisticated trading systems, automated
+          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+          capital, and deliver institutional-grade trading outcomes.
+          <br><br>
+          By connecting your trading account to Market Llama, you acknowledge that every investment activity
+          carries risk, and that results can vary across market conditions. We commit to operating
+          transparently, managing accounts responsibly, and applying disciplined, data-driven strategies
+          designed to achieve consistent long-term performance.
+        </div>
+      </div>
+
+    <div class="footer-container">
+      <div class="col">
+        <h4>Company</h4>
+        <a href="abouts.html">About</a>
+        
+      </div>
+      <div class="col">
+        <h4>Resources</h4>
+        <a href="support.html">Support</a>
+        
+      </div>
+      <div class="col">
+        <h4>Legal</h4>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+      <div class="col">
+        <h4>Connect</h4>
+        <a href="#">Whatsapp</a>
+        <a href="#">Twitter</a>
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+    <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
+  </footer>
+
+  <!-- Chat -->
+  <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+      <circle cx="9" cy="10" r="1.25" />
+      <circle cx="12" cy="10" r="1.25" />
+      <circle cx="15" cy="10" r="1.25" />
+    </svg>
+  </button>
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
+    aria-hidden="true" inert>
+    <div class="chat-header">
+      <div class="chat-title">Assistant</div>
+      <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">Hi! How can I help?</div>
+    </div>
+    <form id="chatForm" class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+      <button class="chat-send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <!-- Back to top (same structure as plans.html, styling from styles/style.css) -->
+  <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
+    </svg>
+  </button>
+
+  <!-- Auth Overlay -->
+  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
+    aria-hidden="true">
+    <div class="auth-container" id="authContainer">
+      <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
+      <h2 id="authTitle">Create Account</h2>
+      <form id="authForm" novalidate>
+        <div class="form-group signup-field" id="firstNameGroup">
+          <label for="authFirstName">First Name</label>
+          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
+            autocomplete="given-name">
+        </div>
+        <div class="form-group signup-field" id="lastNameGroup">
+          <label for="authLastName">Last Name</label>
+          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
+            autocomplete="family-name">
+        </div>
+        <div class="form-group signup-field" id="dobGroup">
+          <label for="authDob">Date of Birth</label>
+          <input id="authDob" name="dob" type="date" required>
+        </div>
+        <div class="form-group signup-field" id="usernameGroup">
+          <label for="authUsername">Username</label>
+          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
+            autocomplete="username">
+        </div>
+        <div class="form-group signup-field" id="countryGroup">
+          <label for="authCountry">Select Country</label>
+          <select id="authCountry" name="country" required>
+            <option value="" disabled selected>Select your country</option>
+            <option value="NG">Nigeria</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+          </select>
+        </div>
+        <div class="form-group" id="emailGroup">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
+            inputmode="email">
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label for="authPassword">Password</label>
+          <div class="pw-field">
+            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
+              autocomplete="new-password" minlength="8" />
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
+              aria-label="Toggle password visibility">
+              <path
+                d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+            </svg>
+          </div>
+          <div class="hint" id="passwordHint" aria-live="polite"></div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+        <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- MOBILE Our Services toggle -->
+  <script>
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var servicesItem = document.getElementById('services');
+        if (!servicesItem) return;
+
+        var link = servicesItem.querySelector('.dropdown');
+        var menu = servicesItem.querySelector('.dropdown-menu');
+        if (!link || !menu) return;
+
+        link.addEventListener('click', function (e) {
+          var navToggle = document.getElementById('navToggle');
+          if (!navToggle) return;
+
+          var toggleDisplay = window.getComputedStyle(navToggle).display;
+          var isMobile = toggleDisplay !== 'none';
+
+          if (!isMobile) return;
+
+          e.preventDefault();
+
+          var expanded = link.getAttribute('aria-expanded') === 'true';
+          link.setAttribute('aria-expanded', String(!expanded));
+          servicesItem.classList.toggle('is-open', !expanded);
+        });
+      });
+    })();
+  </script>
+
+  <!-- 🔥 Back-to-top behavior now matches plans.html logic (uses #screen2 scrollTop) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const screen2 = document.getElementById('screen2');
+      const backBtn = document.getElementById('backToTop');
+      if (!screen2 || !backBtn) return;
+
+      function trackBackToTop() {
+        const st = screen2.scrollTop || 0;
+        if (st > 300) {
+          backBtn.classList.add('show');
+        } else {
+          backBtn.classList.remove('show');
+        }
+      }
+
+      screen2.addEventListener('scroll', trackBackToTop, { passive: true });
+
+      backBtn.addEventListener('click', function () {
+        screen2.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Initial state
+      trackBackToTop();
+    });
+  </script>
+
+  <script src="scripts/app.js" defer></script>
+</body>
+
+</html>

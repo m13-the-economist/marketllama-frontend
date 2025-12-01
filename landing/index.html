@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Market Llama — Invest Smarter</title>
+  <meta name="description"
+    content="Broker integration, AI-powered trade assistance, enterprise risk controls, and premium trading tools." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <link rel="stylesheet" href="styles/style.css" />
+
+  <!-- Chat + minor overrides -->
+  <style>
+    /* When skipping welcome, force main screen visible and hide welcome completely */
+    html.skip-welcome #screen1 {
+      display: none !important;
+    }
+
+    html.skip-welcome #screen2 {
+      display: block !important;
+    }
+
+    .screen:not(.active) .chat-fab,
+    .screen:not(.active) .chat-panel {
+      display: none !important;
+    }
+
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+        bottom: 88px;
+      }
+
+      .chat-panel {
+        right: 14px;
+        bottom: 148px;
+      }
+    }
+
+    /* Welcome arrow polish */
+    .arrow-btn,
+    .arrow-btn::before {
+      text-decoration: none !important;
+    }
+
+    .arrow-btn {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      width: 60px;
+      height: 60px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+      background: transparent;
+      color: #fff;
+      outline: 0;
+      appearance: none;
+      user-select: none;
+    }
+
+    .arrow-btn:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-1px) scale(1.05);
+    }
+
+    .arrow-btn:active {
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    .arrow-btn::before {
+      content: "→";
+      font-size: 1.8em;
+      line-height: 1;
+    }
+
+    /* Default: hide hero auth row on desktop; only show in mobile */
+    .hero-auth-inline {
+      display: none;
+    }
+
+    /* MOBILE OVERRIDES – ONLY mobile changed */
+    @media (max-width: 768px) {
+
+      /* Hide Our Services dropdown in mobile nav */
+      .nav-links .has-dropdown {
+        display: none !important;
+      }
+
+      /* Layout: brand left, auth, then burger far right */
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav .brand {
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 0.9rem !important;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .auth-buttons a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      #navToggle {
+        order: 3;
+        margin-left: 0.5rem;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* LEFT-SIDE DRAWER – JS (in scripts/app.js) toggles .open */
+      .nav-links {
+        position: fixed !important;
+        top: var(--header-h, 60px);
+        left: 0;
+        height: calc(100vh - var(--header-h, 60px));
+        width: 260px;
+        padding: 1.2rem 1.5rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+
+        background: rgba(10, 10, 10, 0.92) !important;
+        border: none !important;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .65) !important;
+
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        z-index: 1500;
+      }
+
+      .nav-links.open {
+        transform: translateX(0);
+      }
+
+      #navMenu a {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+
+      /* HERO MOBILE: Sign Up + View Plans as SEPARATE glass cylinders */
+
+      /* Container that used to show inline text; now it becomes the Sign Up pill */
+      .hero-auth-inline {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 0.6rem;
+        margin-bottom: 0.4rem;
+      }
+
+      /* Hide hero sign-in text – nav already has Sign In */
+      .hero-auth-inline .hero-sign-in {
+        display: none;
+      }
+
+      /* Sign Up cylinder */
+      .hero-auth-inline .hero-sign-up {
+        border-radius: 999px;
+        padding: 0.55rem 1.7rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        text-decoration: none;
+        color: #ffffff;
+      }
+
+      /* View Plans cylinder below Sign Up */
+      .hero .cta-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-top: 0.4rem;
+      }
+
+      .hero .cta-buttons .primary-btn {
+        /* View Plans on mobile */
+        border-radius: 999px;
+        padding: 0.55rem 1.7rem;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+
+      /* Hide secondary hero button (Explore Infrastructure) on mobile */
+      .hero .cta-buttons .secondary-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- WELCOME -->
+  <div class="screen active" id="screen1" aria-label="Welcome screen">
+    <div class="overlay" aria-hidden="true"></div>
+    <h1 class="title">Welcome</h1>
+    <button class="arrow-btn" id="nextBtn" type="button" aria-label="Enter site"></button>
+  </div>
+
+  <!-- MAIN / HOME (Screen 2) -->
+  <div class="screen" id="screen2" aria-live="polite">
+    <div id="home" style="position:absolute; inset:0 auto auto 0; width:0; height:0;"></div>
+
+    <div class="reactive-bg" id="reactiveBg" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div a class="glow"></div>
+      <span class="orb orb1"></span>
+      <span class="orb orb2"></span>
+      <span class="orb orb3"></span>
+    </div>
+
+    <nav id="mainNav" class="nav" role="navigation" aria-label="Primary">
+      <a href="index.html#home" class="brand" aria-label="Market Llama home">
+        <img src="assets/llama.webp" alt="Market Llama" class="nav-logo" />
+        <span class="brand-name">Market Llama</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        ☰
+      </button>
+
+      <ul class="nav-links" id="navMenu">
+        <li id="services" class="has-dropdown">
+          <a href="#" class="dropdown" aria-haspopup="true" aria-expanded="false">Our Services</a>
+          <div class="dropdown-menu" role="menu">
+            <a href="#broker" role="menuitem">Broker Integration</a>
+            <a href="#ai" role="menuitem">AI Powered Trade Assistance</a>
+            <a href="#tools" role="menuitem">Comprehensive Trading Tools</a>
+            <a href="#education" role="menuitem">Educational Resources</a>
+            <a href="#risk" role="menuitem">Enterprise Risk Management</a>
+          </div>
+        </li>
+        <li><a href="plans.html">Accounts</a></li>
+        <li><a href="broker.html">Brokers</a></li>
+        <li><a href="tools-education.html">Tools & Education</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+
+      <div class="auth-buttons">
+        <a href="#" class="sign-in" id="openLogin">Sign In</a>
+        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+      </div>
+    </nav>
+
+    <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
+
+    <header class="hero" id="hero">
+      <div class="hero-content">
+        <h2>START<br>INVESTING</h2>
+        <p class="hero-sub">
+          A next generation AI trading ecosystem that manages user accounts end-to-end, executes our
+          proprietary high accuracy strategies, and enables seamless, secure copy trading for every subscriber.
+        </p>
+
+        <!-- MOBILE ONLY: Sign Up becomes a cylinder via CSS -->
+        <div class="hero-auth-inline">
+          <a href="#" class="hero-sign-in"></a>
+          <a href="#" class="hero-sign-up">Sign Up</a>
+        </div>
+
+        <!-- Desktop styling is unchanged; mobile styles applied in @media -->
+        <div class="cta-buttons">
+          <a href="plans.html#plans" class="primary-btn">View Plans</a>
+          <a href="#broker" class="secondary-btn">Explore Infrastructure</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="broker" class="section">
+        <div class="section-inner">
+          <div class="section-content">
+            <h3>BROKER INTEGRATION</h3>
+            <p>
+              Connect your existing broker and trade seamlessly with enhanced execution, intelligent analytics, and
+              automated copy trading. All while preserving full control of your funds within your own broker. Gain
+              deeper insights, automate consistency with AI powered copy trading, and elevate your trading workflow
+              without changing the broker you trust.
+            </p>
+          </div>
+          <figure class="feature-visual visual-broker" aria-hidden="true"></figure>
+        </div>
+      </section>
+
+      <section id="ai" class="section">
+        <div class="section-inner">
+          <div class="section-content">
+            <h3>AI POWERED TRADE</h3>
+            <p>
+              Real-time analytics and automated strategies tuned to your account profile. Insights, execution, and
+              monitoring designed to maximize potential and minimize effort.
+            </p>
+          </div>
+          <figure class="feature-visual visual-ai" aria-hidden="true"></figure>
+        </div>
+      </section>
+
+      <section id="tools" class="section">
+        <div class="section-inner">
+          <div class="section-content">
+            <h3>COMPREHENSIVE TRADING TOOLS</h3>
+            <p>
+              Advanced charting, live market data, and configurable dashboards. Execute with confidence and clarity.
+            </p>
+          </div>
+          <figure class="feature-visual visual-tools" aria-hidden="true"></figure>
+        </div>
+      </section>
+
+      <section id="education" class="section">
+        <div class="section-inner">
+          <div class="section-content">
+            <h3>EDUCATIONAL RESOURCES</h3>
+            <p>
+              Tutorials, webinars, and a community knowledge base that compounds your edge over time.
+            </p>
+          </div>
+          <figure class="feature-visual visual-edu" aria-hidden="true"></figure>
+        </div>
+      </section>
+
+      <section id="risk" class="section">
+        <div class="section-inner">
+          <div class="section-content">
+            <h3>ENTERPRISE LEVEL RISK MANAGEMENT</h3>
+            <p>
+              Adaptive risk controls calibrated to each client’s account balance, with dynamic stop levels and
+              portfolio analytics. Built to optimize position sizing and safeguard capital.
+            </p>
+          </div>
+          <figure class="feature-visual visual-risk" aria-hidden="true"></figure>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <!-- FULL-WIDTH RISK DISCLAIMER ABOVE COLUMNS -->
+        <div class="footer-disclaimer-wrap">
+          <div class="risk-disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong><br><br>
+            Trading in financial markets carries inherent risks, including the potential for loss of capital.
+            Performance may vary based on market conditions, account size, risk tolerance, and execution
+            environment. While Market Llama is built to deliver consistent, data-driven performance through
+            advanced automation and professional account management, no trading environment is completely
+            without risk.
+            <br><br>
+            Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+            cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+            market fluctuations more effectively, but they are still subject to market risk and temporary
+            performance deviations.
+            <br><br>
+            Market Llama operates as a technology-enabled, professional account management platform — similar
+            to institutional asset managers — providing users with sophisticated trading systems, automated
+            execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+            capital, and deliver institutional-grade trading outcomes.
+            <br><br>
+            By connecting your trading account to Market Llama, you acknowledge that every investment activity
+            carries risk, and that results can vary across market conditions. We commit to operating
+            transparently, managing accounts responsibly, and applying disciplined, data-driven strategies
+            designed to achieve consistent long-term performance.
+          </div>
+        </div>
+
+        <!-- EXISTING FOOTER COLUMNS -->
+        <div class="footer-container">
+          <div class="col">
+            <h4>Company</h4>
+            <a href="abouts.html">About</a>
+          </div>
+          <div class="col">
+            <h4>Resources</h4>
+            <a href="support.html">Support</a>
+          </div>
+          <div class="col">
+            <h4>Legal</h4>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+          </div>
+          <div class="col">
+            <h4>Connect</h4>
+            <a href="#">Whatsapp</a>
+            <a href="#">Twitter</a>
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+          </div>
+        </div>
+
+        <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
+      </footer>
+
+      <!-- Chat -->
+      <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+          <circle cx="9" cy="10" r="1.25" />
+          <circle cx="12" cy="10" r="1.25" />
+          <circle cx="15" cy="10" r="1.25" />
+        </svg>
+      </button>
+      <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
+        aria-hidden="true" inert>
+        <div class="chat-header">
+          <div class="chat-title">Assistant</div>
+          <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+        </div>
+        <div class="chat-body" id="chatBody">
+          <div class="chat-msg bot">Hi! How can I help?</div>
+        </div>
+        <form id="chatForm" class="chat-input-row">
+          <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+          <button class="chat-send" type="submit">Send</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
+    </svg>
+  </button>
+
+  <!-- Auth Overlay -->
+  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
+    aria-hidden="true">
+    <div class="auth-container" id="authContainer">
+      <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
+      <h2 id="authTitle">Create Account</h2>
+      <form id="authForm" novalidate>
+        <div class="form-group signup-field" id="firstNameGroup">
+          <label for="authFirstName">First Name</label>
+          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
+            autocomplete="given-name">
+        </div>
+        <div class="form-group signup-field" id="lastNameGroup">
+          <label for="authLastName">Last Name</label>
+          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
+            autocomplete="family-name">
+        </div>
+        <div class="form-group signup-field" id="dobGroup">
+          <label for="authDob">Date of Birth</label>
+          <input id="authDob" name="dob" type="date" required>
+        </div>
+        <div class="form-group signup-field" id="usernameGroup">
+          <label for="authUsername">Username</label>
+          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
+            autocomplete="username">
+        </div>
+        <div class="form-group signup-field" id="countryGroup">
+          <label for="authCountry">Select Country</label>
+          <select id="authCountry" name="country" required>
+            <option value="" disabled selected>Select your country</option>
+            <option value="NG">Nigeria</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+          </select>
+        </div>
+        <div class="form-group" id="emailGroup">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
+            inputmode="email">
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label for="authPassword">Password</label>
+          <div class="pw-field">
+            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
+              autocomplete="new-password" minlength="8" />
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
+              aria-label="Toggle password visibility">
+              <path
+                d="M12 5C7 5 2.73 8.11 1 12c1.73-3.89 6-7 11-7s9.27 3.11 11 7c-1.73 3.89-6 7-11 7s-9.27-3.11-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+            </svg>
+          </div>
+          <div class="hint" id="passwordHint" aria-live="polite"></div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+        <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Unified logic: on reload or #hero/#home, go straight to .hero -->
+  <script>
+    (function () {
+      var hash = window.location.hash;
+
+      var navEntry = (window.performance &&
+        performance.getEntriesByType &&
+        performance.getEntriesByType('navigation')[0]) || null;
+
+      var isReload = navEntry
+        ? navEntry.type === 'reload'
+        : (performance && performance.navigation && performance.navigation.type === 1);
+
+      var isHeroHash = (hash === '#home' || hash === '#hero');
+
+      var shouldGoHero = isReload || isHeroHash;
+
+      if (!shouldGoHero) return;
+
+      document.documentElement.classList.add('skip-welcome');
+
+      function activateMainScreen() {
+        var screen1 = document.getElementById('screen1');
+        var screen2 = document.getElementById('screen2');
+        if (screen1 && screen2) {
+          screen1.classList.remove('active');
+          screen2.classList.add('active');
+        }
+      }
+
+      function scrollToHero() {
+        var hero = document.querySelector('.hero');
+        if (hero) {
+          hero.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+      }
+
+      activateMainScreen();
+
+      window.addEventListener('load', function () {
+        window.scrollTo(0, 0);
+        scrollToHero();
+      });
+    })();
+  </script>
+
+  <!-- Our Services toggle (desktop only; mobile hidden via CSS) -->
+  <script>
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var servicesItem = document.getElementById('services');
+        if (!servicesItem) return;
+
+        var link = servicesItem.querySelector('.dropdown');
+        var menu = servicesItem.querySelector('.dropdown-menu');
+        if (!link || !menu) return;
+
+        link.addEventListener('click', function (e) {
+          var navToggle = document.getElementById('navToggle');
+          if (!navToggle) return;
+
+          var toggleDisplay = window.getComputedStyle(navToggle).display;
+          var isMobile = toggleDisplay !== 'none';
+
+          if (isMobile) return; // only desktop
+
+          e.preventDefault();
+
+          var expanded = link.getAttribute('aria-expanded') === 'true';
+          link.setAttribute('aria-expanded', String(!expanded));
+          servicesItem.classList.toggle('is-open', !expanded);
+        });
+      });
+    })();
+  </script>
+
+  <!-- Hero Sign In / Sign Up wiring to open the same modal -->
+  <script>
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var heroSignIn = document.querySelector('.hero-sign-in');
+        var heroSignUp = document.querySelector('.hero-sign-up');
+        var navSignIn = document.getElementById('openLogin');
+        var navSignUp = document.getElementById('openSignup');
+
+        if (heroSignIn && navSignIn) {
+          heroSignIn.addEventListener('click', function (e) {
+            e.preventDefault();
+            navSignIn.click();
+          });
+        }
+
+        if (heroSignUp && navSignUp) {
+          heroSignUp.addEventListener('click', function (e) {
+            e.preventDefault();
+            navSignUp.click();
+          });
+        }
+      });
+    })();
+  </script>
+
+
+  <script src="scripts/app.js" defer></script>
+  
+</body>
+
+</html>

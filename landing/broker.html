@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Brokers — Market Llama</title>
+  <meta name="description"
+        content="Broker integration hub for Market Llama users — coming soon." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml"
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+  <link rel="stylesheet" href="styles/style.css" />
+
+  <style>
+    /* ===== Brokers page ===== */
+
+    .page-brokers {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .broker-hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 1.5rem 3rem;
+    }
+
+    .broker-hero-inner {
+      max-width: 720px;
+      width: 100%;
+      padding: 2.5rem 2rem;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: linear-gradient(145deg, #1a6d72, #15919a);
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+    }
+
+    .broker-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.45);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #cfd3dc;
+      margin-bottom: 1rem;
+    }
+
+    .broker-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffd766;
+      box-shadow: 0 0 8px rgba(255, 215, 102, 0.9);
+    }
+
+    .broker-hero h1 {
+      font-size: 2.4rem;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+    }
+
+    .broker-hero .sub {
+      font-size: 0.98rem;
+      color: #e6e9f2;
+      opacity: 0.95;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .broker-hero .sub strong {
+      font-weight: 700;
+      color: #ffe49a;
+    }
+
+    .footer {
+      margin-top: auto;
+    }
+
+    @media (max-width: 700px) {
+      .broker-hero {
+        padding: 4rem 1.25rem 2.5rem;
+      }
+
+      .broker-hero-inner {
+        padding: 2rem 1.5rem;
+      }
+
+      .broker-hero h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Chat widget (shared) */
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+      }
+
+      .chat-panel {
+        right: 14px;
+      }
+    }
+
+    /* ===== MOBILE NAV: same behaviour as index/accounts ===== */
+    @media (max-width: 768px) {
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav .brand {
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 0.9rem !important;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .auth-buttons a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      #navToggle {
+        order: 3;
+        margin-left: 0.5rem;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      .nav-links {
+        position: fixed !important;
+        top: var(--header-h, 60px);
+        left: 0;
+        height: calc(100vh - var(--header-h, 60px));
+        width: 260px;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.92);
+        border: none !important;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .65);
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        z-index: 1500;
+      }
+
+      .nav-links.open {
+        transform: translateX(0);
+      }
+
+      #navMenu a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+
+      /* Hide Our Services in mobile hamburger */
+      .nav-services {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-brokers" id="screen2" aria-live="polite">
+    <!-- NAV -->
+    <nav id="mainNav" class="nav" role="navigation" aria-label="Primary">
+      <a href="index.html#home" class="brand" aria-label="Market Llama home">
+        <img src="assets/llama.webp" alt="Market Llama" class="nav-logo" />
+        <span class="brand-name">Market Llama</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        <span class="sr-only">Toggle menu</span> ☰
+      </button>
+
+      <ul class="nav-links" id="navMenu">
+        <!-- Our Services visible on desktop, hidden on mobile via .nav-services -->
+        <li id="services" class="has-dropdown nav-services">
+          <a href="#" class="dropdown" aria-haspopup="true" aria-expanded="false">Our Services</a>
+          <div class="dropdown-menu" role="menu">
+            <a href="index.html#broker">Broker Integration</a>
+            <a href="index.html#ai">AI Powered Trade Assistance</a>
+            <a href="index.html#tools">Comprehensive Trading Tools</a>
+            <a href="index.html#education">Educational Resources</a>
+            <a href="index.html#risk">Enterprise Risk Management</a>
+          </div>
+        </li>
+        <li><a href="plans.html">Accounts</a></li>
+        <li><a href="broker.html" aria-current="page">Brokers</a></li>
+        <li><a href="tools-education.html">Tools &amp; Education</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
+
+      <div class="auth-buttons">
+        <a href="#" class="sign-in" id="openLogin">Sign In</a>
+        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+      </div>
+    </nav>
+
+    <!-- Backdrop for mobile nav (handled in app.js) -->
+    <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
+
+    <!-- ===== Broker Hero ===== -->
+    <section class="broker-hero">
+      <div class="broker-hero-inner">
+        <div class="broker-pill">
+          <span class="broker-pill-dot"></span>
+          Broker Integration
+        </div>
+        <h1>Supported Brokers — Coming Soon</h1>
+        <p class="sub">
+          We are integrating leading global brokers into Market Llama so you can
+          connect your trading accounts, sync positions, and deploy strategies with
+          a single click.
+          <br><br>
+          <strong>Broker onboarding and connection flows are currently in development.</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-disclaimer-wrap">
+        <div class="risk-disclaimer">
+          <strong>⚠️ Risk Disclaimer:</strong><br><br>
+          Trading in financial markets carries inherent risks, including the potential for loss of capital.
+          Performance may vary based on market conditions, account size, risk tolerance, and execution
+          environment. While Market Llama is built to deliver consistent, data-driven performance through
+          advanced automation and professional account management, no trading environment is completely
+          without risk.
+          <br><br>
+          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+          market fluctuations more effectively, but they are still subject to market risk and temporary
+          performance deviations.
+          <br><br>
+          Market Llama operates as a technology-enabled, professional account management platform — similar
+          to institutional asset managers — providing users with sophisticated trading systems, automated
+          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+          capital, and deliver institutional-grade trading outcomes.
+          <br><br>
+          By connecting your trading account to Market Llama, you acknowledge that every investment activity
+          carries risk, and that results can vary across market conditions. We commit to operating
+          transparently, managing accounts responsibly, and applying disciplined, data-driven strategies
+          designed to achieve consistent long-term performance.
+        </div>
+      </div>
+
+      <div class="footer-container">
+        <div class="col">
+          <h4>Company</h4>
+          <a href="abouts.html">About</a>
+        </div>
+        <div class="col">
+          <h4>Resources</h4>
+          <a href="support.html">Support</a>
+        </div>
+        <div class="col">
+          <h4>Legal</h4>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+        <div class="col">
+          <h4>Connect</h4>
+          <a href="#">Whatsapp</a>
+          <a href="#">Twitter</a>
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+        </div>
+      </div>
+
+      <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
+    </footer>
+
+    <!-- Back to top -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
+      </svg>
+    </button>
+
+    <!-- CHAT -->
+    <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+        <circle cx="9" cy="10" r="1.25" />
+        <circle cx="12" cy="10" r="1.25" />
+        <circle cx="15" cy="10" r="1.25" />
+      </svg>
+    </button>
+    <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
+      aria-hidden="true" inert>
+      <div class="chat-header">
+        <div class="chat-title">Assistant</div>
+        <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-msg bot">Hi! How can I help?</div>
+      </div>
+      <form id="chatForm" class="chat-input-row">
+        <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+        <button class="chat-send" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Auth Overlay -->
+  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
+       aria-hidden="true">
+    <div class="auth-container" id="authContainer">
+      <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
+      <h2 id="authTitle">Create Account</h2>
+      <form id="authForm" novalidate>
+        <div class="form-group signup-field" id="firstNameGroup">
+          <label for="authFirstName">First Name</label>
+          <input id="authFirstName" name="firstName" type="text"
+                 placeholder="Enter your first name" required autocomplete="given-name">
+        </div>
+        <div class="form-group signup-field" id="lastNameGroup">
+          <label for="authLastName">Last Name</label>
+          <input id="authLastName" name="lastName" type="text"
+                 placeholder="Enter your last name" required autocomplete="family-name">
+        </div>
+        <div class="form-group signup-field" id="dobGroup">
+          <label for="authDob">Date of Birth</label>
+          <input id="authDob" name="dob" type="date" required>
+        </div>
+        <div class="form-group signup-field" id="usernameGroup">
+          <label for="authUsername">Username</label>
+          <input id="authUsername" name="username" type="text"
+                 placeholder="Choose a username" required autocomplete="username">
+        </div>
+        <div class="form-group signup-field" id="countryGroup">
+          <label for="authCountry">Select Country</label>
+          <select id="authCountry" name="country" required>
+            <option value="" disabled selected>Select your country</option>
+            <option value="NG">Nigeria</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="emailGroup">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" name="email" type="email"
+                 placeholder="Enter your email" required autocomplete="email" inputmode="email">
+        </div>
+        <div class="form-group" id="passwordGroup">
+          <label for="authPassword">Password</label>
+          <div class="pw-field">
+            <input id="authPassword" name="password" type="password"
+                   placeholder="Enter your password" required autocomplete="new-password" minlength="8" />
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24" role="button" aria-label="Toggle password visibility">
+              <path
+                d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+            </svg>
+          </div>
+          <div class="hint" id="passwordHint" aria-live="polite"></div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+        <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="scripts/app.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('[broker] DOM loaded, initializing...');
+
+      const screen2 = document.getElementById('screen2');
+      const mainNav = document.getElementById('mainNav');
+      const backBtn = document.getElementById('backToTop');
+      const services = document.getElementById('services');
+
+      function setNavOffset() {
+        requestAnimationFrame(() => {
+          if (!mainNav) return;
+          const h = Math.ceil(mainNav.getBoundingClientRect().height);
+          document.documentElement.style.setProperty('--nav-offset', `${h}px`);
+        });
+      }
+      window.addEventListener('load', setNavOffset);
+      window.addEventListener('resize', setNavOffset);
+
+      // Desktop Our Services dropdown
+      (function dropdown() {
+        const li = services;
+        if (!li) return;
+        const link = li.querySelector('.dropdown');
+        const menu = li.querySelector('.dropdown-menu');
+        if (!link || !menu) return;
+
+        link.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          const willShow = !menu.classList.contains('show');
+          menu.classList.toggle('show', willShow);
+          link.setAttribute('aria-expanded', String(willShow));
+        });
+        document.addEventListener('click', (ev) => {
+          if (!li.contains(ev.target)) {
+            menu.classList.remove('show');
+            link.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+
+      function trackBackToTop() {
+        const st = screen2?.scrollTop || 0;
+        if (st > 300) backBtn?.classList.add('show');
+        else backBtn?.classList.remove('show');
+      }
+      screen2?.addEventListener('scroll', trackBackToTop, { passive: true });
+      backBtn?.addEventListener('click', () =>
+        screen2?.scrollTo({ top: 0, behavior: 'smooth' })
+      );
+      trackBackToTop();
+
+      function initializeAuthButtons() {
+        const openSignup = document.getElementById('openSignup');
+        const openLogin = document.getElementById('openLogin');
+
+        function handleAuthClick(e, mode) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const authOverlay = document.getElementById('authOverlay');
+          const authTitle = document.getElementById('authTitle');
+          const authContainer = document.getElementById('authContainer');
+
+          if (authOverlay && authTitle && authContainer) {
+            if (mode === 'signup') {
+              authTitle.textContent = "Create Account";
+              authContainer.classList.add('bubble');
+              document.querySelectorAll('.signup-field').forEach(el => {
+                el.style.display = 'block';
+              });
+            } else {
+              authTitle.textContent = "Sign In";
+              authContainer.classList.remove('bubble');
+              document.querySelectorAll('.signup-field').forEach(el => {
+                el.style.display = 'none';
+              });
+            }
+
+            authOverlay.classList.add('active');
+            authOverlay.setAttribute('aria-hidden', 'false');
+          }
+        }
+
+        if (openSignup) {
+          openSignup.addEventListener('click', (e) => handleAuthClick(e, 'signup'));
+        }
+
+        if (openLogin) {
+          openLogin.addEventListener('click', (e) => handleAuthClick(e, 'login'));
+        }
+      }
+
+      setTimeout(initializeAuthButtons, 100);
+      console.log('[broker] initialization complete');
+    });
+
+    if (document.readyState !== 'loading') {
+      setTimeout(function () {
+        const event = new Event('DOMContentLoaded');
+        document.dispatchEvent(event);
+      }, 100);
+    }
+  </script>
+</body>
+</html>
