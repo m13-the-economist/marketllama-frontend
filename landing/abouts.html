@@ -47,10 +47,10 @@
     }
 
     .page-about .hero h2 {
-  font-size: 2.4rem;
-  letter-spacing: .04em;
-  color: #FFFFFF !important;  /* FORCE About Us to be white */
-}
+      font-size: 2.4rem;
+      letter-spacing: .04em;
+      color: #FFFFFF !important;
+    }
 
     .page-about .hero .hero-sub {
       margin-top: 1rem;
@@ -136,26 +136,23 @@
       opacity: .9;
     }
 
-   .legal-back-link,
-.legal-back-link:hover,
-.legal-back-link:focus,
-.legal-back-link:active {
-  display: inline;
-  font-size: .9rem;
-  margin-top: 1rem;
+    .legal-back-link,
+    .legal-back-link:hover,
+    .legal-back-link:focus,
+    .legal-back-link:active {
+      display: inline;
+      font-size: .9rem;
+      margin-top: 1rem;
+      padding: 0;
+      border: none !important;
+      border-radius: 0 !important;
+      background: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      text-decoration: none;
+      color: #60A5FA;
+    }
 
-  /* no pill, no highlight, no box */
-  padding: 0;
-  border: none !important;
-  border-radius: 0 !important;
-  background: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-
-  text-decoration: none;
-  color: #60A5FA; /* light blue text only */
-}
-      /* Back to Home light blue */
     .legal-back-link {
       color: #60A5FA;
       border: 1px solid rgba(96, 165, 250, 0.5);
@@ -164,9 +161,9 @@
     }
 
     .legal-back-link span {
-  font-size: 1.1rem;
-  color: #60A5FA !important;
-}
+      font-size: 1.1rem;
+      color: #60A5FA !important;
+    }
 
     .legal-back-link:hover {
       background: rgba(96, 165, 250, 0.14);
@@ -377,16 +374,109 @@
       }
     }
 
-    /* Remove click highlight on Back to Home link */
-.legal-back-link {
-  outline: none !important;
-  -webkit-tap-highlight-color: transparent;
-}
+    .legal-back-link {
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.legal-back-link:active {
-  background: none !important;
-}
+    .legal-back-link:active {
+      background: none !important;
+    }
 
+    /* MOBILE NAV (same pattern as other pages) */
+    @media (max-width: 768px) {
+
+      .nav-links .has-dropdown {
+        display: none !important;
+      }
+
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav .brand {
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 0.9rem !important;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .auth-buttons a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      #navToggle {
+        order: 3;
+        margin-left: 0.5rem;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      .nav-links {
+        position: fixed !important;
+        top: var(--header-h, 60px);
+        left: 0;
+        height: calc(100vh - var(--header-h, 60px));
+        width: 260px;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.92) !important;
+        border: none !important;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .65) !important;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        z-index: 1500;
+      }
+
+      .nav-links.open {
+        transform: translateX(0);
+      }
+
+      #navMenu a {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+    }
+  </style>
+
+  <style>
+    /* extra mobile spacing fix */
+    @media (max-width: 768px) {
+      .page-about .hero {
+        position: relative;
+        margin-bottom: 1.75rem;
+      }
+
+      .page-about main .about-section:first-of-type {
+        margin-top: 0;
+      }
+    }
   </style>
 </head>
 
@@ -415,7 +505,6 @@
         <li><a href="plans.html">Accounts</a></li>
         <li><a href="broker.html">Brokers</a></li>
         <li><a href="tools-education.html">Tools &amp; Education</a></li>
-        
         <li><a href="support.html">Support</a></li>
       </ul>
 
@@ -425,18 +514,21 @@
       </div>
     </nav>
 
-    
+    <!-- BACKDROP -->
+    <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
+
     <!-- HERO -->
-<header class="hero">
-  <div class="hero-content">
-    <h2 style="color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF;">ABOUT US</h2>
-    <p class="hero-sub">
-      Built for modern professionals with demanding lives, Market Llama manages trading accounts with automated,
-      institutional grade infrastructure so users can focus on their careers, families, and goals while
-      disciplined systems work in the background.
-    </p>
-  </div>
-</header>
+    <header class="hero">
+      <div class="hero-content">
+        <h2 style="color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF;">ABOUT US</h2>
+        <p class="hero-sub">
+          Built for modern professionals with demanding lives, Market Llama manages trading accounts with automated,
+          institutional grade infrastructure so users can focus on their careers, families, and goals while
+          disciplined systems work in the background.
+        </p>
+      </div>
+    </header>
+
     <!-- MAIN -->
     <main>
       <!-- Our Purpose -->
@@ -580,7 +672,6 @@
           Market Llama is more than a tool — it’s a financial partner built for real life.
         </p>
 
-        <!-- Back to DASHBOARD → Hero section on index -->
         <a href="index.html#hero" class="legal-back-link">
           <span>←</span> Back to Home
         </a>
@@ -589,7 +680,6 @@
 
     <!-- FOOTER -->
     <footer class="footer">
-      <!-- FULL-WIDTH RISK DISCLAIMER ABOVE COLUMNS -->
       <div class="footer-disclaimer-wrap">
         <div class="risk-disclaimer">
           <strong>⚠️ Risk Disclaimer:</strong><br><br>
@@ -616,17 +706,14 @@
         </div>
       </div>
 
-      <!-- EXISTING FOOTER COLUMNS -->
       <div class="footer-container">
         <div class="col">
           <h4>Company</h4>
           <a href="abouts.html">About</a>
-          
         </div>
         <div class="col">
           <h4>Resources</h4>
           <a href="support.html">Support</a>
-          
         </div>
         <div class="col">
           <h4>Legal</h4>
@@ -678,32 +765,41 @@
     </div>
   </div>
 
-  <!-- AUTH OVERLAY (same pattern as index/accounts) -->
-  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
-    aria-hidden="true">
+  <!-- AUTH OVERLAY: full unified modal (same as support/accounts/tools) -->
+  <div class="auth-overlay" id="authOverlay" aria-hidden="true">
     <div class="auth-container" id="authContainer">
       <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
-      <h2 id="authTitle">Create Account</h2>
+
+      <h2 id="authTitle" class="auth-title">Create account</h2>
+      <p id="authSubtitle" class="auth-subtitle">
+        Create your Market Llama profile in a few steps.
+      </p>
+
       <form id="authForm" novalidate>
+        <!-- SIGN-UP ONLY FIELDS -->
         <div class="form-group signup-field" id="firstNameGroup">
           <label for="authFirstName">First Name</label>
-          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
-            autocomplete="given-name">
+          <input id="authFirstName" name="firstName" type="text"
+            placeholder="Enter your first name" required autocomplete="given-name">
         </div>
+
         <div class="form-group signup-field" id="lastNameGroup">
           <label for="authLastName">Last Name</label>
-          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
-            autocomplete="family-name">
+          <input id="authLastName" name="lastName" type="text"
+            placeholder="Enter your last name" required autocomplete="family-name">
         </div>
+
         <div class="form-group signup-field" id="dobGroup">
           <label for="authDob">Date of Birth</label>
           <input id="authDob" name="dob" type="date" required>
         </div>
+
         <div class="form-group signup-field" id="usernameGroup">
           <label for="authUsername">Username</label>
-          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
-            autocomplete="username">
+          <input id="authUsername" name="username" type="text"
+            placeholder="Choose a username" required autocomplete="username">
         </div>
+
         <div class="form-group signup-field" id="countryGroup">
           <label for="authCountry">Select Country</label>
           <select id="authCountry" name="country" required>
@@ -715,34 +811,392 @@
             <option value="AU">Australia</option>
           </select>
         </div>
+
+        <!-- SHARED FIELDS -->
         <div class="form-group" id="emailGroup">
           <label for="authEmail">Email</label>
-          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
-            inputmode="email">
+          <input id="authEmail" name="email" type="email"
+            placeholder="Enter your email" required autocomplete="email" inputmode="email">
         </div>
+
         <div class="form-group" id="passwordGroup">
           <label for="authPassword">Password</label>
           <div class="pw-field">
-            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
-              autocomplete="new-password" minlength="8" />
-            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
-              aria-label="Toggle password visibility">
+            <input
+              id="authPassword"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="new-password"
+              minlength="8"
+            />
+            <!-- Eye icon -->
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              role="button"
+              aria-label="Toggle password visibility"
+              tabindex="0">
               <path
                 d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
             </svg>
           </div>
+
+          <div class="password-strength" aria-live="polite">
+            <div class="password-strength-bar" aria-hidden="true">
+              <div class="password-strength-bar-fill" id="passwordStrengthBar"></div>
+            </div>
+            <p id="passwordStrengthText" class="password-strength-text"></p>
+          </div>
+
           <div class="hint" id="passwordHint" aria-live="polite"></div>
         </div>
-        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          id="submitBtn"
+          data-mode="signup"
+          disabled
+        >
+          Continue
+        </button>
+
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+
+        <p class="auth-switch-row">
+          <span id="authSwitchLabel">Already have an account?</span>
+          <button
+            type="button"
+            class="auth-switch-link"
+            id="authSwitchAction"
+          >
+            Sign in
+          </button>
+        </p>
       </form>
     </div>
   </div>
 
-  <!-- SHARED LOGIC -->
+  <!-- SHARED APP JS -->
   <script src="scripts/app.js"></script>
 
-  <!-- Back to Top Logic (mirrors index.html behaviour) -->
+  <!-- Page-specific: Our Services dropdown + mobile outside-close -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('[about] DOM loaded, init dropdown + outside-close');
+
+      /* Our Services desktop dropdown */
+      const services = document.getElementById('services');
+      (function dropdown() {
+        const li = services;
+        if (!li) return;
+        const link = li.querySelector('.dropdown');
+        const menu = li.querySelector('.dropdown-menu');
+        if (!link || !menu) return;
+
+        link.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          const willShow = !menu.classList.contains('show');
+          menu.classList.toggle('show', willShow);
+          link.setAttribute('aria-expanded', String(willShow));
+        });
+
+        document.addEventListener('click', function (ev) {
+          if (!li.contains(ev.target)) {
+            menu.classList.remove('show');
+            link.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+
+      /* Close hamburger when tapping outside (mobile only) */
+      (function enableOutsideClose() {
+        const nav = document.getElementById('mainNav');
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        const navBackdrop = document.getElementById('navBackdrop');
+
+        if (!nav || !navMenu || !navToggle) return;
+
+        function isMobile() {
+          return window.getComputedStyle(navToggle).display !== 'none';
+        }
+
+        function closeMenu() {
+          navMenu.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+          if (navBackdrop) {
+            navBackdrop.classList.remove('active');
+            navBackdrop.classList.remove('show');
+          }
+        }
+
+        document.addEventListener('click', function (e) {
+          if (!isMobile()) return;
+
+          const clickedInsideNav = nav.contains(e.target);
+          if (!clickedInsideNav && navMenu.classList.contains('open')) {
+            closeMenu();
+          }
+        });
+      })();
+    });
+  </script>
+
+  <!-- Unified Auth modal logic (same as support/accounts/tools) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var authOverlay = document.getElementById('authOverlay');
+      var authContainer = document.getElementById('authContainer');
+      var authForm = document.getElementById('authForm');
+      var openLogin = document.getElementById('openLogin');
+      var openSignup = document.getElementById('openSignup');
+      var closeAuth = document.getElementById('closeAuth');
+      var authTitle = document.getElementById('authTitle');
+      var authSubtitle = document.getElementById('authSubtitle');
+      var authSwitchLabel = document.getElementById('authSwitchLabel');
+      var authSwitchAction = document.getElementById('authSwitchAction');
+      var signupFields = document.querySelectorAll('.signup-field');
+      var authPassword = document.getElementById('authPassword');
+      var authEmail = document.getElementById('authEmail');
+      var submitBtn = document.getElementById('submitBtn');
+      var passwordStrengthBar = document.getElementById('passwordStrengthBar');
+      var passwordStrengthText = document.getElementById('passwordStrengthText');
+      var passwordHint = document.getElementById('passwordHint');
+      var togglePassword = document.getElementById('togglePassword');
+
+      var lastTrigger = null;
+      var currentMode = 'signup';
+
+      var focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      var firstFocusable, lastFocusable;
+
+      function setOverlayVisibility(open) {
+        if (!authOverlay) return;
+
+        if (open) {
+          authOverlay.classList.add('open');
+          authOverlay.removeAttribute('aria-hidden');
+          authOverlay.setAttribute('role', 'dialog');
+          authOverlay.setAttribute('aria-modal', 'true');
+          authOverlay.setAttribute('aria-labelledby', 'authTitle');
+
+          var background = document.getElementById('screen2');
+          if (background) {
+            background.setAttribute('inert', 'true');
+          }
+
+          var focusables = authContainer.querySelectorAll(focusableSelectors);
+          firstFocusable = focusables[0];
+          lastFocusable = focusables[focusables.length - 1];
+
+          if (authEmail) authEmail.focus();
+        } else {
+          authOverlay.classList.remove('open');
+          authOverlay.setAttribute('aria-hidden', 'true');
+          authOverlay.removeAttribute('aria-modal');
+          authOverlay.removeAttribute('role');
+
+          var background2 = document.getElementById('screen2');
+          if (background2) {
+            background2.removeAttribute('inert');
+          }
+
+          if (lastTrigger && typeof lastTrigger.focus === 'function') {
+            lastTrigger.focus();
+          }
+        }
+      }
+
+      function resetPasswordUI() {
+        if (authPassword) authPassword.value = '';
+        if (passwordStrengthBar) passwordStrengthBar.style.width = '0%';
+        if (passwordStrengthText) passwordStrengthText.textContent = '';
+        if (passwordHint) passwordHint.textContent = '';
+        if (submitBtn) submitBtn.disabled = true;
+      }
+
+      function clearForm() {
+        if (authForm) authForm.reset();
+        resetPasswordUI();
+      }
+
+      function setMode(mode) {
+        currentMode = mode;
+        var isSignup = mode === 'signup';
+
+        signupFields.forEach(function (el) {
+          el.style.display = isSignup ? '' : 'none';
+        });
+
+        if (isSignup) {
+          authTitle.textContent = 'Create account';
+          authSubtitle.textContent = 'Create your Market Llama profile in a few steps.';
+          authSwitchLabel.textContent = 'Already have an account?';
+          authSwitchAction.textContent = 'Sign in';
+          submitBtn.dataset.mode = 'signup';
+          if (authPassword) authPassword.setAttribute('autocomplete', 'new-password');
+        } else {
+          authTitle.textContent = 'Sign in';
+          authSubtitle.textContent = 'Access your Market Llama dashboard and accounts.';
+          authSwitchLabel.textContent = 'New here?';
+          authSwitchAction.textContent = 'Create an account';
+          submitBtn.dataset.mode = 'login';
+          if (authPassword) authPassword.setAttribute('autocomplete', 'current-password');
+        }
+
+        clearForm();
+      }
+
+      function openAuth(mode, trigger) {
+        lastTrigger = trigger || null;
+        setMode(mode || 'signup');
+        setOverlayVisibility(true);
+      }
+
+      function closeAuthModal() {
+        setOverlayVisibility(false);
+      }
+
+      window.mlOpenAuth = openAuth;
+      window.mlSetAuthMode = setMode;
+
+      if (openSignup) {
+        openSignup.addEventListener('click', function (e) {
+          e.preventDefault();
+          openAuth('signup', e.currentTarget);
+        });
+      }
+
+      if (openLogin) {
+        openLogin.addEventListener('click', function (e) {
+          e.preventDefault();
+          openAuth('login', e.currentTarget);
+        });
+      }
+
+      if (authSwitchAction) {
+        authSwitchAction.addEventListener('click', function () {
+          var next = currentMode === 'signup' ? 'login' : 'signup';
+          setMode(next);
+        });
+      }
+
+      if (closeAuth) {
+        closeAuth.addEventListener('click', function () {
+          closeAuthModal();
+        });
+      }
+
+      if (authOverlay) {
+        authOverlay.addEventListener('click', function (e) {
+          if (e.target === authOverlay) {
+            closeAuthModal();
+          }
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (!authOverlay || authOverlay.getAttribute('aria-hidden') === 'true') return;
+
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeAuthModal();
+        }
+
+        if (e.key === 'Tab') {
+          var focusables = authContainer.querySelectorAll(focusableSelectors);
+          if (!focusables.length) return;
+
+          firstFocusable = focusables[0];
+          lastFocusable = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+              e.preventDefault();
+              lastFocusable.focus();
+            }
+          } else {
+            if (document.activeElement === lastFocusable) {
+              e.preventDefault();
+              firstFocusable.focus();
+            }
+          }
+        }
+      });
+
+      if (togglePassword && authPassword) {
+        togglePassword.addEventListener('click', function () {
+          var isHidden = authPassword.type === 'password';
+          authPassword.type = isHidden ? 'text' : 'password';
+          togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        });
+
+        togglePassword.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            var isHidden = authPassword.type === 'password';
+            authPassword.type = isHidden ? 'text' : 'password';
+            togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+          }
+        });
+      }
+
+      function updatePasswordStrength(password) {
+        if (!passwordStrengthBar || !passwordStrengthText || !submitBtn) return;
+
+        var hasUpper = /[A-Z]/.test(password);
+        var hasLower = /[a-z]/.test(password);
+        var hasNumber = /[0-9]/.test(password);
+        var hasSymbol = /[^A-Za-z0-9]/.test(password);
+        var length = password.length;
+        var rulesMet = [hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length;
+
+        var label = '';
+        var text = '';
+        var width = 0;
+        var valid = false;
+
+        if (length === 0) {
+          width = 0;
+          label = '';
+          text = '';
+        } else if (length < 8) {
+          width = 20;
+          label = 'Too short';
+          text = 'Use at least 14 characters with letters, numbers and symbols.';
+        } else if (length < 14 || rulesMet < 4) {
+          width = 40;
+          label = 'Can be stronger';
+          text = 'Add more characters and a mix of upper, lower, numbers and symbols.';
+        } else if (length < 20) {
+          width = 75;
+          label = 'Strong password';
+          text = 'Good. Your password is strong and hard to guess.';
+          valid = true;
+        } else {
+          width = 100;
+          label = 'Excellent';
+          text = 'Excellent. This password is very hard to guess.';
+          valid = true;
+        }
+
+        passwordStrengthBar.style.width = width + '%';
+        passwordStrengthText.textContent = label ? label + ' – ' + text : '';
+        submitBtn.disabled = !valid;
+      }
+
+      if (authPassword) {
+        authPassword.addEventListener('input', function () {
+          updatePasswordStrength(authPassword.value);
+        });
+      }
+    });
+  </script>
+
+  <!-- Back to Top Logic -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const backBtn = document.getElementById("backToTop");

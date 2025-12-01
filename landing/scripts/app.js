@@ -659,4 +659,317 @@ function maybeOpenChatFromHash(){
 if (chatPanel) {
   chatPanel.setAttribute('aria-hidden', 'true');
   chatPanel.setAttribute('inert', 'true');
-}
+}// ===========================
+// Auth modal + password logic
+// ===========================
+document.addEventListener("DOMContentLoaded", function () {
+  const authOverlay = document.getElementById("authOverlay");
+  const authContainer = document.getElementById("authContainer");
+  const authForm = document.getElementById("authForm");
+
+  const openLoginBtns = document.querySelectorAll("#openLogin");
+  const openSignupBtns = document.querySelectorAll("#openSignup, .hero-sign-up");
+
+  const closeAuthBtn = document.getElementById("closeAuth");
+  const submitBtn = document.getElementById("submitBtn");
+
+  const authTitle = document.getElementById("authTitle");
+  const authSubtitle = document.getElementById("authSubtitle");
+
+  const emailInput = document.getElementById("authEmail");
+  const passwordInput = document.getElementById("authPassword");
+  const passwordHint = document.getElementById("passwordHint");
+  const strengthBar = document.getElementById("passwordStrengthBar");
+  const strengthText = document.getElementById("passwordStrengthText");
+
+  const switchLabel = document.getElementById("authSwitchLabel");
+  const switchAction = document.getElementById("authSwitchAction");
+
+  const signupFields = document.querySelectorAll(".signup-field");
+  const formFeedback = document.getElementById("formFeedback");
+  const togglePasswordBtn = document.getElementById("togglePassword");
+
+  let currentMode = "signup"; // "signup" | "login"
+  let lastTrigger = null;     // element that opened the modal
+
+  // All page content except modal – used for inert
+  const pageShell = Array.from(document.body.children).filter(
+    (el) => el.id !== "authOverlay"
+  );
+
+  function setPageInert(isInert) {
+    pageShell.forEach((el) => {
+      if (isInert) {
+        el.setAttribute("inert", "");
+        el.setAttribute("aria-hidden", "true");
+      } else {
+        el.removeAttribute("inert");
+        el.removeAttribute("aria-hidden");
+      }
+    });
+  }
+
+  function setMode(mode) {
+    currentMode = mode === "login" ? "login" : "signup";
+    const isLogin = currentMode === "login";
+
+    // Show / hide signup-only fields
+    signupFields.forEach((group) => {
+      const input = group.querySelector("input, select");
+      group.style.display = isLogin ? "none" : "";
+      if (input) input.required = !isLogin;
+    });
+
+    if (isLogin) {
+      authTitle.textContent = "Sign in";
+      authSubtitle.textContent =
+        "Access your Market Llama dashboard and accounts.";
+      submitBtn.dataset.mode = "login";
+      switchLabel.textContent = "New here?";
+      switchAction.textContent = "Create an account";
+    } else {
+      authTitle.textContent = "Create account";
+      authSubtitle.textContent =
+        "Create your Market Llama profile in a few steps.";
+      submitBtn.dataset.mode = "signup";
+      switchLabel.textContent = "Already have an account?";
+      switchAction.textContent = "Sign in";
+    }
+
+    validateForm();
+  }
+
+  function openAuth(mode, trigger) {
+    lastTrigger = trigger || null;
+    setMode(mode);
+
+    authOverlay.removeAttribute("aria-hidden");
+    authOverlay.setAttribute("aria-modal", "true");
+    authOverlay.setAttribute("role", "dialog");
+    authOverlay.setAttribute("aria-labelledby", "authTitle");
+
+    setPageInert(true);
+
+    authOverlay.style.display = "flex";
+
+    // Focus first meaningful field
+    (emailInput || authContainer).focus();
+
+    document.addEventListener("keydown", handleKeydown);
+  }
+
+  function closeAuth() {
+    authOverlay.setAttribute("aria-hidden", "true");
+    authOverlay.style.display = "none";
+
+    setPageInert(false);
+
+    document.removeEventListener("keydown", handleKeydown);
+
+    if (lastTrigger && typeof lastTrigger.focus === "function") {
+      lastTrigger.focus();
+    }
+  }
+
+  // Focus trap
+  function handleKeydown(e) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeAuth();
+      return;
+    }
+
+    if (e.key !== "Tab") return;
+
+    const focusable = authOverlay.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const focusableArray = Array.from(focusable).filter(
+      (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+    );
+
+    if (!focusableArray.length) return;
+
+    const first = focusableArray[0];
+    const last = focusableArray[focusableArray.length - 1];
+
+    if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    } else if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    }
+  }
+
+  // Password strength evaluation
+  function evaluatePassword(pw) {
+    const length = pw.length;
+    const hasUpper = /[A-Z]/.test(pw);
+    const hasLower = /[a-z]/.test(pw);
+    const hasNumber = /[0-9]/.test(pw);
+    const hasSymbol = /[^A-Za-z0-9]/.test(pw);
+
+    const meetsAll =
+      length >= 14 && hasUpper && hasLower && hasNumber && hasSymbol;
+
+    let score = 0;
+    if (length >= 8) score++;
+    if (length >= 14) score++;
+    if (hasUpper && hasLower) score++;
+    if (hasNumber && hasSymbol) score++;
+
+    score = Math.min(score, 4);
+
+    let label = "";
+    let text = "";
+    let color = "#4b5563";
+    let width = "0%";
+
+    if (!pw) {
+      label = "";
+      text = "";
+      width = "0%";
+    } else if (length < 8) {
+      label = "Too short";
+      text =
+        "Use at least 14 characters with letters, numbers and symbols.";
+      color = "#f97316";
+      width = "25%";
+    } else if (!meetsAll) {
+      label = "Can be stronger";
+      text =
+        "Add more characters and a mix of upper, lower, numbers and symbols.";
+      color = "#facc15";
+      width = "50%";
+    } else if (length >= 20) {
+      label = "Excellent";
+      text = "Excellent. This password is very hard to guess.";
+      color = "#22c55e";
+      width = "100%";
+    } else {
+      label = "Strong password";
+      text = "Good. Your password is strong and hard to guess.";
+      color = "#22c55e";
+      width = "75%";
+    }
+
+    return {
+      meetsAll,
+      label,
+      text,
+      color,
+      width,
+    };
+  }
+
+  function updatePasswordStrength(pw) {
+    const result = evaluatePassword(pw);
+
+    if (strengthBar) {
+      strengthBar.style.width = result.width;
+      strengthBar.style.backgroundColor = result.color;
+    }
+
+    if (strengthText) {
+      strengthText.textContent = result.label
+        ? `${result.label}. ${result.text}`
+        : "";
+    }
+
+    return result.meetsAll;
+  }
+
+  function validateForm() {
+    const emailValid = emailInput ? emailInput.checkValidity() : true;
+    const pw = passwordInput ? passwordInput.value : "";
+    const pwValid = pw ? evaluatePassword(pw).meetsAll : false;
+
+    submitBtn.disabled = !(emailValid && pwValid);
+  }
+
+  // Event wiring
+  openLoginBtns.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      openAuth("login", btn);
+    });
+  });
+
+  openSignupBtns.forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      openAuth("signup", btn);
+    });
+  });
+
+  if (closeAuthBtn) {
+    closeAuthBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      closeAuth();
+    });
+  }
+
+  // Click outside container closes modal
+  if (authOverlay) {
+    authOverlay.addEventListener("click", function (e) {
+      if (e.target === authOverlay) {
+        closeAuth();
+      }
+    });
+  }
+
+  // Bottom switch link: sign in <-> sign up
+  if (switchAction) {
+    switchAction.addEventListener("click", function () {
+      if (currentMode === "signup") {
+        setMode("login");
+      } else {
+        setMode("signup");
+      }
+      // refocus email on switch
+      (emailInput || authContainer).focus();
+    });
+  }
+
+  // Password show / hide
+  if (togglePasswordBtn && passwordInput) {
+    togglePasswordBtn.addEventListener("click", function () {
+      const isPassword = passwordInput.type === "password";
+      passwordInput.type = isPassword ? "text" : "password";
+      togglePasswordBtn.setAttribute(
+        "aria-label",
+        isPassword ? "Hide password" : "Show password"
+      );
+    });
+  }
+
+  if (passwordInput) {
+    passwordInput.addEventListener("input", function () {
+      const meetsAll = updatePasswordStrength(passwordInput.value);
+      passwordHint.textContent = meetsAll
+        ? ""
+        : "Password must be at least 14 characters with upper, lower, number and symbol.";
+      validateForm();
+    });
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener("input", validateForm);
+  }
+
+  // Basic submit handler (placeholder)
+  if (authForm) {
+    authForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      formFeedback.textContent =
+        currentMode === "login"
+          ? "Submitting sign in…"
+          : "Submitting sign up…";
+      // backend wiring will replace this
+    });
+  }
+
+  // Initialise default mode
+  setMode("signup");
+});

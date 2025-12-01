@@ -220,8 +220,64 @@
       display: none;
     }
 
+    /* AUTH password field: keep structure, rely on global styles for svg position */
+    .pw-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .pw-field input {
+      width: 100%;
+      padding-right: 2.5rem; /* space for the eye icon */
+    }
+
     /* MOBILE OVERRIDES – ONLY mobile changed */
     @media (max-width: 768px) {
+      /* Shrink modal ONLY in Sign Up mode (mobile only) */
+      #submitBtn[data-mode="signup"] ~ .form-feedback,
+      #submitBtn[data-mode="signup"] {
+        /* selector anchor, no styling needed here */
+      }
+
+      #submitBtn[data-mode="signup"]::before {
+        /* enable parent selector functionality */
+        content: "";
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) {
+        max-width: 340px;
+        padding: 1rem 1rem 1.25rem;
+        border-radius: 14px;
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) h2 {
+        font-size: 1.05rem;
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) .form-group {
+        margin-bottom: 0.55rem;
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) label {
+        font-size: 0.8rem;
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) input,
+      .auth-container:has(#submitBtn[data-mode="signup"]) select {
+        padding: 0.5rem 0.55rem;
+        font-size: 0.85rem;
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) .submit-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .auth-container:has(#submitBtn[data-mode="signup"]) .hint,
+      .auth-container:has(#submitBtn[data-mode="signup"]) .form-feedback {
+        font-size: 0.78rem;
+      }
 
       /* Hide Our Services dropdown in mobile nav */
       .nav-links .has-dropdown {
@@ -598,31 +654,40 @@
   </button>
 
   <!-- Auth Overlay -->
-  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
-    aria-hidden="true">
+  <div class="auth-overlay" id="authOverlay" aria-hidden="true">
     <div class="auth-container" id="authContainer">
       <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
-      <h2 id="authTitle">Create Account</h2>
+
+      <h2 id="authTitle" class="auth-title">Create account</h2>
+      <p id="authSubtitle" class="auth-subtitle">
+        Create your Market Llama profile in a few steps.
+      </p>
+
       <form id="authForm" novalidate>
+        <!-- SIGN-UP ONLY FIELDS (hidden in login mode) -->
         <div class="form-group signup-field" id="firstNameGroup">
           <label for="authFirstName">First Name</label>
-          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
-            autocomplete="given-name">
+          <input id="authFirstName" name="firstName" type="text"
+                 placeholder="Enter your first name" required autocomplete="given-name">
         </div>
+
         <div class="form-group signup-field" id="lastNameGroup">
           <label for="authLastName">Last Name</label>
-          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
-            autocomplete="family-name">
+          <input id="authLastName" name="lastName" type="text"
+                 placeholder="Enter your last name" required autocomplete="family-name">
         </div>
+
         <div class="form-group signup-field" id="dobGroup">
           <label for="authDob">Date of Birth</label>
           <input id="authDob" name="dob" type="date" required>
         </div>
+
         <div class="form-group signup-field" id="usernameGroup">
           <label for="authUsername">Username</label>
-          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
-            autocomplete="username">
+          <input id="authUsername" name="username" type="text"
+                 placeholder="Choose a username" required autocomplete="username">
         </div>
+
         <div class="form-group signup-field" id="countryGroup">
           <label for="authCountry">Select Country</label>
           <select id="authCountry" name="country" required>
@@ -634,26 +699,71 @@
             <option value="AU">Australia</option>
           </select>
         </div>
+
+        <!-- SHARED FIELDS (SIGN IN + SIGN UP) -->
         <div class="form-group" id="emailGroup">
           <label for="authEmail">Email</label>
-          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
-            inputmode="email">
+          <input id="authEmail" name="email" type="email"
+                 placeholder="Enter your email" required autocomplete="email" inputmode="email">
         </div>
+
+        <!-- PASSWORD WITH BROKER-STYLE EYE ICON -->
         <div class="form-group" id="passwordGroup">
           <label for="authPassword">Password</label>
           <div class="pw-field">
-            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
-              autocomplete="new-password" minlength="8" />
-            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
-              aria-label="Toggle password visibility">
+            <input
+              id="authPassword"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="new-password"
+              minlength="8"
+            />
+            <!-- Eye icon copied from broker.html -->
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 role="button"
+                 aria-label="Toggle password visibility"
+                 tabindex="0">
               <path
-                d="M12 5C7 5 2.73 8.11 1 12c1.73-3.89 6-7 11-7s9.27 3.11 11 7c-1.73 3.89-6 7-11 7s-9.27-3.11-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+                d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
             </svg>
           </div>
+
+          <div class="password-strength" aria-live="polite">
+            <div class="password-strength-bar" aria-hidden="true">
+              <div class="password-strength-bar-fill" id="passwordStrengthBar"></div>
+            </div>
+            <p id="passwordStrengthText" class="password-strength-text"></p>
+          </div>
+
           <div class="hint" id="passwordHint" aria-live="polite"></div>
         </div>
-        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          id="submitBtn"
+          data-mode="signup"
+          disabled
+        >
+          Continue
+        </button>
+
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+
+        <!-- MODE SWITCH (sign in <-> sign up) -->
+        <p class="auth-switch-row">
+          <span id="authSwitchLabel">Already have an account?</span>
+          <button
+            type="button"
+            class="auth-switch-link"
+            id="authSwitchAction"
+          >
+            Sign in
+          </button>
+        </p>
       </form>
     </div>
   </div>
@@ -760,9 +870,259 @@
     })();
   </script>
 
-
+  <!-- Existing app.js (nav, chat, etc.) -->
   <script src="scripts/app.js" defer></script>
-  
+
+  <!-- Auth modal: accessibility, mode switch, password strength & eye icon -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var authOverlay = document.getElementById('authOverlay');
+      var authContainer = document.getElementById('authContainer');
+      var authForm = document.getElementById('authForm');
+      var openLogin = document.getElementById('openLogin');
+      var openSignup = document.getElementById('openSignup');
+      var closeAuth = document.getElementById('closeAuth');
+      var authTitle = document.getElementById('authTitle');
+      var authSubtitle = document.getElementById('authSubtitle');
+      var authSwitchLabel = document.getElementById('authSwitchLabel');
+      var authSwitchAction = document.getElementById('authSwitchAction');
+      var signupFields = document.querySelectorAll('.signup-field');
+      var authPassword = document.getElementById('authPassword');
+      var authEmail = document.getElementById('authEmail');
+      var submitBtn = document.getElementById('submitBtn');
+      var passwordStrengthBar = document.getElementById('passwordStrengthBar');
+      var passwordStrengthText = document.getElementById('passwordStrengthText');
+      var passwordHint = document.getElementById('passwordHint');
+      var togglePassword = document.getElementById('togglePassword');
+
+      var lastTrigger = null;
+      var currentMode = 'signup';
+
+      var focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      var firstFocusable, lastFocusable;
+
+      function setOverlayVisibility(open) {
+        if (!authOverlay) return;
+
+        if (open) {
+          authOverlay.classList.add('open');
+          authOverlay.removeAttribute('aria-hidden');
+          authOverlay.setAttribute('role', 'dialog');
+          authOverlay.setAttribute('aria-modal', 'true');
+          authOverlay.setAttribute('aria-labelledby', 'authTitle');
+
+          var background = document.getElementById('screen2');
+          if (background) {
+            background.setAttribute('inert', 'true');
+          }
+
+          var focusables = authContainer.querySelectorAll(focusableSelectors);
+          firstFocusable = focusables[0];
+          lastFocusable = focusables[focusables.length - 1];
+
+          if (authEmail) authEmail.focus();
+        } else {
+          authOverlay.classList.remove('open');
+          authOverlay.setAttribute('aria-hidden', 'true');
+          authOverlay.removeAttribute('aria-modal');
+          authOverlay.removeAttribute('role');
+
+          var background2 = document.getElementById('screen2');
+          if (background2) {
+            background2.removeAttribute('inert');
+          }
+
+          if (lastTrigger && typeof lastTrigger.focus === 'function') {
+            lastTrigger.focus();
+          }
+        }
+      }
+
+      function resetPasswordUI() {
+        if (authPassword) authPassword.value = '';
+        if (passwordStrengthBar) passwordStrengthBar.style.width = '0%';
+        if (passwordStrengthText) passwordStrengthText.textContent = '';
+        if (passwordHint) passwordHint.textContent = '';
+        if (submitBtn) submitBtn.disabled = true;
+      }
+
+      function clearForm() {
+        if (authForm) authForm.reset();
+        resetPasswordUI();
+      }
+
+      function setMode(mode) {
+        currentMode = mode;
+        var isSignup = mode === 'signup';
+
+        signupFields.forEach(function (el) {
+          el.style.display = isSignup ? '' : 'none';
+        });
+
+        if (isSignup) {
+          authTitle.textContent = 'Create account';
+          authSubtitle.textContent = 'Create your Market Llama profile in a few steps.';
+          authSwitchLabel.textContent = 'Already have an account?';
+          authSwitchAction.textContent = 'Sign in';
+          submitBtn.dataset.mode = 'signup';
+          if (authPassword) authPassword.setAttribute('autocomplete', 'new-password');
+        } else {
+          authTitle.textContent = 'Sign in';
+          authSubtitle.textContent = 'Access your Market Llama dashboard and accounts.';
+          authSwitchLabel.textContent = 'New here?';
+          authSwitchAction.textContent = 'Create an account';
+          submitBtn.dataset.mode = 'login';
+          if (authPassword) authPassword.setAttribute('autocomplete', 'current-password');
+        }
+
+        clearForm();
+      }
+
+      function openAuth(mode, trigger) {
+        lastTrigger = trigger || null;
+        setMode(mode || 'signup');
+        setOverlayVisibility(true);
+      }
+
+      function closeAuthModal() {
+        setOverlayVisibility(false);
+      }
+
+      if (openSignup) {
+        openSignup.addEventListener('click', function (e) {
+          e.preventDefault();
+          openAuth('signup', e.currentTarget);
+        });
+      }
+
+      if (openLogin) {
+        openLogin.addEventListener('click', function (e) {
+          e.preventDefault();
+          openAuth('login', e.currentTarget);
+        });
+      }
+
+      if (authSwitchAction) {
+        authSwitchAction.addEventListener('click', function () {
+          var next = currentMode === 'signup' ? 'login' : 'signup';
+          setMode(next);
+        });
+      }
+
+      if (closeAuth) {
+        closeAuth.addEventListener('click', function () {
+          closeAuthModal();
+        });
+      }
+
+      if (authOverlay) {
+        authOverlay.addEventListener('click', function (e) {
+          if (e.target === authOverlay) {
+            closeAuthModal();
+          }
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (!authOverlay || authOverlay.getAttribute('aria-hidden') === 'true') return;
+
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeAuthModal();
+        }
+
+        if (e.key === 'Tab') {
+          var focusables = authContainer.querySelectorAll(focusableSelectors);
+          if (!focusables.length) return;
+
+          firstFocusable = focusables[0];
+          lastFocusable = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+              e.preventDefault();
+              lastFocusable.focus();
+            }
+          } else {
+            if (document.activeElement === lastFocusable) {
+              e.preventDefault();
+              firstFocusable.focus();
+            }
+          }
+        }
+      });
+
+      if (togglePassword && authPassword) {
+        // Click to toggle
+        togglePassword.addEventListener('click', function () {
+          var isHidden = authPassword.type === 'password';
+          authPassword.type = isHidden ? 'text' : 'password';
+          togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        });
+
+        // Keyboard support (Enter / Space) on the SVG
+        togglePassword.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            var isHidden = authPassword.type === 'password';
+            authPassword.type = isHidden ? 'text' : 'password';
+            togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+          }
+        });
+      }
+
+      function updatePasswordStrength(password) {
+        if (!passwordStrengthBar || !passwordStrengthText || !submitBtn) return;
+
+        var hasUpper = /[A-Z]/.test(password);
+        var hasLower = /[a-z]/.test(password);
+        var hasNumber = /[0-9]/.test(password);
+        var hasSymbol = /[^A-Za-z0-9]/.test(password);
+        var length = password.length;
+        var rulesMet = [hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length;
+
+        var label = '';
+        var text = '';
+        var width = 0;
+        var valid = false;
+
+        if (length === 0) {
+          width = 0;
+          label = '';
+          text = '';
+        } else if (length < 8) {
+          width = 20;
+          label = 'Too short';
+          text = 'Use at least 14 characters with letters, numbers and symbols.';
+        } else if (length < 14 || rulesMet < 4) {
+          width = 40;
+          label = 'Can be stronger';
+          text = 'Add more characters and a mix of upper, lower, numbers and symbols.';
+        } else if (length < 20) {
+          width = 75;
+          label = 'Strong password';
+          text = 'Good. Your password is strong and hard to guess.';
+          valid = true;
+        } else {
+          width = 100;
+          label = 'Excellent';
+          text = 'Excellent. This password is very hard to guess.';
+          valid = true;
+        }
+
+        passwordStrengthBar.style.width = width + '%';
+        passwordStrengthText.textContent = label ? label + ' – ' + text : '';
+        submitBtn.disabled = !valid;
+      }
+
+      if (authPassword) {
+        authPassword.addEventListener('input', function () {
+          updatePasswordStrength(authPassword.value);
+        });
+      }
+    });
+  </script>
+
 </body>
 
 </html>

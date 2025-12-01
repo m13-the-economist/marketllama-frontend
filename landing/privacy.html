@@ -6,263 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy Policy — Market Llama</title>
   <meta name="description"
-    content="Privacy Policy for Market Llama, covering how we collect, use, store, and protect your personal and trading data." />
+        content="Privacy Policy for Market Llama, covering how we collect, use, store, and protect your personal and trading data." />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
-    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
   <link rel="stylesheet" href="styles/style.css" />
 
-  <!-- Chat + layout overrides -->
   <style>
-    html,
-    body {
-      height: 100%;
-      overflow-y: auto !important;
-    }
-
-    .chat-fab {
-      position: fixed;
-      right: 20px;
-      bottom: 88px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, .06);
-      color: #eaeaea;
-      border: 1px solid rgba(255, 255, 255, .12);
-      cursor: pointer;
-      z-index: 1100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-      backdrop-filter: blur(8px);
-    }
-
-    .chat-fab:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-      background: rgba(255, 255, 255, .09);
-    }
-
-    .chat-fab svg {
-      width: 24px;
-      height: 24px;
-      stroke: currentColor;
-    }
-
-    .chat-panel {
-      position: fixed;
-      right: 20px;
-      bottom: 156px;
-      width: min(420px, 92vw);
-      max-height: 72vh;
-      background: rgba(10, 10, 10, .92);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .08);
-      border-radius: 16px;
-      z-index: 1200;
+    /* ===== Legal / Privacy page shell (same flex pattern as page-tools) ===== */
+    .page-legal {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      opacity: 0;
-      transform: translateY(8px) scale(.98);
-      pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
-      color: #fff;
-      overflow: hidden;
     }
 
-    .chat-panel.open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .chat-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, .06);
-    }
-
-    .chat-title {
-      font-weight: 600;
-    }
-
-    .chat-close {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .chat-body {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow: auto;
-    }
-
-    .chat-msg {
-      font-size: .92rem;
-      line-height: 1.4;
-      background: rgba(255, 255, 255, .06);
-      color: #eaeaea;
-      padding: 8px 10px;
-      border-radius: 12px;
-      max-width: 85%;
-    }
-
-    .chat-msg.bot {
-      align-self: flex-start;
-    }
-
-    .chat-msg.user {
-      align-self: flex-end;
-      background: #4169E1;
-      color: #fff;
-    }
-
-    .chat-input-row {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 1px solid rgba(255, 255, 255, .06);
-    }
-
-    .chat-input-row input {
-      flex: 1;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .12);
-      color: #fff;
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
-
-    .chat-send {
-      background: #4169E1;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
-
-    @media (max-width:540px) {
-      .chat-fab {
-        right: 14px;
-        bottom: 88px;
-      }
-
-      .chat-panel {
-        right: 14px;
-        bottom: 148px;
-      }
-    }
-
-    /* MOBILE OVERRIDES copied from index/accounts */
-    @media (max-width: 768px) {
-      .nav {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-
-      .nav .brand {
-        flex-shrink: 0;
-      }
-
-      .brand-name {
-        font-size: 0.9rem !important;
-      }
-
-      .auth-buttons {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .auth-buttons a {
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0.25rem 0 !important;
-        font-size: 0.8rem !important;
-      }
-
-      #navToggle {
-        order: 3;
-        margin-left: 0.5rem;
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-      }
-
-      .nav-links {
-        background: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-      }
-
-      #navMenu a {
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0.75rem 0 !important;
-        width: 100% !important;
-        text-align: left !important;
-      }
-
-      .nav-links .has-dropdown {
-        position: static;
-      }
-
-      .nav-links .has-dropdown .dropdown-menu {
-        position: fixed !important;
-        top: 110px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: min(92vw, 420px);
-        display: none;
-        flex-direction: column;
-        padding: 0 !important;
-        margin: 0;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        z-index: 2000;
-      }
-
-      .nav-links .has-dropdown.is-open .dropdown-menu {
-        display: flex;
-      }
-
-      .nav-links .has-dropdown .dropdown-menu a {
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0.6rem 0 !important;
-        font-size: 0.9rem !important;
-        text-align: center;
-      }
+    .footer {
+      margin-top: auto;
     }
 
     /* LEGAL PAGE LAYOUT */
     .legal-shell {
-      min-height: calc(100vh - 200px);
       padding: 96px 5vw 56px;
       display: flex;
       justify-content: center;
@@ -393,363 +159,619 @@
         padding-inline: 16px;
       }
     }
+
+    /* Chat widget (same as tools-education) */
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .12);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
+      background: rgba(255, 255, 255, .09);
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(10, 10, 10, .92);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: #4169E1;
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: #4169E1;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+      }
+
+      .chat-panel {
+        right: 14px;
+      }
+    }
+
+    /* Back to top (same visual as other pages) */
+    .back-to-top {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .back-to-top.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    /* ===== MOBILE NAV like tools-education (no Our Services in hamburger) ===== */
+    @media (max-width: 768px) {
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav .brand {
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 0.9rem !important;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .auth-buttons a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.25rem 0 !important;
+        font-size: 0.8rem !important;
+      }
+
+      #navToggle {
+        order: 3;
+        margin-left: 0.5rem;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+      }
+
+      .nav-links {
+        position: fixed !important;
+        top: var(--header-h, 60px);
+        left: 0;
+        height: calc(100vh - var(--header-h, 60px));
+        width: 260px;
+        padding: 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: rgba(10, 10, 10, 0.92);
+        border: none !important;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .65);
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        z-index: 1500;
+      }
+
+      .nav-links.open {
+        transform: translateX(0);
+      }
+
+      #navMenu a {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 0 !important;
+        width: 100% !important;
+        text-align: left !important;
+      }
+
+      /* Hide Our Services item in mobile hamburger */
+      .nav-services {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 
-<!-- same pattern as terms.html → use body as #screen2 scroll container -->
-<body id="screen2">
-  <!-- NAV BAR -->
-  <nav id="mainNav" class="nav" role="navigation" aria-label="Primary">
-    <a href="index.html#home" class="brand" aria-label="Market Llama home">
-      <img src="assets/llama.webp" alt="Market Llama" class="nav-logo" />
-      <span class="brand-name">Market Llama</span>
-    </a>
+<body>
+  <div class="page-legal" id="screen2" aria-live="polite">
+    <!-- NAV -->
+    <nav id="mainNav" class="nav" role="navigation" aria-label="Primary">
+      <a href="index.html#home" class="brand" aria-label="Market Llama home">
+        <img src="assets/llama.webp" alt="Market Llama" class="nav-logo" />
+        <span class="brand-name">Market Llama</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+        ☰
+      </button>
+      <ul class="nav-links" id="navMenu">
+        <!-- Our Services visible on desktop, hidden on mobile via .nav-services -->
+        <li id="services" class="has-dropdown nav-services">
+          <a href="#" class="dropdown" aria-haspopup="true" aria-expanded="false">Our Services</a>
+          <div class="dropdown-menu" role="menu">
+            <a href="index.html#broker">Broker Integration</a>
+            <a href="index.html#ai">AI Powered Trade Assistance</a>
+            <a href="index.html#tools">Comprehensive Trading Tools</a>
+            <a href="index.html#education">Educational Resources</a>
+            <a href="index.html#risk">Enterprise Risk Management</a>
+          </div>
+        </li>
+        <li><a href="plans.html">Accounts</a></li>
+        <li><a href="broker.html">Brokers</a></li>
+        <li><a href="tools-education.html">Tools &amp; Education</a></li>
+        <li><a href="support.html">Support</a></li>
+      </ul>
 
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
-      ☰
-    </button>
+      <div class="auth-buttons">
+        <a href="#" class="sign-in" id="openLogin">Sign In</a>
+        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+      </div>
+    </nav>
 
-    <ul class="nav-links" id="navMenu">
-      <li id="services" class="has-dropdown">
-        <a href="#" class="dropdown" aria-haspopup="true" aria-expanded="false">Our Services</a>
-        <div class="dropdown-menu" role="menu">
-          <a href="index.html#broker" role="menuitem">Broker Integration</a>
-          <a href="index.html#ai" role="menuitem">AI Powered Trade Assistance</a>
-          <a href="index.html#tools" role="menuitem">Comprehensive Trading Tools</a>
-          <a href="index.html#education" role="menuitem">Educational Resources</a>
-          <a href="index.html#risk" role="menuitem">Enterprise Risk Management</a>
-        </div>
-      </li>
-      <li><a href="plans.html">Accounts</a></li>
-      <li><a href="broker.html">Brokers</a></li>
-      <li><a href="tools-education.html">Tools &amp; Education</a></li>
-      
-      <li><a href="support.html">Support</a></li>
-    </ul>
+    <!-- Backdrop for mobile nav -->
+    <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
 
-    <div class="auth-buttons">
-      <a href="#" class="sign-in" id="openLogin">Sign In</a>
-      <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
-    </div>
-  </nav>
-  <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
+    <!-- LEGAL CONTENT -->
+    <main class="legal-shell">
+      <div class="legal-inner">
+        <header>
+          <div class="legal-header-eyebrow">Legal</div>
+          <h1 class="legal-title">Privacy Policy</h1>
+          <p class="legal-subtitle">
+            This Privacy Policy explains how Market Llama collects, uses, stores, and protects your personal and trading
+            data when you use the platform.
+          </p>
+          <div class="legal-meta">Last Updated: [Insert Date]</div>
+          <!-- Back to DASHBOARD → Hero section on index -->
+          <a href="index.html#hero" class="legal-back-link">
+            <span>←</span> Back to Home
+          </a>
+        </header>
 
-  <!-- LEGAL CONTENT -->
-  <main class="legal-shell">
-    <div class="legal-inner">
-      <header>
-        <div class="legal-header-eyebrow">Legal</div>
-        <h1 class="legal-title">Privacy Policy</h1>
-        <p class="legal-subtitle">
-          This Privacy Policy explains how Market Llama collects, uses, stores, and protects your personal and trading
-          data when you use the platform.
-        </p>
-        <div class="legal-meta">Last Updated: [Insert Date]</div>
-        <!-- Back to DASHBOARD → Hero section on index -->
-        <a href="index.html#hero" class="legal-back-link">
-          <span>←</span> Back to Home
-        </a>
-      </header>
+        <article class="legal-card">
+          <h1>🛡️ MARKET LLAMA — PRIVACY POLICY</h1>
+          <p><em>Last Updated: [Insert Date]</em></p>
 
-      <article class="legal-card">
-        <h1>🛡️ MARKET LLAMA — PRIVACY POLICY</h1>
-        <p><em>Last Updated: [Insert Date]</em></p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>1. Introduction</h2>
+          <p>
+            This Privacy Policy explains how Market Llama, operated under Lee Henry Inc. (“we”, “us”, “our”), collects,
+            uses, stores, and protects your personal data when you access or use our Platform and Services.
+          </p>
+          <p>
+            We are committed to safeguarding your privacy and complying with applicable data protection laws, including
+            the:
+          </p>
+          <ul>
+            <li>General Data Protection Regulation (GDPR)</li>
+            <li>Nigeria Data Protection Regulation (NDPR)</li>
+            <li>Other relevant regional privacy standards</li>
+          </ul>
+          <p>By using Market Llama, you consent to the practices described in this Privacy Policy.</p>
 
-        <h2>1. Introduction</h2>
-        <p>
-          This Privacy Policy explains how Market Llama, operated under Lee Henry Inc. (“we”, “us”, “our”), collects,
-          uses, stores, and protects your personal data when you access or use our Platform and Services.
-        </p>
-        <p>
-          We are committed to safeguarding your privacy and complying with applicable data protection laws, including
-          the:
-        </p>
-        <ul>
-          <li>General Data Protection Regulation (GDPR)</li>
-          <li>Nigeria Data Protection Regulation (NDPR)</li>
-          <li>Other relevant regional privacy standards</li>
-        </ul>
-        <p>By using Market Llama, you consent to the practices described in this Privacy Policy.</p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>2. Definitions</h2>
+          <ul>
+            <li><strong>“Personal Data”</strong> — Any information relating to an identified or identifiable individual.
+            </li>
+            <li><strong>“User” / “You”</strong> — Any individual or entity accessing the Platform.</li>
+            <li><strong>“Platform”</strong> — The Market Llama website, dashboard, systems, automation tools, and all
+              related services.</li>
+            <li><strong>“Broker Account”</strong> — Third-party trading account (e.g., Deriv) connected to Market Llama
+              via API Token.</li>
+            <li><strong>“Processing”</strong> — Any operation performed on data (collection, storage, transfer, deletion,
+              etc.).</li>
+          </ul>
 
-        <h2>2. Definitions</h2>
-        <ul>
-          <li><strong>“Personal Data”</strong> — Any information relating to an identified or identifiable individual.
-          </li>
-          <li><strong>“User” / “You”</strong> — Any individual or entity accessing the Platform.</li>
-          <li><strong>“Platform”</strong> — The Market Llama website, dashboard, systems, automation tools, and all
-            related services.</li>
-          <li><strong>“Broker Account”</strong> — Third-party trading account (e.g., Deriv) connected to Market Llama
-            via API Token.</li>
-          <li><strong>“Processing”</strong> — Any operation performed on data (collection, storage, transfer, deletion,
-            etc.).</li>
-        </ul>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>3. Data We Collect</h2>
+          <p>We collect the following categories of data:</p>
 
-        <h2>3. Data We Collect</h2>
-        <p>We collect the following categories of data:</p>
+          <h3>3.1. Account Information</h3>
+          <ul>
+            <li>Full name</li>
+            <li>Email address</li>
+            <li>Password (encrypted)</li>
+            <li>Phone number (optional)</li>
+            <li>Country &amp; region</li>
+            <li>IP address and device metadata</li>
+            <li>Timezone and language preferences</li>
+          </ul>
 
-        <h3>3.1. Account Information</h3>
-        <ul>
-          <li>Full name</li>
-          <li>Email address</li>
-          <li>Password (encrypted)</li>
-          <li>Phone number (optional)</li>
-          <li>Country &amp; region</li>
-          <li>IP address and device metadata</li>
-          <li>Timezone and language preferences</li>
-        </ul>
+          <h3>3.2. Broker Connection Data</h3>
+          <p>When you connect a trading account:</p>
+          <ul>
+            <li>Broker account Login ID</li>
+            <li>API Token (encrypted and never displayed again)</li>
+            <li>Account type (demo/live)</li>
+            <li>Balance, equity, margin</li>
+            <li>Trade history, open positions, past orders</li>
+            <li>Market data associated with your trading activity</li>
+          </ul>
+          <p>We do NOT collect:</p>
+          <ul>
+            <li>Broker account password</li>
+            <li>Withdrawal PIN or secure IDs</li>
+            <li>Personal data unrelated to trading activities</li>
+          </ul>
 
-        <h3>3.2. Broker Connection Data</h3>
-        <p>When you connect a trading account:</p>
-        <ul>
-          <li>Broker account Login ID</li>
-          <li>API Token (encrypted and never displayed again)</li>
-          <li>Account type (demo/live)</li>
-          <li>Balance, equity, margin</li>
-          <li>Trade history, open positions, past orders</li>
-          <li>Market data associated with your trading activity</li>
-        </ul>
-        <p>We do NOT collect:</p>
-        <ul>
-          <li>Broker account password</li>
-          <li>Withdrawal PIN or secure IDs</li>
-          <li>Personal data unrelated to trading activities</li>
-        </ul>
+          <h3>3.3. Transaction &amp; Payment Data</h3>
+          <p>When subscribing to a plan:</p>
+          <ul>
+            <li>Payment method (card, bank, etc.)</li>
+            <li>Payment provider (Flutterwave, Paystack, Stripe)</li>
+            <li>Transaction ID</li>
+            <li>Subscription plan details</li>
+            <li>Billing status &amp; history</li>
+          </ul>
+          <p>
+            We do not store full card numbers or sensitive payment credentials.
+            All payments are processed securely via third-party partners.
+          </p>
 
-        <h3>3.3. Transaction &amp; Payment Data</h3>
-        <p>When subscribing to a plan:</p>
-        <ul>
-          <li>Payment method (card, bank, etc.)</li>
-          <li>Payment provider (Flutterwave, Paystack, Stripe)</li>
-          <li>Transaction ID</li>
-          <li>Subscription plan details</li>
-          <li>Billing status &amp; history</li>
-        </ul>
-        <p>
-          We do not store full card numbers or sensitive payment credentials.
-          All payments are processed securely via third-party partners.
-        </p>
+          <h3>3.4. Usage &amp; Technical Data</h3>
+          <ul>
+            <li>Login logs</li>
+            <li>Page visits</li>
+            <li>Click interactions</li>
+            <li>Device type and OS</li>
+            <li>Browser data</li>
+            <li>Cookies and tracking identifiers (non-invasive)</li>
+          </ul>
 
-        <h3>3.4. Usage &amp; Technical Data</h3>
-        <ul>
-          <li>Login logs</li>
-          <li>Page visits</li>
-          <li>Click interactions</li>
-          <li>Device type and OS</li>
-          <li>Browser data</li>
-          <li>Cookies and tracking identifiers (non-invasive)</li>
-        </ul>
+          <h3>3.5. Communication Data</h3>
+          <ul>
+            <li>Support messages</li>
+            <li>Emails sent to Market Llama</li>
+            <li>Notifications and feedback</li>
+          </ul>
 
-        <h3>3.5. Communication Data</h3>
-        <ul>
-          <li>Support messages</li>
-          <li>Emails sent to Market Llama</li>
-          <li>Notifications and feedback</li>
-        </ul>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>4. How We Use Your Data</h2>
+          <p>We use your data strictly for legitimate business purposes, including:</p>
 
-        <h2>4. How We Use Your Data</h2>
-        <p>We use your data strictly for legitimate business purposes, including:</p>
+          <h3>4.1. Service Delivery</h3>
+          <ul>
+            <li>Automating trades on your connected broker account</li>
+            <li>Providing analytics, insights, and performance dashboards</li>
+            <li>Managing your subscription and billing</li>
+            <li>Operating your Market Llama account</li>
+            <li>Improving strategy execution and accuracy</li>
+          </ul>
 
-        <h3>4.1. Service Delivery</h3>
-        <ul>
-          <li>Automating trades on your connected broker account</li>
-          <li>Providing analytics, insights, and performance dashboards</li>
-          <li>Managing your subscription and billing</li>
-          <li>Operating your Market Llama account</li>
-          <li>Improving strategy execution and accuracy</li>
-        </ul>
+          <h3>4.2. Security &amp; Compliance</h3>
+          <ul>
+            <li>Detecting fraud or unauthorized access</li>
+            <li>Verifying user identity where necessary</li>
+            <li>Enforcing Terms &amp; Conditions</li>
+            <li>Complying with legal obligations</li>
+          </ul>
 
-        <h3>4.2. Security &amp; Compliance</h3>
-        <ul>
-          <li>Detecting fraud or unauthorized access</li>
-          <li>Verifying user identity where necessary</li>
-          <li>Enforcing Terms &amp; Conditions</li>
-          <li>Complying with legal obligations</li>
-        </ul>
+          <h3>4.3. Performance Optimization</h3>
+          <ul>
+            <li>Enhancing system efficiency</li>
+            <li>Monitoring platform performance</li>
+            <li>Training AI models on anonymized data</li>
+          </ul>
 
-        <h3>4.3. Performance Optimization</h3>
-        <ul>
-          <li>Enhancing system efficiency</li>
-          <li>Monitoring platform performance</li>
-          <li>Training AI models on anonymized data</li>
-        </ul>
+          <h3>4.4. Communication</h3>
+          <ul>
+            <li>Sending service updates</li>
+            <li>Providing support</li>
+            <li>Delivering account notifications</li>
+            <li>Informing users of feature changes, strategies, or billing updates</li>
+          </ul>
 
-        <h3>4.4. Communication</h3>
-        <ul>
-          <li>Sending service updates</li>
-          <li>Providing support</li>
-          <li>Delivering account notifications</li>
-          <li>Informing users of feature changes, strategies, or billing updates</li>
-        </ul>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>5. Legal Basis for Processing (GDPR/NDPR)</h2>
+          <p>We process data based on the following legal grounds:</p>
+          <ul>
+            <li><strong>Contractual Necessity</strong> — To deliver automated trading and analytics services.</li>
+            <li><strong>Legitimate Interest</strong> — To improve system performance and detect fraud.</li>
+            <li><strong>User Consent</strong> — For email communications, tracking cookies, or optional features.</li>
+            <li><strong>Legal Obligation</strong> — To meet regulatory, tax, or compliance requirements.</li>
+          </ul>
 
-        <h2>5. Legal Basis for Processing (GDPR/NDPR)</h2>
-        <p>We process data based on the following legal grounds:</p>
-        <ul>
-          <li><strong>Contractual Necessity</strong> — To deliver automated trading and analytics services.</li>
-          <li><strong>Legitimate Interest</strong> — To improve system performance and detect fraud.</li>
-          <li><strong>User Consent</strong> — For email communications, tracking cookies, or optional features.</li>
-          <li><strong>Legal Obligation</strong> — To meet regulatory, tax, or compliance requirements.</li>
-        </ul>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>6. API Tokens &amp; Sensitive Access</h2>
+          <p>Your API Token enables automated trading.</p>
+          <p>We guarantee that:</p>
+          <ul>
+            <li>API Tokens are stored in encrypted form</li>
+            <li>Tokens are never shared with third parties</li>
+            <li>Tokens are never logged in plaintext</li>
+            <li>Tokens are only used to execute trades you authorize</li>
+            <li>You can revoke access at any time from your broker dashboard</li>
+          </ul>
+          <p>We do not initiate withdrawals or deposits via your API Token.</p>
 
-        <h2>6. API Tokens &amp; Sensitive Access</h2>
-        <p>Your API Token enables automated trading.</p>
-        <p>We guarantee that:</p>
-        <ul>
-          <li>API Tokens are stored in encrypted form</li>
-          <li>Tokens are never shared with third parties</li>
-          <li>Tokens are never logged in plaintext</li>
-          <li>Tokens are only used to execute trades you authorize</li>
-          <li>You can revoke access at any time from your broker dashboard</li>
-        </ul>
-        <p>We do not initiate withdrawals or deposits via your API Token.</p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>7. Data Sharing &amp; Third Parties</h2>
+          <p>We do not sell or rent personal data.</p>
+          <p>We only share data with:</p>
 
-        <h2>7. Data Sharing &amp; Third Parties</h2>
-        <p>We do not sell or rent personal data.</p>
-        <p>We only share data with:</p>
+          <h3>7.1. Payment Partners</h3>
+          <ul>
+            <li>Paystack</li>
+            <li>Flutterwave</li>
+            <li>Stripe</li>
+          </ul>
+          <p>For billing and subscription processing.</p>
 
-        <h3>7.1. Payment Partners</h3>
-        <ul>
-          <li>Paystack</li>
-          <li>Flutterwave</li>
-          <li>Stripe</li>
-        </ul>
-        <p>For billing and subscription processing.</p>
+          <h3>7.2. Cloud &amp; Infrastructure Providers</h3>
+          <ul>
+            <li>Secure hosting servers</li>
+            <li>Encrypted databases</li>
+            <li>Backup storage services</li>
+          </ul>
+          <p>All providers meet industry security standards.</p>
 
-        <h3>7.2. Cloud &amp; Infrastructure Providers</h3>
-        <ul>
-          <li>Secure hosting servers</li>
-          <li>Encrypted databases</li>
-          <li>Backup storage services</li>
-        </ul>
-        <p>All providers meet industry security standards.</p>
+          <h3>7.3. Compliance Authorities</h3>
+          <p>Where legally required:</p>
+          <ul>
+            <li>Government regulators</li>
+            <li>Law enforcement</li>
+            <li>Compliance auditors</li>
+          </ul>
 
-        <h3>7.3. Compliance Authorities</h3>
-        <p>Where legally required:</p>
-        <ul>
-          <li>Government regulators</li>
-          <li>Law enforcement</li>
-          <li>Compliance auditors</li>
-        </ul>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>8. Data Retention</h2>
+          <p>We retain data only as long as necessary:</p>
+          <ul>
+            <li>Account data — while your account remains active</li>
+            <li>Trading data — up to 5 years for compliance</li>
+            <li>Payment data — up to 7 years for tax purposes</li>
+            <li>API Tokens — deleted immediately when you disconnect an account</li>
+            <li>Communication logs — up to 24 months</li>
+          </ul>
+          <p>Users may request data deletion at any time (see Section 11).</p>
 
-        <h2>8. Data Retention</h2>
-        <p>We retain data only as long as necessary:</p>
-        <ul>
-          <li>Account data — while your account remains active</li>
-          <li>Trading data — up to 5 years for compliance</li>
-          <li>Payment data — up to 7 years for tax purposes</li>
-          <li>API Tokens — deleted immediately when you disconnect an account</li>
-          <li>Communication logs — up to 24 months</li>
-        </ul>
-        <p>Users may request data deletion at any time (see Section 11).</p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>9. Cookies &amp; Tracking</h2>
+          <p>Market Llama uses:</p>
+          <ul>
+            <li>Essential cookies (for login + dashboard functionality)</li>
+            <li>Analytical cookies (optional)</li>
+            <li>No invasive advertising cookies</li>
+          </ul>
+          <p>You may disable cookies in your browser, but some features may stop working.</p>
 
-        <h2>9. Cookies &amp; Tracking</h2>
-        <p>Market Llama uses:</p>
-        <ul>
-          <li>Essential cookies (for login + dashboard functionality)</li>
-          <li>Analytical cookies (optional)</li>
-          <li>No invasive advertising cookies</li>
-        </ul>
-        <p>You may disable cookies in your browser, but some features may stop working.</p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>10. Data Protection &amp; Security Measures</h2>
+          <p>We use industry-grade security:</p>
+          <ul>
+            <li>End-to-end data encryption</li>
+            <li>Encrypted API Token storage</li>
+            <li>Firewalls and intrusion detection</li>
+            <li>Access control and audit logs</li>
+            <li>Secure HTTPS communication</li>
+            <li>Regular security reviews and penetration testing</li>
+          </ul>
+          <p>Despite this, no system is 100% risk-free.</p>
 
-        <h2>10. Data Protection &amp; Security Measures</h2>
-        <p>We use industry-grade security:</p>
-        <ul>
-          <li>End-to-end data encryption</li>
-          <li>Encrypted API Token storage</li>
-          <li>Firewalls and intrusion detection</li>
-          <li>Access control and audit logs</li>
-          <li>Secure HTTPS communication</li>
-          <li>Regular security reviews and penetration testing</li>
-        </ul>
-        <p>Despite this, no system is 100% risk-free.</p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>11. User Rights (GDPR &amp; NDPR)</h2>
+          <p>You have full control over your personal data. You may:</p>
+          <ul>
+            <li>Request access</li>
+            <li>Request correction</li>
+            <li>Request deletion</li>
+            <li>Request data portability</li>
+            <li>Withdraw consent</li>
+            <li>Object to certain processing</li>
+            <li>Request restriction of processing</li>
+          </ul>
+          <p>To exercise these rights, contact: <strong>privacy@marketllama.com</strong></p>
+          <p>We will respond within:</p>
+          <ul>
+            <li>30 days (GDPR)</li>
+            <li>7–21 days (NDPR)</li>
+          </ul>
 
-        <h2>11. User Rights (GDPR &amp; NDPR)</h2>
-        <p>You have full control over your personal data. You may:</p>
-        <ul>
-          <li>Request access</li>
-          <li>Request correction</li>
-          <li>Request deletion</li>
-          <li>Request data portability</li>
-          <li>Withdraw consent</li>
-          <li>Object to certain processing</li>
-          <li>Request restriction of processing</li>
-        </ul>
-        <p>To exercise these rights, contact: <strong>privacy@marketllama.com</strong></p>
-        <p>We will respond within:</p>
-        <ul>
-          <li>30 days (GDPR)</li>
-          <li>7–21 days (NDPR)</li>
-        </ul>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>12. International Data Transfers</h2>
+          <p>
+            Your data may be processed outside your country, including the EU, US, or Africa, depending on server
+            infrastructure.
+          </p>
+          <p>We ensure:</p>
+          <ul>
+            <li>Standard contractual clauses</li>
+            <li>GDPR-compliant safeguards</li>
+            <li>NDPR-compliant data transfer policies</li>
+          </ul>
+          <p>Your data remains protected regardless of location.</p>
 
-        <h2>12. International Data Transfers</h2>
-        <p>
-          Your data may be processed outside your country, including the EU, US, or Africa, depending on server
-          infrastructure.
-        </p>
-        <p>We ensure:</p>
-        <ul>
-          <li>Standard contractual clauses</li>
-          <li>GDPR-compliant safeguards</li>
-          <li>NDPR-compliant data transfer policies</li>
-        </ul>
-        <p>Your data remains protected regardless of location.</p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>13. Children’s Privacy</h2>
+          <p>
+            Market Llama does not knowingly collect data from individuals under 18 years of age.
+            If we discover underage usage, we will immediately delete the account.
+          </p>
 
-        <h2>13. Children’s Privacy</h2>
-        <p>
-          Market Llama does not knowingly collect data from individuals under 18 years of age.
-          If we discover underage usage, we will immediately delete the account.
-        </p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>14. Changes to This Policy</h2>
+          <p>
+            We may update this Privacy Policy periodically.
+            Updated versions will be posted on the Platform with a revised “Last Updated” date.
+            Continued use of Market Llama constitutes acceptance of the updated Policy.
+          </p>
 
-        <h2>14. Changes to This Policy</h2>
-        <p>
-          We may update this Privacy Policy periodically.
-          Updated versions will be posted on the Platform with a revised “Last Updated” date.
-          Continued use of Market Llama constitutes acceptance of the updated Policy.
-        </p>
+          <hr class="legal-divider">
 
-        <hr class="legal-divider">
+          <h2>15. Contact Information</h2>
+          <p>For privacy questions, data requests, or legal issues:</p>
+          <p>
+            <strong>Market Llama Privacy Office</strong><br />
+            Email: privacy@marketllama.com<br />
+            Website: www.marketllama.com
+          </p>
+        </article>
+      </div>
+    </main>
 
-        <h2>15. Contact Information</h2>
-        <p>For privacy questions, data requests, or legal issues:</p>
-        <p>
-          <strong>Market Llama Privacy Office</strong><br />
-          Email: privacy@marketllama.com<br />
-          Website: www.marketllama.com
-        </p>
-      </article>
-    </div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-     <!-- FULL-WIDTH RISK DISCLAIMER ABOVE COLUMNS -->
+    <!-- FOOTER -->
+    <footer class="footer">
+      <!-- FULL-WIDTH RISK DISCLAIMER ABOVE COLUMNS -->
       <div class="footer-disclaimer-wrap">
         <div class="risk-disclaimer">
           <strong>⚠️ Risk Disclaimer:</strong><br><br>
@@ -775,91 +797,102 @@
           designed to achieve consistent long-term performance.
         </div>
       </div>
-    <div class="footer-container">
-      <div class="col">
-        <h4>Company</h4>
-        <a href="abouts.html">About</a>
-       
-      </div>
-      <div class="col">
-        <h4>Resources</h4>
-        <a href="support.html">Support</a>
-       
-      </div>
-      <div class="col">
-        <h4>Legal</h4>
-        <a href="terms.html">Terms</a>
-        <a href="privacy.html">Privacy</a>
-      </div>
-      <div class="col">
-        <h4>Connect</h4>
-        <a href="#">Whatsapp</a>
-        <a href="#">Twitter</a>
-        <a href="#">Facebook</a>
-        <a href="#">Instagram</a>
-      </div>
-    </div>
-    <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
-  </footer>
 
-  <!-- Chat -->
-  <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-      stroke-linejoin="round" aria-hidden="true">
-      <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
-      <circle cx="9" cy="10" r="1.25" />
-      <circle cx="12" cy="10" r="1.25" />
-      <circle cx="15" cy="10" r="1.25" />
-    </svg>
-  </button>
-  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
-    aria-hidden="true" inert>
-    <div class="chat-header">
-      <div class="chat-title">Assistant</div>
-      <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+      <!-- EXISTING FOOTER COLUMNS -->
+      <div class="footer-container">
+        <div class="col">
+          <h4>Company</h4>
+          <a href="abouts.html">About</a>
+        </div>
+        <div class="col">
+          <h4>Resources</h4>
+          <a href="support.html">Support</a>
+        </div>
+        <div class="col">
+          <h4>Legal</h4>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html">Privacy</a>
+        </div>
+        <div class="col">
+          <h4>Connect</h4>
+          <a href="#">Whatsapp</a>
+          <a href="#">Twitter</a>
+          <a href="#">Facebook</a>
+          <a href="#">Instagram</a>
+        </div>
+      </div>
+
+      <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
+    </footer>
+
+    <!-- Back to top -->
+    <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
+      </svg>
+    </button>
+
+    <!-- CHAT -->
+    <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+        <circle cx="9" cy="10" r="1.25" />
+        <circle cx="12" cy="10" r="1.25" />
+        <circle cx="15" cy="10" r="1.25" />
+      </svg>
+    </button>
+    <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
+         aria-hidden="true" inert>
+      <div class="chat-header">
+        <div class="chat-title">Assistant</div>
+        <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-msg bot">Hi! How can I help?</div>
+      </div>
+      <form id="chatForm" class="chat-input-row">
+        <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+        <button class="chat-send" type="submit">Send</button>
+      </form>
     </div>
-    <div class="chat-body" id="chatBody">
-      <div class="chat-msg bot">Hi! How can I help?</div>
-    </div>
-    <form id="chatForm" class="chat-input-row">
-      <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
-      <button class="chat-send" type="submit">Send</button>
-    </form>
   </div>
 
-  <!-- Back to top -->
-  <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
-    </svg>
-  </button>
-
-  <!-- Auth Overlay -->
-  <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
-    aria-hidden="true">
+  <!-- Auth Overlay: IDENTICAL structure/logic to tools-education.html -->
+  <div class="auth-overlay" id="authOverlay" aria-hidden="true">
     <div class="auth-container" id="authContainer">
       <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
-      <h2 id="authTitle">Create Account</h2>
+
+      <h2 id="authTitle" class="auth-title">Create account</h2>
+      <p id="authSubtitle" class="auth-subtitle">
+        Create your Market Llama profile in a few steps.
+      </p>
+
       <form id="authForm" novalidate>
+        <!-- SIGN-UP ONLY FIELDS -->
         <div class="form-group signup-field" id="firstNameGroup">
           <label for="authFirstName">First Name</label>
-          <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
-            autocomplete="given-name">
+          <input id="authFirstName" name="firstName" type="text"
+                 placeholder="Enter your first name" required autocomplete="given-name">
         </div>
+
         <div class="form-group signup-field" id="lastNameGroup">
           <label for="authLastName">Last Name</label>
-          <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
-            autocomplete="family-name">
+          <input id="authLastName" name="lastName" type="text"
+                 placeholder="Enter your last name" required autocomplete="family-name">
         </div>
+
         <div class="form-group signup-field" id="dobGroup">
           <label for="authDob">Date of Birth</label>
           <input id="authDob" name="dob" type="date" required>
         </div>
+
         <div class="form-group signup-field" id="usernameGroup">
           <label for="authUsername">Username</label>
-          <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
-            autocomplete="username">
+          <input id="authUsername" name="username" type="text"
+                 placeholder="Choose a username" required autocomplete="username">
         </div>
+
         <div class="form-group signup-field" id="countryGroup">
           <label for="authCountry">Select Country</label>
           <select id="authCountry" name="country" required>
@@ -871,88 +904,415 @@
             <option value="AU">Australia</option>
           </select>
         </div>
+
+        <!-- SHARED FIELDS -->
         <div class="form-group" id="emailGroup">
           <label for="authEmail">Email</label>
-          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
-            inputmode="email">
+          <input id="authEmail" name="email" type="email"
+                 placeholder="Enter your email" required autocomplete="email" inputmode="email">
         </div>
+
         <div class="form-group" id="passwordGroup">
           <label for="authPassword">Password</label>
           <div class="pw-field">
-            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
-              autocomplete="new-password" minlength="8" />
-            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
-              aria-label="Toggle password visibility">
+            <input
+              id="authPassword"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="new-password"
+              minlength="8"
+            />
+            <!-- Eye icon -->
+            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 role="button"
+                 aria-label="Toggle password visibility"
+                 tabindex="0">
               <path
                 d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
             </svg>
           </div>
+
+          <div class="password-strength" aria-live="polite">
+            <div class="password-strength-bar" aria-hidden="true">
+              <div class="password-strength-bar-fill" id="passwordStrengthBar"></div>
+            </div>
+            <p id="passwordStrengthText" class="password-strength-text"></p>
+          </div>
+
           <div class="hint" id="passwordHint" aria-live="polite"></div>
         </div>
-        <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>Continue</button>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          id="submitBtn"
+          data-mode="signup"
+          disabled
+        >
+          Continue
+        </button>
+
         <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
+
+        <!-- MODE SWITCH -->
+        <p class="auth-switch-row">
+          <span id="authSwitchLabel">Already have an account?</span>
+          <button
+            type="button"
+            class="auth-switch-link"
+            id="authSwitchAction"
+          >
+            Sign in
+          </button>
+        </p>
       </form>
     </div>
   </div>
 
-  <!-- MOBILE Our Services toggle logic -->
-  <script>
-    (function () {
-      document.addEventListener('DOMContentLoaded', function () {
-        var servicesItem = document.getElementById('services');
-        if (!servicesItem) return;
+  <script src="scripts/app.js" defer></script>
 
-        var link = servicesItem.querySelector('.dropdown');
-        var menu = servicesItem.querySelector('.dropdown-menu');
-        if (!link || !menu) return;
-
-        link.addEventListener('click', function (e) {
-          var navToggle = document.getElementById('navToggle');
-          if (!navToggle) return;
-
-          var toggleDisplay = window.getComputedStyle(navToggle).display;
-          var isMobile = toggleDisplay !== 'none';
-
-          if (!isMobile) return;
-
-          e.preventDefault();
-
-          var expanded = link.getAttribute('aria-expanded') === 'true';
-          link.setAttribute('aria-expanded', String(!expanded));
-          servicesItem.classList.toggle('is-open', !expanded);
-        });
-      });
-    })();
-  </script>
-
-  <!-- Back-to-top behavior (same pattern as terms.html) -->
+  <!-- Page-specific: Our Services dropdown + mobile outside-close -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const screen2 = document.getElementById('screen2');
-      const backBtn = document.getElementById('backToTop');
-      if (!screen2 || !backBtn) return;
+      console.log('[privacy] DOM loaded, init dropdown + outside-close');
 
-      function trackBackToTop() {
-        const st = screen2.scrollTop || 0;
-        if (st > 300) {
-          backBtn.classList.add('show');
-        } else {
-          backBtn.classList.remove('show');
+      /* Our Services desktop dropdown */
+      const services = document.getElementById('services');
+      (function dropdown() {
+        const li = services;
+        if (!li) return;
+        const link = li.querySelector('.dropdown');
+        const menu = li.querySelector('.dropdown-menu');
+        if (!link || !menu) return;
+
+        link.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          const willShow = !menu.classList.contains('show');
+          menu.classList.toggle('show', willShow);
+          link.setAttribute('aria-expanded', String(willShow));
+        });
+
+        document.addEventListener('click', function (ev) {
+          if (!li.contains(ev.target)) {
+            menu.classList.remove('show');
+            link.setAttribute('aria-expanded', 'false');
+          }
+        });
+      })();
+
+      /* Close hamburger when tapping outside (mobile only) */
+      (function enableOutsideClose() {
+        const nav = document.getElementById('mainNav');
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        const navBackdrop = document.getElementById('navBackdrop');
+
+        if (!nav || !navMenu || !navToggle) return;
+
+        function isMobile() {
+          return window.getComputedStyle(navToggle).display !== 'none';
         }
-      }
 
-      screen2.addEventListener('scroll', trackBackToTop, { passive: true });
+        function closeMenu() {
+          navMenu.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('nav-open');
+          if (navBackdrop) {
+            navBackdrop.classList.remove('active');
+            navBackdrop.classList.remove('show');
+          }
+        }
 
-      backBtn.addEventListener('click', function () {
-        screen2.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+        document.addEventListener('click', function (e) {
+          if (!isMobile()) return;
 
-      // Initial state
-      trackBackToTop();
+          const clickedInsideNav = nav.contains(e.target);
+          if (!clickedInsideNav && navMenu.classList.contains('open')) {
+            closeMenu();
+          }
+        });
+      })();
+
+      /* Back-to-top visibility based on scroll on #screen2 */
+      (function backToTopLogic() {
+        const screen2 = document.getElementById('screen2');
+        const backBtn = document.getElementById('backToTop');
+        if (!screen2 || !backBtn) return;
+
+        function trackBackToTop() {
+          const st = screen2.scrollTop || 0;
+          if (st > 300) {
+            backBtn.classList.add('show');
+          } else {
+            backBtn.classList.remove('show');
+          }
+        }
+
+        screen2.addEventListener('scroll', trackBackToTop, { passive: true });
+
+        backBtn.addEventListener('click', function () {
+          screen2.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        trackBackToTop();
+      })();
     });
   </script>
 
-  <script src="scripts/app.js" defer></script>
+  <!-- Unified Auth modal logic (same as tools-education, exposed via window.mlOpenAuth) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var authOverlay = document.getElementById('authOverlay');
+      var authContainer = document.getElementById('authContainer');
+      var authForm = document.getElementById('authForm');
+      var openLogin = document.getElementById('openLogin');
+      var openSignup = document.getElementById('openSignup');
+      var closeAuth = document.getElementById('closeAuth');
+      var authTitle = document.getElementById('authTitle');
+      var authSubtitle = document.getElementById('authSubtitle');
+      var authSwitchLabel = document.getElementById('authSwitchLabel');
+      var authSwitchAction = document.getElementById('authSwitchAction');
+      var signupFields = document.querySelectorAll('.signup-field');
+      var authPassword = document.getElementById('authPassword');
+      var authEmail = document.getElementById('authEmail');
+      var submitBtn = document.getElementById('submitBtn');
+      var passwordStrengthBar = document.getElementById('passwordStrengthBar');
+      var passwordStrengthText = document.getElementById('passwordStrengthText');
+      var passwordHint = document.getElementById('passwordHint');
+      var togglePassword = document.getElementById('togglePassword');
+
+      var lastTrigger = null;
+      var currentMode = 'signup';
+
+      var focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      var firstFocusable, lastFocusable;
+
+      function setOverlayVisibility(open) {
+        if (!authOverlay) return;
+
+        if (open) {
+          authOverlay.classList.add('open');
+          authOverlay.removeAttribute('aria-hidden');
+          authOverlay.setAttribute('role', 'dialog');
+          authOverlay.setAttribute('aria-modal', 'true');
+          authOverlay.setAttribute('aria-labelledby', 'authTitle');
+
+          var background = document.getElementById('screen2');
+          if (background) {
+            background.setAttribute('inert', 'true');
+          }
+
+          var focusables = authContainer.querySelectorAll(focusableSelectors);
+          firstFocusable = focusables[0];
+          lastFocusable = focusables[focusables.length - 1];
+
+          if (authEmail) authEmail.focus();
+        } else {
+          authOverlay.classList.remove('open');
+          authOverlay.setAttribute('aria-hidden', 'true');
+          authOverlay.removeAttribute('aria-modal');
+          authOverlay.removeAttribute('role');
+
+          var background2 = document.getElementById('screen2');
+          if (background2) {
+            background2.removeAttribute('inert');
+          }
+
+          if (lastTrigger && typeof lastTrigger.focus === 'function') {
+            lastTrigger.focus();
+          }
+        }
+      }
+
+      function resetPasswordUI() {
+        if (authPassword) authPassword.value = '';
+        if (passwordStrengthBar) passwordStrengthBar.style.width = '0%';
+        if (passwordStrengthText) passwordStrengthText.textContent = '';
+        if (passwordHint) passwordHint.textContent = '';
+        if (submitBtn) submitBtn.disabled = true;
+      }
+
+      function clearForm() {
+        if (authForm) authForm.reset();
+        resetPasswordUI();
+      }
+
+      function setMode(mode) {
+        currentMode = mode;
+        var isSignup = mode === 'signup';
+
+        signupFields.forEach(function (el) {
+          el.style.display = isSignup ? '' : 'none';
+        });
+
+        if (isSignup) {
+          authTitle.textContent = 'Create account';
+          authSubtitle.textContent = 'Create your Market Llama profile in a few steps.';
+          authSwitchLabel.textContent = 'Already have an account?';
+          authSwitchAction.textContent = 'Sign in';
+          submitBtn.dataset.mode = 'signup';
+          if (authPassword) authPassword.setAttribute('autocomplete', 'new-password');
+        } else {
+          authTitle.textContent = 'Sign in';
+          authSubtitle.textContent = 'Access your Market Llama dashboard and accounts.';
+          authSwitchLabel.textContent = 'New here?';
+          authSwitchAction.textContent = 'Create an account';
+          submitBtn.dataset.mode = 'login';
+          if (authPassword) authPassword.setAttribute('autocomplete', 'current-password');
+        }
+
+        clearForm();
+      }
+
+      function openAuth(mode, trigger) {
+        lastTrigger = trigger || null;
+        setMode(mode || 'signup');
+        setOverlayVisibility(true);
+      }
+
+      function closeAuthModal() {
+        setOverlayVisibility(false);
+      }
+
+      // Expose to other scripts (if needed)
+      window.mlOpenAuth = openAuth;
+      window.mlSetAuthMode = setMode;
+
+      if (openSignup) {
+        openSignup.addEventListener('click', function (e) {
+          e.preventDefault();
+          openAuth('signup', e.currentTarget);
+        });
+      }
+
+      if (openLogin) {
+        openLogin.addEventListener('click', function (e) {
+          e.preventDefault();
+          openAuth('login', e.currentTarget);
+        });
+      }
+
+      if (authSwitchAction) {
+        authSwitchAction.addEventListener('click', function () {
+          var next = currentMode === 'signup' ? 'login' : 'signup';
+          setMode(next);
+        });
+      }
+
+      if (closeAuth) {
+        closeAuth.addEventListener('click', function () {
+          closeAuthModal();
+        });
+      }
+
+      if (authOverlay) {
+        authOverlay.addEventListener('click', function (e) {
+          if (e.target === authOverlay) {
+            closeAuthModal();
+          }
+        });
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (!authOverlay || authOverlay.getAttribute('aria-hidden') === 'true') return;
+
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeAuthModal();
+        }
+
+        if (e.key === 'Tab') {
+          var focusables = authContainer.querySelectorAll(focusableSelectors);
+          if (!focusables.length) return;
+
+          firstFocusable = focusables[0];
+          lastFocusable = focusables[focusables.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusable) {
+              e.preventDefault();
+              lastFocusable.focus();
+            }
+          } else {
+            if (document.activeElement === lastFocusable) {
+              e.preventDefault();
+              firstFocusable.focus();
+            }
+          }
+        }
+      });
+
+      if (togglePassword && authPassword) {
+        togglePassword.addEventListener('click', function () {
+          var isHidden = authPassword.type === 'password';
+          authPassword.type = isHidden ? 'text' : 'password';
+          togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        });
+
+        togglePassword.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            var isHidden = authPassword.type === 'password';
+            authPassword.type = isHidden ? 'text' : 'password';
+            togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+          }
+        });
+      }
+
+      function updatePasswordStrength(password) {
+        if (!passwordStrengthBar || !passwordStrengthText || !submitBtn) return;
+
+        var hasUpper = /[A-Z]/.test(password);
+        var hasLower = /[a-z]/.test(password);
+        var hasNumber = /[0-9]/.test(password);
+        var hasSymbol = /[^A-Za-z0-9]/.test(password);
+        var length = password.length;
+        var rulesMet = [hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length;
+
+        var label = '';
+        var text = '';
+        var width = 0;
+        var valid = false;
+
+        if (length === 0) {
+          width = 0;
+          label = '';
+          text = '';
+        } else if (length < 8) {
+          width = 20;
+          label = 'Too short';
+          text = 'Use at least 14 characters with letters, numbers and symbols.';
+        } else if (length < 14 || rulesMet < 4) {
+          width = 40;
+          label = 'Can be stronger';
+          text = 'Add more characters and a mix of upper, lower, numbers and symbols.';
+        } else if (length < 20) {
+          width = 75;
+          label = 'Strong password';
+          text = 'Good. Your password is strong and hard to guess.';
+          valid = true;
+        } else {
+          width = 100;
+          label = 'Excellent';
+          text = 'Excellent. This password is very hard to guess.';
+          valid = true;
+        }
+
+        passwordStrengthBar.style.width = width + '%';
+        passwordStrengthText.textContent = label ? label + ' – ' + text : '';
+        submitBtn.disabled = !valid;
+      }
+
+      if (authPassword) {
+        authPassword.addEventListener('input', function () {
+          updatePasswordStrength(authPassword.value);
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>
