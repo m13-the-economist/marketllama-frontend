@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Final Step — Market Llama</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --nav-height: 64px;
+      --nav-teal: #1a6d72;
+
+      --auth-bg: #000000;
+      --auth-card-bg: rgba(8, 12, 20, 0.88); /* glassy dark */
+      --auth-border: rgba(255, 255, 255, 0.14);
+      --auth-text: #e5e7eb;
+      --auth-muted: #9ca3af;
+      --auth-primary: #1a6d72;      /* dark turquoise */
+      --auth-primary-hover: #20848a;
+      --auth-radius: 24px;
+      --auth-shadow: 0 26px 70px rgba(0, 0, 0, 0.75);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body.auth-body {
+      min-height: 100vh;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: var(--auth-bg);
+      color: var(--auth-text);
+    }
+
+    /* ===========================
+       FIXED TOP NAV
+       =========================== */
+    .auth-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(26, 109, 114, 0.98);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+
+    .auth-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .auth-logo {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    .auth-brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .auth-header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .auth-header-right span {
+      font-size: 0.88rem;
+      color: #e5f4f6;
+    }
+
+    .auth-header-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: background 0.18s ease, transform 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .auth-header-link:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    /* ===========================
+       LAYOUT
+       =========================== */
+    .auth-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-top: var(--nav-height);
+    }
+
+    .auth-main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 84px 16px 40px;
+    }
+
+    /* ===========================
+       CARD – GLASSY, WIDE & LONG
+       =========================== */
+    .auth-card {
+      width: 100%;
+      max-width: 640px;
+      min-height: 860px; /* long modal */
+      background: var(--auth-card-bg);
+      border-radius: var(--auth-radius);
+      box-shadow: var(--auth-shadow);
+      padding: 44px 48px 40px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--auth-border);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .auth-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #f9fafb;
+    }
+
+    .auth-subtitle {
+      font-size: 0.9rem;
+      color: var(--auth-muted);
+      margin-bottom: 24px;
+      max-width: 34rem;
+    }
+
+    .auth-step-indicator {
+      font-size: 0.8rem;
+      color: var(--auth-muted);
+      margin-bottom: 8px;
+    }
+
+    .auth-form-group {
+      margin-bottom: 18px;
+    }
+
+    .auth-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: block;
+      color: #e5e7eb;
+    }
+
+    .auth-helper {
+      font-size: 0.78rem;
+      color: var(--auth-muted);
+      margin-top: 6px;
+    }
+
+    /* inline error */
+    .field-error {
+      min-height: 16px;
+      font-size: 0.78rem;
+      color: #fca5a5;
+      margin-top: 4px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .field-error.is-visible {
+      opacity: 1;
+    }
+
+    .input-invalid {
+      border-color: #f97373 !important;
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.35);
+    }
+
+    .auth-error-global {
+      font-size: 0.8rem;
+      color: #f97373;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* ===========================
+       INPUTS
+       =========================== */
+    .auth-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 0.95rem;
+      outline: none;
+      background: rgba(15, 23, 42, 0.95);
+      color: #f9fafb;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease, transform 0.1s ease;
+    }
+
+    .auth-input::placeholder {
+      color: #6b7280;
+    }
+
+    .auth-input:focus {
+      border-color: #38bdf8;
+      background: rgba(15, 23, 42, 1);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* ===========================
+       PRIMARY BUTTON
+       =========================== */
+    .auth-primary-btn {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      background: var(--auth-primary);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.96rem;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.12s ease, transform 0.05s ease,
+        box-shadow 0.12s ease;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .auth-primary-btn:hover {
+      background: var(--auth-primary-hover);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7);
+      transform: translateY(-1px);
+    }
+
+    .auth-primary-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+    }
+
+    /* ===========================
+       FOOTER + DISCLAIMER
+       =========================== */
+    .page-footer {
+      padding: 32px 16px 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #d1d5db;
+      margin-top: 12px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-disclaimer-wrap {
+      max-width: 1200px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .risk-disclaimer {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #bfbfbf;
+      text-align: left;
+    }
+
+    .risk-disclaimer strong {
+      color: #e0e0e0;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-col h4 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 0.85rem;
+      margin: 3px 0;
+      color: #d1d5db;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.18s ease, transform 0.12s ease;
+    }
+
+    .footer-col a:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    .footer-note {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+      .auth-header {
+        padding: 0 16px;
+      }
+
+      .auth-main {
+        padding: 84px 12px 32px;
+      }
+
+      .auth-card {
+        max-width: 100%;
+        min-height: 720px;
+        padding: 28px 22px 26px;
+        border-radius: 18px;
+      }
+
+      .auth-title {
+        font-size: 1.55rem;
+      }
+
+      .auth-header-right span {
+        display: none;
+      }
+    }
+
+    /* ===========================
+       CHAT WIDGET – DARK TURQUOISE
+       =========================== */
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--nav-teal);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .18);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(8, 20, 24, .96);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(26, 109, 114, 0.6);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--nav-teal);
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: var(--nav-teal);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+      }
+
+      .chat-panel {
+        right: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-body">
+  <!-- NAV BAR -->
+  <header class="auth-header">
+    <a href="index.html#hero" class="auth-header-left">
+      <img src="assets/llama.webp" alt="Market Llama" class="auth-logo" />
+      <span class="auth-brand">Market Llama</span>
+    </a>
+    <div class="auth-header-right">
+      <span>Already have an account?</span>
+      <a href="signin.html" class="auth-header-link">Sign in</a>
+    </div>
+  </header>
+
+  <div class="auth-shell">
+    <main class="auth-main">
+      <section class="auth-card">
+        <div class="auth-step-indicator">Step 3 of 3</div>
+        <h1 class="auth-title">Tell us about you</h1>
+        <p class="auth-subtitle">
+          Complete your basic profile so we can personalise your dashboard and comply with platform requirements.
+        </p>
+
+        <form id="finalStepForm" novalidate>
+          <!-- FULL NAME -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="fullName">Full name</label>
+            <input
+              id="fullName"
+              name="fullName"
+              class="auth-input"
+              placeholder="Gafar Akinfolayan"
+            />
+            <p class="field-error" data-error-for="fullName"></p>
+          </div>
+
+          <!-- USERNAME -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              class="auth-input"
+              placeholder="gafar.trades"
+            />
+            <p class="field-error" data-error-for="username"></p>
+            <div class="auth-helper">
+              This is how we’ll display you across the app.
+            </div>
+          </div>
+
+          <!-- DATE OF BIRTH -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="dob">Date of birth</label>
+            <input
+              id="dob"
+              name="dob"
+              type="date"
+              class="auth-input"
+            />
+            <p class="field-error" data-error-for="dob"></p>
+          </div>
+
+          <!-- COUNTRY PICKER – full list (your original) -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="country">Country</label>
+            <select
+              id="country"
+              name="country"
+              class="auth-input"
+            >
+              <option value="">Select your country</option>
+              <option value="AF">Afghanistan</option>
+              <option value="AL">Albania</option>
+              <option value="DZ">Algeria</option>
+              <option value="AD">Andorra</option>
+              <option value="AO">Angola</option>
+              <option value="AG">Antigua and Barbuda</option>
+              <option value="AR">Argentina</option>
+              <option value="AM">Armenia</option>
+              <option value="AU">Australia</option>
+              <option value="AT">Austria</option>
+              <option value="AZ">Azerbaijan</option>
+              <option value="BS">Bahamas</option>
+              <option value="BH">Bahrain</option>
+              <option value="BD">Bangladesh</option>
+              <option value="BB">Barbados</option>
+              <option value="BY">Belarus</option>
+              <option value="BE">Belgium</option>
+              <option value="BZ">Belize</option>
+              <option value="BJ">Benin</option>
+              <option value="BT">Bhutan</option>
+              <option value="BO">Bolivia</option>
+              <option value="BA">Bosnia and Herzegovina</option>
+              <option value="BW">Botswana</option>
+              <option value="BR">Brazil</option>
+              <option value="BN">Brunei</option>
+              <option value="BG">Bulgaria</option>
+              <option value="BF">Burkina Faso</option>
+              <option value="BI">Burundi</option>
+              <option value="CV">Cabo Verde</option>
+              <option value="KH">Cambodia</option>
+              <option value="CM">Cameroon</option>
+              <option value="CA">Canada</option>
+              <option value="CF">Central African Republic</option>
+              <option value="TD">Chad</option>
+              <option value="CL">Chile</option>
+              <option value="CN">China</option>
+              <option value="CO">Colombia</option>
+              <option value="KM">Comoros</option>
+              <option value="CG">Congo</option>
+              <option value="CD">Congo, Democratic Republic</option>
+              <option value="CR">Costa Rica</option>
+              <option value="HR">Croatia</option>
+              <option value="CU">Cuba</option>
+              <option value="CY">Cyprus</option>
+              <option value="CZ">Czech Republic</option>
+              <option value="DK">Denmark</option>
+              <option value="DJ">Djibouti</option>
+              <option value="DM">Dominica</option>
+              <option value="DO">Dominican Republic</option>
+              <option value="EC">Ecuador</option>
+              <option value="EG">Egypt</option>
+              <option value="SV">El Salvador</option>
+              <option value="GQ">Equatorial Guinea</option>
+              <option value="ER">Eritrea</option>
+              <option value="EE">Estonia</option>
+              <option value="SZ">Eswatini</option>
+              <option value="ET">Ethiopia</option>
+              <option value="FJ">Fiji</option>
+              <option value="FI">Finland</option>
+              <option value="FR">France</option>
+              <option value="GA">Gabon</option>
+              <option value="GM">Gambia</option>
+              <option value="GE">Georgia</option>
+              <option value="DE">Germany</option>
+              <option value="GH">Ghana</option>
+              <option value="GR">Greece</option>
+              <option value="GD">Grenada</option>
+              <option value="GT">Guatemala</option>
+              <option value="GN">Guinea</option>
+              <option value="GW">Guinea-Bissau</option>
+              <option value="GY">Guyana</option>
+              <option value="HT">Haiti</option>
+              <option value="HN">Honduras</option>
+              <option value="HU">Hungary</option>
+              <option value="IS">Iceland</option>
+              <option value="IN">India</option>
+              <option value="ID">Indonesia</option>
+              <option value="IR">Iran</option>
+              <option value="IQ">Iraq</option>
+              <option value="IE">Ireland</option>
+              <option value="IL">Israel</option>
+              <option value="IT">Italy</option>
+              <option value="JM">Jamaica</option>
+              <option value="JP">Japan</option>
+              <option value="JO">Jordan</option>
+              <option value="KZ">Kazakhstan</option>
+              <option value="KE">Kenya</option>
+              <option value="KI">Kiribati</option>
+              <option value="KP">Korea, North</option>
+              <option value="KR">Korea, South</option>
+              <option value="KW">Kuwait</option>
+              <option value="KG">Kyrgyzstan</option>
+              <option value="LA">Laos</option>
+              <option value="LV">Latvia</option>
+              <option value="LB">Lebanon</option>
+              <option value="LS">Lesotho</option>
+              <option value="LR">Liberia</option>
+              <option value="LY">Libya</option>
+              <option value="LI">Liechtenstein</option>
+              <option value="LT">Lithuania</option>
+              <option value="LU">Luxembourg</option>
+              <option value="MG">Madagascar</option>
+              <option value="MW">Malawi</option>
+              <option value="MY">Malaysia</option>
+              <option value="MV">Maldives</option>
+              <option value="ML">Mali</option>
+              <option value="MT">Malta</option>
+              <option value="MH">Marshall Islands</option>
+              <option value="MR">Mauritania</option>
+              <option value="MU">Mauritius</option>
+              <option value="MX">Mexico</option>
+              <option value="FM">Micronesia</option>
+              <option value="MD">Moldova</option>
+              <option value="MC">Monaco</option>
+              <option value="MN">Mongolia</option>
+              <option value="ME">Montenegro</option>
+              <option value="MA">Morocco</option>
+              <option value="MZ">Mozambique</option>
+              <option value="MM">Myanmar</option>
+              <option value="NA">Namibia</option>
+              <option value="NR">Nauru</option>
+              <option value="NP">Nepal</option>
+              <option value="NL">Netherlands</option>
+              <option value="NZ">New Zealand</option>
+              <option value="NI">Nicaragua</option>
+              <option value="NE">Niger</option>
+              <option value="NG">Nigeria</option>
+              <option value="MK">North Macedonia</option>
+              <option value="NO">Norway</option>
+              <option value="OM">Oman</option>
+              <option value="PK">Pakistan</option>
+              <option value="PW">Palau</option>
+              <option value="PS">Palestine</option>
+              <option value="PA">Panama</option>
+              <option value="PG">Papua New Guinea</option>
+              <option value="PY">Paraguay</option>
+              <option value="PE">Peru</option>
+              <option value="PH">Philippines</option>
+              <option value="PL">Poland</option>
+              <option value="PT">Portugal</option>
+              <option value="QA">Qatar</option>
+              <option value="RO">Romania</option>
+              <option value="RU">Russia</option>
+              <option value="RW">Rwanda</option>
+              <option value="KN">Saint Kitts and Nevis</option>
+              <option value="LC">Saint Lucia</option>
+              <option value="VC">Saint Vincent and the Grenadines</option>
+              <option value="WS">Samoa</option>
+              <option value="SM">San Marino</option>
+              <option value="ST">Sao Tome and Principe</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="SN">Senegal</option>
+              <option value="RS">Serbia</option>
+              <option value="SC">Seychelles</option>
+              <option value="SL">Sierra Leone</option>
+              <option value="SG">Singapore</option>
+              <option value="SK">Slovakia</option>
+              <option value="SI">Slovenia</option>
+              <option value="SB">Solomon Islands</option>
+              <option value="SO">Somalia</option>
+              <option value="ZA">South Africa</option>
+              <option value="SS">South Sudan</option>
+              <option value="ES">Spain</option>
+              <option value="LK">Sri Lanka</option>
+              <option value="SD">Sudan</option>
+              <option value="SR">Suriname</option>
+              <option value="SE">Sweden</option>
+              <option value="CH">Switzerland</option>
+              <option value="SY">Syria</option>
+              <option value="TW">Taiwan</option>
+              <option value="TJ">Tajikistan</option>
+              <option value="TZ">Tanzania</option>
+              <option value="TH">Thailand</option>
+              <option value="TL">Timor-Leste</option>
+              <option value="TG">Togo</option>
+              <option value="TO">Tonga</option>
+              <option value="TT">Trinidad and Tobago</option>
+              <option value="TN">Tunisia</option>
+              <option value="TR">Turkey</option>
+              <option value="TM">Turkmenistan</option>
+              <option value="TV">Tuvalu</option>
+              <option value="UG">Uganda</option>
+              <option value="UA">Ukraine</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="GB">United Kingdom</option>
+              <option value="US">United States</option>
+              <option value="UY">Uruguay</option>
+              <option value="UZ">Uzbekistan</option>
+              <option value="VU">Vanuatu</option>
+              <option value="VA">Vatican City</option>
+              <option value="VE">Venezuela</option>
+              <option value="VN">Vietnam</option>
+              <option value="YE">Yemen</option>
+              <option value="ZM">Zambia</option>
+              <option value="ZW">Zimbabwe</option>
+            </select>
+            <p class="field-error" data-error-for="country"></p>
+            <div class="auth-helper">
+              Select your country of residence.
+            </div>
+          </div>
+
+          <p id="finalStepError" class="auth-error-global" data-form-error></p>
+
+          <button id="finalStepSubmit" type="submit" class="auth-primary-btn">
+            Continue
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <!-- FOOTER (same as other auth pages) -->
+    <footer class="page-footer">
+      <div class="footer-inner">
+        <div class="footer-disclaimer-wrap">
+          <div class="risk-disclaimer">
+            <strong>⚠️ Risk Disclaimer:</strong>
+            Trading in financial markets carries inherent risks, including the potential for loss of capital.
+            Performance may vary based on market conditions, account size, risk tolerance, and execution environment.
+            While Market Llama is built to deliver consistent, data-driven performance through advanced automation and
+            professional account management, no trading environment is completely without risk.
+            <br /><br />
+            Users should understand that smaller accounts face higher exposure to volatility, faster drawdown cycles,
+            and reduced margin flexibility compared to larger accounts. Larger accounts can withstand market
+            fluctuations more effectively, but they are still subject to market risk and temporary performance
+            deviations.
+            <br /><br />
+            Market Llama operates as a technology-enabled, professional account management platform — similar to
+            institutional asset managers — providing users with sophisticated trading systems, automated execution, and
+            real-time risk controls. Our purpose is to optimize performance, protect user capital, and deliver
+            institutional-grade trading outcomes.
+            <br /><br />
+            By connecting your trading account to Market Llama, you acknowledge that every investment activity carries
+            risk, and that results can vary across market conditions. We commit to operating transparently, managing
+            accounts responsibly, and applying disciplined, data-driven strategies designed to achieve consistent
+            long-term performance.
+          </div>
+        </div>
+
+        <div class="footer-columns">
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="abouts.html">About</a>
+          </div>
+          <div class="footer-col">
+            <h4>Resources</h4>
+            <a href="support.html">Support</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="terms.html">Terms</a>
+            <a href="privacy.html">Privacy</a>
+          </div>
+          <div class="footer-col">
+            <h4>Connect</h4>
+            <a href="#">Whatsapp</a>
+            <a href="#">Twitter</a>
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+          </div>
+        </div>
+
+        <p class="footer-note">© 2025 Market Llama. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- CHAT -->
+  <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+      <circle cx="9" cy="10" r="1.25" />
+      <circle cx="12" cy="10" r="1.25" />
+      <circle cx="15" cy="10" r="1.25" />
+    </svg>
+  </button>
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
+    aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-title">Assistant</div>
+      <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">Hi! How can I help?</div>
+    </div>
+    <form id="chatForm" class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+      <button class="chat-send" type="submit">Send</button>
+    </form>
+  </div>
+
+  <!-- PURE INLINE VALIDATION, NO auth.js DEPENDENCY -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('finalStepForm');
+      if (!form) return;
+
+      const fullNameInput = document.getElementById('fullName');
+      const usernameInput = document.getElementById('username');
+      const dobInput = document.getElementById('dob');
+      const countrySelect = document.getElementById('country');
+      const globalError = document.getElementById('finalStepError');
+
+      function getErrorEl(field) {
+        if (!field) return null;
+        const key = field.id || field.name;
+        if (!key) return null;
+        return form.querySelector('.field-error[data-error-for="' + key + '"]');
+      }
+
+      function setFieldError(field, msg) {
+        if (!field) return;
+        const el = getErrorEl(field);
+        if (el) {
+          el.textContent = msg;
+          el.classList.add('is-visible');
+        }
+        field.classList.add('input-invalid');
+      }
+
+      function clearFieldError(field) {
+        if (!field) return;
+        const el = getErrorEl(field);
+        if (el) {
+          el.textContent = '';
+          el.classList.remove('is-visible');
+        }
+        field.classList.remove('input-invalid');
+      }
+
+      function clearAllErrors() {
+        form.querySelectorAll('.field-error').forEach(el => {
+          el.textContent = '';
+          el.classList.remove('is-visible');
+        });
+        form.querySelectorAll('.input-invalid').forEach(el => {
+          el.classList.remove('input-invalid');
+        });
+        if (globalError) {
+          globalError.textContent = '';
+          globalError.style.display = 'none';
+        }
+      }
+
+      function focusFirst(field) {
+        if (!field) return;
+        try {
+          field.focus({ preventScroll: true });
+        } catch (_) {
+          try { field.focus(); } catch (_) {}
+        }
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function calculateAge(dobDate) {
+        const today = new Date();
+        let age = today.getFullYear() - dobDate.getFullYear();
+        const m = today.getMonth() - dobDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+          age--;
+        }
+        return age;
+      }
+
+      [fullNameInput, usernameInput, dobInput, countrySelect].forEach(field => {
+        if (!field) return;
+        const evt = field.tagName === 'SELECT' ? 'change' : 'input';
+        field.addEventListener(evt, () => clearFieldError(field));
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearAllErrors();
+
+        let hasError = false;
+        let firstInvalid = null;
+
+        const fullName = fullNameInput ? fullNameInput.value.trim() : '';
+        const username = usernameInput ? usernameInput.value.trim() : '';
+        const dobValue = dobInput ? dobInput.value : '';
+        const country = countrySelect ? countrySelect.value : '';
+
+        // FULL NAME: must exist + at least two words
+        if (!fullName) {
+          hasError = true;
+          firstInvalid = firstInvalid || fullNameInput;
+          setFieldError(fullNameInput, 'Enter your full name.');
+        } else {
+          const nameParts = fullName.split(/\s+/).filter(Boolean);
+          if (nameParts.length < 2) {
+            hasError = true;
+            firstInvalid = firstInvalid || fullNameInput;
+            setFieldError(fullNameInput, 'Enter your first and last name.');
+          }
+        }
+
+        // USERNAME: required
+        if (!username) {
+          hasError = true;
+          firstInvalid = firstInvalid || usernameInput;
+          setFieldError(usernameInput, 'Enter a username.');
+        }
+
+        // DOB: required + not future + at least 18 years old + not insane old
+        if (!dobValue) {
+          hasError = true;
+          firstInvalid = firstInvalid || dobInput;
+          setFieldError(dobInput, 'Enter your date of birth.');
+        } else {
+          const dobDate = new Date(dobValue);
+          if (isNaN(dobDate.getTime())) {
+            hasError = true;
+            firstInvalid = firstInvalid || dobInput;
+            setFieldError(dobInput, 'Enter a valid date of birth.');
+          } else {
+            const today = new Date();
+            if (dobDate > today) {
+              hasError = true;
+              firstInvalid = firstInvalid || dobInput;
+              setFieldError(dobInput, 'Enter a valid date of birth.');
+            } else {
+              const age = calculateAge(dobDate);
+              if (age < 18) {
+                hasError = true;
+                firstInvalid = firstInvalid || dobInput;
+                setFieldError(dobInput, 'You must be at least 18 to use Market Llama.');
+              } else if (age > 120) {
+                hasError = true;
+                firstInvalid = firstInvalid || dobInput;
+                setFieldError(dobInput, 'Enter a valid date of birth.');
+              }
+            }
+          }
+        }
+
+        // COUNTRY: required
+        if (!country) {
+          hasError = true;
+          firstInvalid = firstInvalid || countrySelect;
+          setFieldError(countrySelect, 'Select your country.');
+        }
+
+        if (hasError) {
+          if (firstInvalid) focusFirst(firstInvalid);
+          if (globalError) {
+            globalError.textContent = 'Please fix the highlighted fields to continue.';
+            globalError.style.display = 'block';
+          }
+          return;
+        }
+
+        // ✅ All good – simple redirect for now
+        window.location.href = '/dashboard/accounts.html';
+      });
+    });
+  </script>
+
+  <!-- Chat wiring with smooth outside-click close -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatFab = document.getElementById('chatFab');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatBody = document.getElementById('chatBody');
+
+      function openChat() {
+        chatPanel.classList.add('open');
+      }
+
+      function closeChat() {
+        chatPanel.classList.remove('open');
+      }
+
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openChat();
+        });
+      }
+
+      if (chatClose) {
+        chatClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeChat();
+        });
+      }
+
+      // Close chat by clicking/tapping anywhere outside (without jumping to top)
+      document.addEventListener('click', function (e) {
+        if (!chatPanel.classList.contains('open')) return;
+
+        const target = e.target;
+        if (chatPanel.contains(target) || chatFab.contains(target)) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true);
+
+      if (chatForm) {
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
+          chatInput.value = '';
+          chatBody.scrollTop = chatBody.scrollHeight;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

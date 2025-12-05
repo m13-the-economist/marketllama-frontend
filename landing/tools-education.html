@@ -128,7 +128,9 @@
       }
     }
 
-    /* Chat widget (shared) */
+    /* ===========================
+       CHAT WIDGET – DARK TURQUOISE (aligned with auth/support pages)
+       =========================== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -136,23 +138,23 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, .06);
+      background: var(--nav-teal, #1a6d72);
       color: #eaeaea;
-      border: 1px solid rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
       cursor: pointer;
       z-index: 1100;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
 
     .chat-fab:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-      background: rgba(255, 255, 255, .09);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
     }
 
     .chat-fab svg {
@@ -167,9 +169,9 @@
       bottom: 156px;
       width: min(420px, 92vw);
       max-height: 72vh;
-      background: rgba(10, 10, 10, .92);
+      background: rgba(8, 20, 24, .96);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .08);
+      border: 1px solid rgba(26, 109, 114, 0.6);
       border-radius: 16px;
       z-index: 1200;
       display: flex;
@@ -194,6 +196,7 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal, #1a6d72);
     }
 
     .chat-title {
@@ -233,7 +236,7 @@
 
     .chat-msg.user {
       align-self: flex-end;
-      background: #4169E1;
+      background: var(--nav-teal, #1a6d72);
       color: #fff;
     }
 
@@ -242,6 +245,7 @@
       gap: 8px;
       padding: 12px;
       border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
     }
 
     .chat-input-row input {
@@ -254,7 +258,7 @@
     }
 
     .chat-send {
-      background: #4169E1;
+      background: var(--nav-teal, #1a6d72);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -270,6 +274,37 @@
       .chat-panel {
         right: 14px;
       }
+    }
+
+    /* Back to top button (visual align with other pages) */
+    .back-to-top {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .back-to-top.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
     }
 
     /* ===== MOBILE NAV like accounts/support (no Our Services in hamburger) ===== */
@@ -385,8 +420,10 @@
       </ul>
 
       <div class="auth-buttons">
-        <a href="#" class="sign-in" id="openLogin">Sign In</a>
-        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+        <div class="auth-buttons">
+          <a href="signin.html" class="sign-in">Sign In</a>
+          <a href="signup.html" class="sign-up-btn">Sign Up</a>
+        </div>
       </div>
     </nav>
 
@@ -494,7 +531,7 @@
       </svg>
     </button>
     <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
-      aria-hidden="true" inert>
+      aria-hidden="true">
       <div class="chat-header">
         <div class="chat-title">Assistant</div>
         <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
@@ -626,10 +663,10 @@
 
   <script src="scripts/app.js" defer></script>
 
-  <!-- Page-specific: Our Services dropdown + mobile outside-close -->
+  <!-- Page-specific: Our Services dropdown + mobile outside-close + back-to-top -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      console.log('[tools-education] DOM loaded, init dropdown + outside-close');
+      console.log('[tools-education] DOM loaded, init dropdown + outside-close + back-to-top');
 
       /* Our Services desktop dropdown */
       const services = document.getElementById('services');
@@ -686,6 +723,30 @@
             closeMenu();
           }
         });
+      })();
+
+      /* Back-to-top visibility based on scroll on #screen2 */
+      (function backToTopLogic() {
+        const screen2 = document.getElementById('screen2');
+        const backBtn = document.getElementById('backToTop');
+        if (!screen2 || !backBtn) return;
+
+        function trackBackToTop() {
+          const st = screen2.scrollTop || 0;
+          if (st > 300) {
+            backBtn.classList.add('show');
+          } else {
+            backBtn.classList.remove('show');
+          }
+        }
+
+        screen2.addEventListener('scroll', trackBackToTop, { passive: true });
+
+        backBtn.addEventListener('click', function () {
+          screen2.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        trackBackToTop();
       })();
     });
   </script>
@@ -939,6 +1000,66 @@
       if (authPassword) {
         authPassword.addEventListener('input', function () {
           updatePasswordStrength(authPassword.value);
+        });
+      }
+    });
+  </script>
+
+  <!-- Chat wiring with smooth outside-click close (same pattern as other pages) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatFab = document.getElementById('chatFab');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatBody = document.getElementById('chatBody');
+
+      function openChat() {
+        chatPanel.classList.add('open');
+      }
+
+      function closeChat() {
+        chatPanel.classList.remove('open');
+      }
+
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openChat();
+        });
+      }
+
+      if (chatClose) {
+        chatClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeChat();
+        });
+      }
+
+      // Close chat by clicking/tapping anywhere outside (without jumping to top)
+      document.addEventListener('click', function (e) {
+        if (!chatPanel || !chatPanel.classList.contains('open')) return;
+
+        const target = e.target;
+        if (chatPanel.contains(target) || (chatFab && chatFab.contains(target))) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true); // capture phase so we swallow before links fire
+
+      if (chatForm) {
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
+          chatInput.value = '';
+          chatBody.scrollTop = chatBody.scrollHeight;
         });
       }
     });

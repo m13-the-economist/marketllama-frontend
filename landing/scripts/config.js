@@ -1,10 +1,24 @@
 // landing/scripts/config.js
 
-// Same origin as your live site – avoids CORS headaches
-const API_BASE_URL  = "https://marketllama.com";
+(function (window) {
+  const ORIGIN = window.location.origin;
 
-// Where to send the user after successful login
-const DASHBOARD_URL = "https://marketllama.com/dashboard/accounts.html";
+  const ML_CONFIG = {
+    // Backend API
+    API_BASE_URL: "http://72.61.201.223:8000",
 
-// LocalStorage key for auth token
-const ACCESS_TOKEN_KEY = "ml_access_token";
+    // Where to send users AFTER successful login
+    DASHBOARD_URL: `${ORIGIN}/dashboard/accounts.html`,
+
+    // Auth-related front-end pages (all in /landing)
+    SIGNIN_URL: `${ORIGIN}/landing/signin.html`,
+    SIGNUP_URL: `${ORIGIN}/landing/signup.html`,
+    RESET_PASSWORD_URL: `${ORIGIN}/landing/reset-password.html`,
+    RESET_PASSWORD_CONFIRM_URL: `${ORIGIN}/landing/reset-password-confirm.html`,
+    VERIFY_EMAIL_URL: `${ORIGIN}/landing/verify-email.html`,
+    VERIFY_PHONE_URL: `${ORIGIN}/landing/verify-phone.html`,
+    FINAL_STEP_URL: `${ORIGIN}/landing/final-step.html`,
+  };
+
+  window.ML_CONFIG = ML_CONFIG;
+})(window);

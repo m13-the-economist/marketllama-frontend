@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="styles/style.css" />
 
     <style>
+        :root {
+            --nav-teal: #1a6d72;
+        }
+
         /* ===== Accounts page (Plans + Comparison) ===== */
 
         .accounts-shell {
@@ -631,7 +635,7 @@
             }
         }
 
-        /* ===== Chat widget (same as index.html) ===== */
+        /* ===== Chat widget – teal (aligned with brokers/about) ===== */
 
         .chat-fab {
             position: fixed;
@@ -640,23 +644,23 @@
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, .06);
+            background: var(--nav-teal);
             color: #eaeaea;
-            border: 1px solid rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .18);
             cursor: pointer;
             z-index: 1100;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
             transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
             backdrop-filter: blur(8px);
         }
 
         .chat-fab:hover {
             transform: translateY(-1px);
-            box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-            background: rgba(255, 255, 255, .09);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+            background: #20848a;
         }
 
         .chat-fab svg {
@@ -671,9 +675,9 @@
             bottom: 156px;
             width: min(420px, 92vw);
             max-height: 72vh;
-            background: rgba(10, 10, 10, .92);
+            background: rgba(8, 20, 24, .96);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, .08);
+            border: 1px solid rgba(26, 109, 114, 0.6);
             border-radius: 16px;
             z-index: 1200;
             display: flex;
@@ -698,6 +702,7 @@
             justify-content: space-between;
             padding: 12px 14px;
             border-bottom: 1px solid rgba(255, 255, 255, .06);
+            background: var(--nav-teal);
         }
 
         .chat-title {
@@ -737,7 +742,7 @@
 
         .chat-msg.user {
             align-self: flex-end;
-            background: #4169E1;
+            background: var(--nav-teal);
             color: #fff;
         }
 
@@ -746,6 +751,7 @@
             gap: 8px;
             padding: 12px;
             border-top: 1px solid rgba(255, 255, 255, .06);
+            background: rgba(6, 14, 16, 0.96);
         }
 
         .chat-input-row input {
@@ -758,7 +764,7 @@
         }
 
         .chat-send {
-            background: #4169E1;
+            background: var(--nav-teal);
             color: #fff;
             border: none;
             border-radius: 12px;
@@ -893,8 +899,10 @@
             </ul>
 
             <div class="auth-buttons">
-                <a href="#" class="sign-in" id="openLogin">Sign In</a>
-                <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+                <div class="auth-buttons">
+                    <a href="signin.html" class="sign-in">Sign In</a>
+                    <a href="signup.html" class="sign-up-btn">Sign Up</a>
+                </div>
             </div>
         </nav>
 
@@ -951,13 +959,12 @@
                         </ul>
                     </div>
                     <div class="cta">
-                        <button class="select-plan" data-select-plan="Pro">Select Plan</button>
+                        <button class="select-plan">coming soon</button>
                     </div>
                 </article>
 
                 <!-- Premium -->
                 <article class="plan" data-plan="Premium">
-                    <!-- Popular badge REMOVED -->
                     <div>
                         <div class="name">Premium</div>
                         <div class="price">
@@ -1068,9 +1075,9 @@
                     <tfoot>
                         <tr>
                             <td class="strong">Choose your plan</td>
-                            <td><button type="button" class="cta-btn" data-select-plan="Basic">Select Basic</button>
+                            <td><button type="button" class="cta-btn" data-select-plan="Basic">Select plan</button>
                             </td>
-                            <td><button type="button" class="cta-btn" data-select-plan="Pro">Select Pro</button></td>
+                            <td><button type="button" class="cta-btn">coming soon</button></td>
                             <td><button type="button" class="cta-btn">Coming Soon</button></td>
                             <td><button type="button" class="cta-btn">Coming Soon</button></td>
                         </tr>
@@ -1145,7 +1152,7 @@
             </svg>
         </button>
         <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
-            aria-hidden="true" inert>
+            aria-hidden="true">
             <div class="chat-header">
                 <div class="chat-title">Assistant</div>
                 <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
@@ -1285,7 +1292,7 @@
     <!-- Global nav + chat + back-to-top logic -->
     <script src="scripts/app.js"></script>
 
-    <!-- Page-specific script: pricing + Our Services dropdown + hamburger outside-close + plan->modal -->
+    <!-- Page-specific script: pricing + Our Services dropdown + hamburger outside-close + plan->signup.html -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             console.log('[accounts] DOM loaded, init pricing + dropdown + outside-close + plan->auth');
@@ -1354,7 +1361,7 @@
             })();
             setBilling(storedMode || 'monthly');
 
-            /* ---------- Plan selection -> open unified auth modal (signup) ---------- */
+            /* ---------- Plan selection -> go to signup page ---------- */
             document.querySelectorAll('[data-select-plan]').forEach(btn => {
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1362,30 +1369,17 @@
 
                     const plan = this.getAttribute('data-select-plan');
                     if (!plan) {
-                        // "Coming Soon" buttons without data-select-plan just do nothing for now
+                        // "Coming Soon" buttons without data-select-plan do nothing for now
                         return;
                     }
 
-                    if (window.mlOpenAuth) {
-                        window.mlOpenAuth('signup', this);
-                    } else {
-                        const openSignup = document.getElementById('openSignup');
-                        if (openSignup) openSignup.click();
-                    }
+                    try {
+                        // Remember selected plan so signup.html can read it and pre-select
+                        sessionStorage.setItem('ml_selected_plan', plan);
+                    } catch (_) { }
 
-                    // Slight delay so modal layout is applied before we tweak title/feedback
-                    setTimeout(() => {
-                        const authTitle = document.getElementById('authTitle');
-                        const fb = document.getElementById('formFeedback');
-                        if (authTitle) authTitle.textContent = `Create account — ${plan}`;
-                        if (fb) {
-                            fb.textContent = `Selected plan: ${plan}`;
-                            fb.style.color = '#7dffb3';
-                            setTimeout(() => {
-                                fb.textContent = '';
-                            }, 2500);
-                        }
-                    }, 120);
+                    // Go to the new signup page
+                    window.location.href = 'signup.html';
                 });
             });
 
@@ -1676,6 +1670,67 @@
             if (authPassword) {
                 authPassword.addEventListener('input', function () {
                     updatePasswordStrength(authPassword.value);
+                });
+            }
+        });
+    </script>
+
+    <!-- Chat wiring with smooth outside-click close (same pattern as brokers.html) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatFab = document.getElementById('chatFab');
+            const chatPanel = document.getElementById('chatPanel');
+            const chatClose = document.getElementById('chatClose');
+            const chatForm = document.getElementById('chatForm');
+            const chatInput = document.getElementById('chatInput');
+            const chatBody = document.getElementById('chatBody');
+
+            function openChat() {
+                chatPanel.classList.add('open');
+            }
+
+            function closeChat() {
+                chatPanel.classList.remove('open');
+            }
+
+            if (chatFab) {
+                chatFab.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    openChat();
+                });
+            }
+
+            if (chatClose) {
+                chatClose.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    closeChat();
+                });
+            }
+
+            // Close chat by clicking/tapping anywhere outside (without triggering page nav)
+            document.addEventListener('click', function (e) {
+                if (!chatPanel.classList.contains('open')) return;
+
+                const target = e.target;
+                if (chatPanel.contains(target) || chatFab.contains(target)) return;
+
+                // Chat is open and click is outside -> close and swallow the click
+                e.preventDefault();
+                e.stopPropagation();
+                closeChat();
+            }, true); // capture so we intercept before links fire
+
+            if (chatForm) {
+                chatForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const text = chatInput.value.trim();
+                    if (!text) return;
+                    const msg = document.createElement('div');
+                    msg.className = 'chat-msg user';
+                    msg.textContent = text;
+                    chatBody.appendChild(msg);
+                    chatInput.value = '';
+                    chatBody.scrollTop = chatBody.scrollHeight;
                 });
             }
         });

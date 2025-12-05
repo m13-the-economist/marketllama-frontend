@@ -17,6 +17,7 @@
       --ring: rgba(255,255,255,.12);
       --glass: rgba(255,255,255,.04);
       --muted: #8f8f92;
+      --nav-teal: #1a6d72;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 14px; }
@@ -60,7 +61,6 @@
       width: 26px;
       height: 26px;
       border-radius: 8px;
-      
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -206,13 +206,161 @@
       text-decoration: none;
       opacity: .9;
     }
+
+    /* ===== CHAT WIDGET – teal variant (same as reset/insight/profile) ===== */
+    .chat-fab {
+      position: fixed;
+      right: 20px;
+      bottom: 88px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--nav-teal);
+      color: #eaeaea;
+      border: 1px solid rgba(255, 255, 255, .18);
+      cursor: pointer;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .chat-fab:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+    }
+
+    .chat-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 156px;
+      width: min(420px, 92vw);
+      max-height: 72vh;
+      background: rgba(8, 20, 24, .96);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(26, 109, 114, 0.6);
+      border-radius: 16px;
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px) scale(.98);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .chat-panel.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
+    }
+
+    .chat-title {
+      font-weight: 600;
+    }
+
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .chat-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: auto;
+    }
+
+    .chat-msg {
+      font-size: .92rem;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, .06);
+      color: #eaeaea;
+      padding: 8px 10px;
+      border-radius: 12px;
+      max-width: 85%;
+    }
+
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: var(--nav-teal);
+      color: #fff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .chat-send {
+      background: var(--nav-teal);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width:540px) {
+      .chat-fab {
+        right: 14px;
+        bottom: 88px;
+      }
+
+      .chat-panel {
+        right: 14px;
+        bottom: 148px;
+      }
+    }
   </style>
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 </head>
 <body class="app dark">
   <header class="site-header" id="siteHeader">
     <div class="left">
-      <a href="accounts.html" class="brand">
+      <a href="accounts.html" class="brand" data-link="accounts">
         <div class="logo">
           <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
         </div>
@@ -268,6 +416,32 @@
     </div>
   </main>
 
+  <!-- CHAT WIDGET (teal variant) -->
+  <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
+      <circle cx="9" cy="10" r="1.25" />
+      <circle cx="12" cy="10" r="1.25" />
+      <circle cx="15" cy="10" r="1.25" />
+    </svg>
+  </button>
+
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat"
+       aria-modal="true" aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-title">Assistant</div>
+      <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div class="chat-msg bot">Hi! How can I help?</div>
+    </div>
+    <form id="chatForm" class="chat-input-row">
+      <input id="chatInput" type="text" placeholder="Type a message…" autocomplete="off" />
+      <button class="chat-send" type="submit">Send</button>
+    </form>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
@@ -309,24 +483,24 @@
       if (!translations[currentLang]) currentLang = 'en';
 
       function updateNavLinks() {
-  // profile
-  const profileLinks = document.querySelectorAll('[data-link="profile"]');
-  profileLinks.forEach(a => {
-    const href = a.getAttribute('href') || 'profile.html';
-    const url = new URL(href, window.location.origin + window.location.pathname);
-    url.searchParams.set('lang', currentLang);
-    a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-  });
+        // profile links
+        const profileLinks = document.querySelectorAll('[data-link="profile"]');
+        profileLinks.forEach(a => {
+          const href = a.getAttribute('href') || 'profile.html';
+          const url = new URL(href, window.location.origin + window.location.pathname);
+          url.searchParams.set('lang', currentLang);
+          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+        });
 
-  // accounts (back link)
-  const accountLinks = document.querySelectorAll('[data-link="accounts"]');
-  accountLinks.forEach(a => {
-    const href = 'accounts.html';    // ✅ FIXED
-    const url = new URL(href, window.location.origin + window.location.pathname);
-    url.searchParams.set('lang', currentLang);
-    a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-  });
-}
+        // accounts links (brand + back link)
+        const accountLinks = document.querySelectorAll('[data-link="accounts"]');
+        accountLinks.forEach(a => {
+          const href = 'accounts.html';
+          const url = new URL(href, window.location.origin + window.location.pathname);
+          url.searchParams.set('lang', currentLang);
+          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+        });
+      }
 
       function applyLanguage(lang) {
         const t = translations[lang] || translations.en;
@@ -345,7 +519,7 @@
         updateNavLinks();
       }
 
-      // Balance toggle (same behaviour as accounts header)
+      // Balance toggle
       const toggleBalance = document.getElementById('toggleBalance');
       const topBalance = document.getElementById('topBalance');
       const topEye = document.getElementById('topEye');
@@ -406,7 +580,75 @@
       }
 
       applyLanguage(currentLang);
-      console.log('Chart language set to', currentLang);
+    });
+  </script>
+
+  <!-- CHAT WIDGET LOGIC -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatFab = document.getElementById('chatFab');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatBody = document.getElementById('chatBody');
+
+      function openChat() {
+        chatPanel.classList.add('open');
+        chatPanel.setAttribute('aria-hidden', 'false');
+        if (chatInput) {
+          setTimeout(() => chatInput.focus(), 80);
+        }
+      }
+
+      function closeChat() {
+        chatPanel.classList.remove('open');
+        chatPanel.setAttribute('aria-hidden', 'true');
+      }
+
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (chatPanel.classList.contains('open')) {
+            closeChat();
+          } else {
+            openChat();
+          }
+        });
+      }
+
+      if (chatClose) {
+        chatClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeChat();
+        });
+      }
+
+      // Close chat by clicking/tapping anywhere outside, swallowing the click
+      document.addEventListener('click', function (e) {
+        if (!chatPanel.classList.contains('open')) return;
+
+        const target = e.target;
+        if (chatPanel.contains(target) || chatFab.contains(target)) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true);
+
+      if (chatForm && chatInput && chatBody) {
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
+          chatInput.value = '';
+          chatBody.scrollTop = chatBody.scrollHeight;
+        });
+      }
     });
   </script>
 </body>

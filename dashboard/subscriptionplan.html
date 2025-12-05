@@ -28,6 +28,7 @@
       --ring: rgba(255, 255, 255, .12);
       --pill: #16171a;
       --shadow: 0 8px 24px rgba(0, 0, 0, .45);
+      --nav-teal: #1a6d72;
     }
 
     * {
@@ -448,7 +449,7 @@
       text-decoration: underline;
     }
 
-    /* ===== Chat widget — SAME as other dashboard pages ===== */
+    /* ===== Chat widget — teal variant (same as chart/reset/insight/profile) ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -456,23 +457,23 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
       color: #eaeaea;
-      border: 1px solid rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
       cursor: pointer;
       z-index: 1100;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
 
     .chat-fab:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-      background: rgba(255, 255, 255, .09);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
     }
 
     .chat-fab svg {
@@ -487,9 +488,9 @@
       bottom: 156px;
       width: min(420px, 92vw);
       max-height: 72vh;
-      background: rgba(10, 10, 10, .94);
+      background: rgba(8, 20, 24, .96);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .08);
+      border: 1px solid rgba(26, 109, 114, 0.6);
       border-radius: 16px;
       z-index: 1200;
       display: flex;
@@ -514,6 +515,7 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
     }
 
     .chat-title {
@@ -553,7 +555,7 @@
 
     .chat-msg.user {
       align-self: flex-end;
-      background: #4169E1;
+      background: var(--nav-teal);
       color: #fff;
     }
 
@@ -562,6 +564,7 @@
       gap: 8px;
       padding: 12px;
       border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
     }
 
     .chat-input-row input {
@@ -574,7 +577,7 @@
     }
 
     .chat-send {
-      background: #4169E1;
+      background: var(--nav-teal);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -1124,7 +1127,7 @@
         <h1 class="page-title" data-i18n="subscription">Subscription Plan</h1>
       </div>
 
-      <!-- Pricing section from your second file -->
+      <!-- Pricing section -->
       <section class="pricing" id="plans">
         <h2>Plans</h2>
 
@@ -1176,7 +1179,7 @@
               </ul>
             </div>
             <div class="cta">
-              <button class="select-plan" data-select-plan="Pro">Select Plan</button>
+              <button class="select-plan">coming soon</button>
             </div>
           </article>
 
@@ -1226,7 +1229,7 @@
         </div>
       </section>
 
-      <!-- Comparison table from your second file -->
+      <!-- Comparison table -->
       <section class="compare" id="plan-compare">
         <h3>COMPARE SUBSCRIPTIONS?</h3>
 
@@ -1289,8 +1292,8 @@
             <tfoot>
               <tr>
                 <td class="strong">Choose your plan</td>
-                <td><button type="button" class="cta-btn" data-select-plan="Basic">Select Basic</button></td>
-                <td><button type="button" class="cta-btn" data-select-plan="Pro">Select Pro</button></td>
+                <td><button type="button" class="cta-btn" data-select-plan="Basic">Select plan</button></td>
+                <td><button type="button" class="cta-btn">coming soon</button></td>
                 <td><button type="button" class="cta-btn">Coming Soon</button></td>
                 <td><button type="button" class="cta-btn">Coming Soon</button></td>
               </tr>
@@ -1304,7 +1307,7 @@
       </section>
     </section>
 
-    <!-- DASHBOARD FOOTER USING YOUR RISK DISCLAIMER + LINKS -->
+    <!-- DASHBOARD FOOTER -->
     <footer class="legal-footer">
       <div class="footer-inner">
         <p class="footer-risk">
@@ -1371,7 +1374,7 @@
     </form>
   </div>
 
-  <!-- SIMPLE BACK-TO-TOP BUTTON FOR THIS PAGE -->
+  <!-- SIMPLE BACK-TO-TOP BUTTON -->
   <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
@@ -1441,7 +1444,7 @@
     </div>
   </div>
 
-  <!-- LANGUAGE + SIDEBAR + BALANCE LOGIC (FROM PROFILE PAGE) -->
+  <!-- LANGUAGE + SIDEBAR + BALANCE LOGIC -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
@@ -1679,7 +1682,7 @@
     });
   </script>
 
-  <!-- CHAT WIDGET LOGIC -->
+  <!-- CHAT WIDGET LOGIC (teal variant logic from chart page) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -1688,8 +1691,6 @@
       const chatForm = document.getElementById('chatForm');
       const chatInput = document.getElementById('chatInput');
       const chatBody = document.getElementById('chatBody');
-
-      if (!chatFab || !chatPanel) return;
 
       function openChat() {
         chatPanel.classList.add('open');
@@ -1704,18 +1705,16 @@
         chatPanel.setAttribute('aria-hidden', 'true');
       }
 
-      chatFab.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (chatPanel.classList.contains('open')) {
-          closeChat();
-        } else {
-          openChat();
-        }
-      });
-
-      chatPanel.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (chatPanel.classList.contains('open')) {
+            closeChat();
+          } else {
+            openChat();
+          }
+        });
+      }
 
       if (chatClose) {
         chatClose.addEventListener('click', function (e) {
@@ -1724,41 +1723,29 @@
         });
       }
 
+      // Close chat by clicking/tapping anywhere outside, swallowing the click
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-        const onFab = chatFab.contains(e.target);
-        const insidePanel = chatPanel.contains(e.target);
-        if (!onFab && !insidePanel) {
-          closeChat();
-        }
-      });
 
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeChat();
-        }
-      });
+        const target = e.target;
+        if (chatPanel.contains(target) || chatFab.contains(target)) return;
 
-      function appendMsg(text, role) {
-        if (!chatBody) return;
-        const div = document.createElement('div');
-        div.className = 'chat-msg ' + (role === 'user' ? 'user' : 'bot');
-        div.textContent = text;
-        chatBody.appendChild(div);
-        chatBody.scrollTop = chatBody.scrollHeight;
-      }
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true);
 
-      if (chatForm && chatInput) {
+      if (chatForm && chatInput && chatBody) {
         chatForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          const msg = chatInput.value.trim();
-          if (!msg) return;
-          appendMsg(msg, 'user');
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
           chatInput.value = '';
-
-          setTimeout(() => {
-            appendMsg("This is a preview assistant on the subscription page. Your real AI trading assistant will be wired here later.", 'bot');
-          }, 400);
+          chatBody.scrollTop = chatBody.scrollHeight;
         });
       }
     });

@@ -24,6 +24,7 @@
       --pill: #16171a;
       --shadow: 0 8px 24px rgba(0, 0, 0, .45);
       --accent-main: #00c8ff;
+      --nav-teal: #1a6d72;
     }
 
     * {
@@ -920,7 +921,7 @@
       text-decoration: underline;
     }
 
-    /* ===== Chat widget – same style as performance page ===== */
+    /* ===== Chat widget – teal variant (aligned with chart page) ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -928,23 +929,23 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
       color: #eaeaea;
-      border: 1px solid rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
       cursor: pointer;
       z-index: 1100;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
 
     .chat-fab:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-      background: rgba(255, 255, 255, .09);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
     }
 
     .chat-fab svg {
@@ -959,9 +960,9 @@
       bottom: 156px;
       width: min(420px, 92vw);
       max-height: 72vh;
-      background: rgba(10, 10, 10, .94);
+      background: rgba(8, 20, 24, .96);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .08);
+      border: 1px solid rgba(26, 109, 114, 0.6);
       border-radius: 16px;
       z-index: 1200;
       display: flex;
@@ -986,6 +987,7 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
     }
 
     .chat-title {
@@ -1025,7 +1027,7 @@
 
     .chat-msg.user {
       align-self: flex-end;
-      background: #4169E1;
+      background: var(--nav-teal);
       color: #fff;
     }
 
@@ -1034,6 +1036,7 @@
       gap: 8px;
       padding: 12px;
       border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
     }
 
     .chat-input-row input {
@@ -1046,7 +1049,7 @@
     }
 
     .chat-send {
-      background: #4169E1;
+      background: var(--nav-teal);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -1059,6 +1062,7 @@
         right: 14px;
         bottom: 88px;
       }
+
       .chat-panel {
         right: 14px;
         bottom: 148px;
@@ -1286,11 +1290,10 @@
             <li><a href="#">Privacy Policy</a></li>
             <li><a href="#">Terms &amp; Conditions</a></li>
             <li><a href="#">Refund &amp; Billing Policy</a></li>
-             <li><a href="#">support</a></li>
+            <li><a href="#">support</a></li>
             <li><a href="#">Whatsapp</a></li>
             <li><a href="#">Twitter</a></li>
             <li><a href="#">instagram</a></li>
-           
           </ul>
         </div>
       </div>
@@ -1965,7 +1968,7 @@
       applyLanguage(currentLang);
     });
 
-    // ===== CHAT WIDGET LOGIC (same behaviour as performance page) =====
+    // ===== CHAT WIDGET LOGIC (with preview assistant response) =====
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab   = document.getElementById('chatFab');
       const chatPanel = document.getElementById('chatPanel');

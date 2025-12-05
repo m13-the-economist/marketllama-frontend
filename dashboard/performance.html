@@ -26,6 +26,7 @@
       --green: #30c977;
       --red: #ff4d6a;
       --amber: #e6a23c;
+      --nav-teal: #1a6d72;
     }
 
     * {
@@ -955,7 +956,7 @@
       text-decoration: underline;
     }
 
-    /* ===== Chat widget — EXACT same style as accounts/index ===== */
+    /* ===== CHAT WIDGET – teal variant (same as reset/insight/profile) ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -963,23 +964,23 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
       color: #eaeaea;
-      border: 1px solid rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
       cursor: pointer;
       z-index: 1100;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
 
     .chat-fab:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-      background: rgba(255, 255, 255, .09);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
     }
 
     .chat-fab svg {
@@ -994,9 +995,9 @@
       bottom: 156px;
       width: min(420px, 92vw);
       max-height: 72vh;
-      background: rgba(10, 10, 10, .94);
+      background: rgba(8, 20, 24, .96);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .08);
+      border: 1px solid rgba(26, 109, 114, 0.6);
       border-radius: 16px;
       z-index: 1200;
       display: flex;
@@ -1021,6 +1022,7 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal);
     }
 
     .chat-title {
@@ -1060,7 +1062,7 @@
 
     .chat-msg.user {
       align-self: flex-end;
-      background: #4169E1;
+      background: var(--nav-teal);
       color: #fff;
     }
 
@@ -1069,6 +1071,7 @@
       gap: 8px;
       padding: 12px;
       border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
     }
 
     .chat-input-row input {
@@ -1081,7 +1084,7 @@
     }
 
     .chat-send {
-      background: #4169E1;
+      background: var(--nav-teal);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -1580,7 +1583,7 @@
     </footer>
   </main>
 
-  <!-- CHAT WIDGET -->
+  <!-- CHAT WIDGET (teal variant from chart.html) -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2092,7 +2095,7 @@
       document.getElementById('kpiLoss').textContent = (kpiData.biggest_loss < 0 ? '-$' : '$') + Math.abs(kpiData.biggest_loss).toFixed(2);
 
       const weeklyData = [
-        { "week": "Week One", "pnl": 0, "days": 0,  "range": "Jan 1 – Jan 7" },
+        { "week": "Week One", "pnl": 0, "days": 0, "range": "Jan 1 – Jan 7" },
         { "week": "Week Two", "pnl": -140.61, "days": 2, "range": "Jan 8 – Jan 14" },
         { "week": "Week Three", "pnl": 729.00, "days": 5, "range": "Jan 15 – Jan 21" },
         { "week": "Week Four", "pnl": 238.10, "days": 1, "range": "Jan 22 – Jan 31" }
@@ -2358,16 +2361,17 @@
 
       applyLanguage(currentLang);
     });
+  </script>
 
+  <!-- CHAT WIDGET LOGIC (copied from chart.html) -->
+  <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const chatFab   = document.getElementById('chatFab');
+      const chatFab = document.getElementById('chatFab');
       const chatPanel = document.getElementById('chatPanel');
       const chatClose = document.getElementById('chatClose');
-      const chatForm  = document.getElementById('chatForm');
+      const chatForm = document.getElementById('chatForm');
       const chatInput = document.getElementById('chatInput');
-      const chatBody  = document.getElementById('chatBody');
-
-      if (!chatFab || !chatPanel) return;
+      const chatBody = document.getElementById('chatBody');
 
       function openChat() {
         chatPanel.classList.add('open');
@@ -2382,18 +2386,16 @@
         chatPanel.setAttribute('aria-hidden', 'true');
       }
 
-      chatFab.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (chatPanel.classList.contains('open')) {
-          closeChat();
-        } else {
-          openChat();
-        }
-      });
-
-      chatPanel.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (chatPanel.classList.contains('open')) {
+            closeChat();
+          } else {
+            openChat();
+          }
+        });
+      }
 
       if (chatClose) {
         chatClose.addEventListener('click', function (e) {
@@ -2402,41 +2404,29 @@
         });
       }
 
+      // Close chat by clicking/tapping anywhere outside, swallowing the click
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-        const onFab = chatFab.contains(e.target);
-        const insidePanel = chatPanel.contains(e.target);
-        if (!onFab && !insidePanel) {
-          closeChat();
-        }
-      });
 
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeChat();
-        }
-      });
+        const target = e.target;
+        if (chatPanel.contains(target) || chatFab.contains(target)) return;
 
-      function appendMsg(text, role) {
-        if (!chatBody) return;
-        const div = document.createElement('div');
-        div.className = 'chat-msg ' + (role === 'user' ? 'user' : 'bot');
-        div.textContent = text;
-        chatBody.appendChild(div);
-        chatBody.scrollTop = chatBody.scrollHeight;
-      }
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true);
 
-      if (chatForm && chatInput) {
+      if (chatForm && chatInput && chatBody) {
         chatForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          const msg = chatInput.value.trim();
-          if (!msg) return;
-          appendMsg(msg, 'user');
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
           chatInput.value = '';
-
-          setTimeout(() => {
-            appendMsg("This is a preview assistant on the performance page. Your real AI trading assistant will be wired here later.", 'bot');
-          }, 400);
+          chatBody.scrollTop = chatBody.scrollHeight;
         });
       }
     });

@@ -11,8 +11,11 @@
     href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
   <link rel="stylesheet" href="styles/style.css" />
 
-  <!-- Minimal chat + page-specific styling -->
+  <!-- Chat + page-specific styling -->
   <style>
+    /* ===========================
+       CHAT WIDGET – DARK TURQUOISE (same as auth final step)
+       =========================== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -20,22 +23,28 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, .06);
+      background: var(--nav-teal, #1a6d72);
       color: #eaeaea;
-      border: 1px solid rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
       cursor: pointer;
       z-index: 1100;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
     .chat-fab:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, .42);
-      background: rgba(255, 255, 255, .09);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
+      background: #20848a;
+    }
+
+    .chat-fab svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
     }
 
     .chat-panel {
@@ -44,9 +53,9 @@
       bottom: 156px;
       width: min(420px, 92vw);
       max-height: 72vh;
-      background: rgba(10, 10, 10, .92);
+      background: rgba(8, 20, 24, .96);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, .08);
+      border: 1px solid rgba(26, 109, 114, 0.6);
       border-radius: 16px;
       z-index: 1200;
       display: flex;
@@ -70,6 +79,18 @@
       justify-content: space-between;
       padding: 12px 14px;
       border-bottom: 1px solid rgba(255, 255, 255, .06);
+      background: var(--nav-teal, #1a6d72);
+    }
+    .chat-title {
+      font-weight: 600;
+    }
+    .chat-close {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
     }
     .chat-body {
       padding: 12px;
@@ -87,9 +108,12 @@
       border-radius: 12px;
       max-width: 85%;
     }
+    .chat-msg.bot {
+      align-self: flex-start;
+    }
     .chat-msg.user {
       align-self: flex-end;
-      background: #4169E1;
+      background: var(--nav-teal, #1a6d72);
       color: #fff;
     }
     .chat-input-row {
@@ -97,6 +121,7 @@
       gap: 8px;
       padding: 12px;
       border-top: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(6, 14, 16, 0.96);
     }
     .chat-input-row input {
       flex: 1;
@@ -107,7 +132,7 @@
       padding: 10px 12px;
     }
     .chat-send {
-      background: #4169E1;
+      background: var(--nav-teal, #1a6d72);
       color: #fff;
       border: none;
       border-radius: 12px;
@@ -249,8 +274,10 @@
         <li><a href="support.html">Support</a></li>
       </ul>
       <div class="auth-buttons">
-        <a href="#" class="sign-in" id="openLogin">Sign In</a>
-        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+        <div class="auth-buttons">
+          <a href="signin.html" class="sign-in">Sign In</a>
+          <a href="signup.html" class="sign-up-btn">Sign Up</a>
+        </div>
       </div>
     </nav>
 
@@ -467,7 +494,7 @@
         </svg>
       </button>
 
-      <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true" aria-hidden="true" inert>
+      <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true" aria-hidden="true">
         <div class="chat-header">
           <div class="chat-title">Assistant</div>
           <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
@@ -492,117 +519,8 @@
 
   <!-- Auth Overlay: full modal with password strength + mode switch -->
   <div class="auth-overlay" id="authOverlay" aria-hidden="true">
-    <div class="auth-container" id="authContainer">
-      <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
-
-      <h2 id="authTitle" class="auth-title">Create account</h2>
-      <p id="authSubtitle" class="auth-subtitle">
-        Create your Market Llama profile in a few steps.
-      </p>
-
-      <form id="authForm" novalidate>
-        <!-- SIGN-UP ONLY FIELDS (hidden in login mode) -->
-        <div class="form-group signup-field" id="firstNameGroup">
-          <label for="authFirstName">First Name</label>
-          <input id="authFirstName" name="firstName" type="text"
-            placeholder="Enter your first name" required autocomplete="given-name">
-        </div>
-
-        <div class="form-group signup-field" id="lastNameGroup">
-          <label for="authLastName">Last Name</label>
-          <input id="authLastName" name="lastName" type="text"
-            placeholder="Enter your last name" required autocomplete="family-name">
-        </div>
-
-        <div class="form-group signup-field" id="dobGroup">
-          <label for="authDob">Date of Birth</label>
-          <input id="authDob" name="dob" type="date" required>
-        </div>
-
-        <div class="form-group signup-field" id="usernameGroup">
-          <label for="authUsername">Username</label>
-          <input id="authUsername" name="username" type="text"
-            placeholder="Choose a username" required autocomplete="username">
-        </div>
-
-        <div class="form-group signup-field" id="countryGroup">
-          <label for="authCountry">Select Country</label>
-          <select id="authCountry" name="country" required>
-            <option value="" disabled selected>Select your country</option>
-            <option value="NG">Nigeria</option>
-            <option value="US">United States</option>
-            <option value="GB">United Kingdom</option>
-            <option value="CA">Canada</option>
-            <option value="AU">Australia</option>
-          </select>
-        </div>
-
-        <!-- SHARED FIELDS (SIGN IN + SIGN UP) -->
-        <div class="form-group" id="emailGroup">
-          <label for="authEmail">Email</label>
-          <input id="authEmail" name="email" type="email"
-            placeholder="Enter your email" required autocomplete="email" inputmode="email">
-        </div>
-
-        <!-- PASSWORD WITH BROKER-STYLE EYE ICON -->
-        <div class="form-group" id="passwordGroup">
-          <label for="authPassword">Password</label>
-          <div class="pw-field">
-            <input
-              id="authPassword"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              required
-              autocomplete="new-password"
-              minlength="8"
-            />
-            <!-- Eye icon -->
-            <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              role="button"
-              aria-label="Toggle password visibility"
-              tabindex="0">
-              <path
-                d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
-            </svg>
-          </div>
-
-          <div class="password-strength" aria-live="polite">
-            <div class="password-strength-bar" aria-hidden="true">
-              <div class="password-strength-bar-fill" id="passwordStrengthBar"></div>
-            </div>
-            <p id="passwordStrengthText" class="password-strength-text"></p>
-          </div>
-
-          <div class="hint" id="passwordHint" aria-live="polite"></div>
-        </div>
-
-        <button
-          type="submit"
-          class="submit-btn"
-          id="submitBtn"
-          data-mode="signup"
-          disabled
-        >
-          Continue
-        </button>
-
-        <p class="form-feedback" id="formFeedback" role="status" aria-live="polite"></p>
-
-        <!-- MODE SWITCH (sign in <-> sign up) -->
-        <p class="auth-switch-row">
-          <span id="authSwitchLabel">Already have an account?</span>
-          <button
-            type="button"
-            class="auth-switch-link"
-            id="authSwitchAction"
-          >
-            Sign in
-          </button>
-        </p>
-      </form>
-    </div>
+    <!-- keep your existing auth overlay markup exactly as-is -->
+    <!-- ... -->
   </div>
 
   <script src="scripts/app.js" defer></script>
@@ -673,253 +591,65 @@
 
   <!-- Unified Auth modal logic (same as accounts/index, exposed via window.mlOpenAuth) -->
   <script>
+    /* keep your existing unified auth JS here exactly as you had it */
+    /* ... */
+  </script>
+
+  <!-- Chat wiring with smooth outside-click close (same as Final Step auth page) -->
+  <script>
     document.addEventListener('DOMContentLoaded', function () {
-      var authOverlay = document.getElementById('authOverlay');
-      var authContainer = document.getElementById('authContainer');
-      var authForm = document.getElementById('authForm');
-      var openLogin = document.getElementById('openLogin');
-      var openSignup = document.getElementById('openSignup');
-      var closeAuth = document.getElementById('closeAuth');
-      var authTitle = document.getElementById('authTitle');
-      var authSubtitle = document.getElementById('authSubtitle');
-      var authSwitchLabel = document.getElementById('authSwitchLabel');
-      var authSwitchAction = document.getElementById('authSwitchAction');
-      var signupFields = document.querySelectorAll('.signup-field');
-      var authPassword = document.getElementById('authPassword');
-      var authEmail = document.getElementById('authEmail');
-      var submitBtn = document.getElementById('submitBtn');
-      var passwordStrengthBar = document.getElementById('passwordStrengthBar');
-      var passwordStrengthText = document.getElementById('passwordStrengthText');
-      var passwordHint = document.getElementById('passwordHint');
-      var togglePassword = document.getElementById('togglePassword');
+      const chatFab = document.getElementById('chatFab');
+      const chatPanel = document.getElementById('chatPanel');
+      const chatClose = document.getElementById('chatClose');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      const chatBody = document.getElementById('chatBody');
 
-      var lastTrigger = null;
-      var currentMode = 'signup';
-
-      var focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-      var firstFocusable, lastFocusable;
-
-      function setOverlayVisibility(open) {
-        if (!authOverlay) return;
-
-        if (open) {
-          authOverlay.classList.add('open');
-          authOverlay.removeAttribute('aria-hidden');
-          authOverlay.setAttribute('role', 'dialog');
-          authOverlay.setAttribute('aria-modal', 'true');
-          authOverlay.setAttribute('aria-labelledby', 'authTitle');
-
-          var background = document.getElementById('screen2');
-          if (background) {
-            background.setAttribute('inert', 'true');
-          }
-
-          var focusables = authContainer.querySelectorAll(focusableSelectors);
-          firstFocusable = focusables[0];
-          lastFocusable = focusables[focusables.length - 1];
-
-          if (authEmail) authEmail.focus();
-        } else {
-          authOverlay.classList.remove('open');
-          authOverlay.setAttribute('aria-hidden', 'true');
-          authOverlay.removeAttribute('aria-modal');
-          authOverlay.removeAttribute('role');
-
-          var background2 = document.getElementById('screen2');
-          if (background2) {
-            background2.removeAttribute('inert');
-          }
-
-          if (lastTrigger && typeof lastTrigger.focus === 'function') {
-            lastTrigger.focus();
-          }
-        }
+      function openChat() {
+        chatPanel.classList.add('open');
       }
 
-      function resetPasswordUI() {
-        if (authPassword) authPassword.value = '';
-        if (passwordStrengthBar) passwordStrengthBar.style.width = '0%';
-        if (passwordStrengthText) passwordStrengthText.textContent = '';
-        if (passwordHint) passwordHint.textContent = '';
-        if (submitBtn) submitBtn.disabled = true;
+      function closeChat() {
+        chatPanel.classList.remove('open');
       }
 
-      function clearForm() {
-        if (authForm) authForm.reset();
-        resetPasswordUI();
-      }
-
-      function setMode(mode) {
-        currentMode = mode;
-        var isSignup = mode === 'signup';
-
-        signupFields.forEach(function (el) {
-          el.style.display = isSignup ? '' : 'none';
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openChat();
         });
-
-        if (isSignup) {
-          authTitle.textContent = 'Create account';
-          authSubtitle.textContent = 'Create your Market Llama profile in a few steps.';
-          authSwitchLabel.textContent = 'Already have an account?';
-          authSwitchAction.textContent = 'Sign in';
-          submitBtn.dataset.mode = 'signup';
-          if (authPassword) authPassword.setAttribute('autocomplete', 'new-password');
-        } else {
-          authTitle.textContent = 'Sign in';
-          authSubtitle.textContent = 'Access your Market Llama dashboard and accounts.';
-          authSwitchLabel.textContent = 'New here?';
-          authSwitchAction.textContent = 'Create an account';
-          submitBtn.dataset.mode = 'login';
-          if (authPassword) authPassword.setAttribute('autocomplete', 'current-password');
-        }
-
-        clearForm();
       }
 
-      function openAuth(mode, trigger) {
-        lastTrigger = trigger || null;
-        setMode(mode || 'signup');
-        setOverlayVisibility(true);
+      if (chatClose) {
+        chatClose.addEventListener('click', function (e) {
+          e.stopPropagation();
+          closeChat();
+        });
       }
 
-      function closeAuthModal() {
-        setOverlayVisibility(false);
-      }
+      // Close chat by clicking/tapping anywhere outside (without jumping to top)
+      document.addEventListener('click', function (e) {
+        if (!chatPanel || !chatPanel.classList.contains('open')) return;
 
-      // Expose to other scripts (if needed)
-      window.mlOpenAuth = openAuth;
-      window.mlSetAuthMode = setMode;
+        const target = e.target;
+        if (chatPanel.contains(target) || (chatFab && chatFab.contains(target))) return;
 
-      if (openSignup) {
-        openSignup.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true);
+
+      if (chatForm) {
+        chatForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          openAuth('signup', e.currentTarget);
-        });
-      }
-
-      if (openLogin) {
-        openLogin.addEventListener('click', function (e) {
-          e.preventDefault();
-          openAuth('login', e.currentTarget);
-        });
-      }
-
-      if (authSwitchAction) {
-        authSwitchAction.addEventListener('click', function () {
-          var next = currentMode === 'signup' ? 'login' : 'signup';
-          setMode(next);
-        });
-      }
-
-      if (closeAuth) {
-        closeAuth.addEventListener('click', function () {
-          closeAuthModal();
-        });
-      }
-
-      if (authOverlay) {
-        authOverlay.addEventListener('click', function (e) {
-          if (e.target === authOverlay) {
-            closeAuthModal();
-          }
-        });
-      }
-
-      document.addEventListener('keydown', function (e) {
-        if (!authOverlay || authOverlay.getAttribute('aria-hidden') === 'true') return;
-
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          closeAuthModal();
-        }
-
-        if (e.key === 'Tab') {
-          var focusables = authContainer.querySelectorAll(focusableSelectors);
-          if (!focusables.length) return;
-
-          firstFocusable = focusables[0];
-          lastFocusable = focusables[focusables.length - 1];
-
-          if (e.shiftKey) {
-            if (document.activeElement === firstFocusable) {
-              e.preventDefault();
-              lastFocusable.focus();
-            }
-          } else {
-            if (document.activeElement === lastFocusable) {
-              e.preventDefault();
-              firstFocusable.focus();
-            }
-          }
-        }
-      });
-
-      if (togglePassword && authPassword) {
-        // Click to toggle
-        togglePassword.addEventListener('click', function () {
-          var isHidden = authPassword.type === 'password';
-          authPassword.type = isHidden ? 'text' : 'password';
-          togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-        });
-
-        // Keyboard support (Enter / Space) on the SVG
-        togglePassword.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            var isHidden = authPassword.type === 'password';
-            authPassword.type = isHidden ? 'text' : 'password';
-            togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-          }
-        });
-      }
-
-      function updatePasswordStrength(password) {
-        if (!passwordStrengthBar || !passwordStrengthText || !submitBtn) return;
-
-        var hasUpper = /[A-Z]/.test(password);
-        var hasLower = /[a-z]/.test(password);
-        var hasNumber = /[0-9]/.test(password);
-        var hasSymbol = /[^A-Za-z0-9]/.test(password);
-        var length = password.length;
-        var rulesMet = [hasUpper, hasLower, hasNumber, hasSymbol].filter(Boolean).length;
-
-        var label = '';
-        var text = '';
-        var width = 0;
-        var valid = false;
-
-        if (length === 0) {
-          width = 0;
-          label = '';
-          text = '';
-        } else if (length < 8) {
-          width = 20;
-          label = 'Too short';
-          text = 'Use at least 14 characters with letters, numbers and symbols.';
-        } else if (length < 14 || rulesMet < 4) {
-          width = 40;
-          label = 'Can be stronger';
-          text = 'Add more characters and a mix of upper, lower, numbers and symbols.';
-        } else if (length < 20) {
-          width = 75;
-          label = 'Strong password';
-          text = 'Good. Your password is strong and hard to guess.';
-          valid = true;
-        } else {
-          width = 100;
-          label = 'Excellent';
-          text = 'Excellent. This password is very hard to guess.';
-          valid = true;
-        }
-
-        passwordStrengthBar.style.width = width + '%';
-        passwordStrengthText.textContent = label ? label + ' – ' + text : '';
-        submitBtn.disabled = !valid;
-      }
-
-      if (authPassword) {
-        authPassword.addEventListener('input', function () {
-          updatePasswordStrength(authPassword.value);
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
+          chatInput.value = '';
+          chatBody.scrollTop = chatBody.scrollHeight;
         });
       }
     });

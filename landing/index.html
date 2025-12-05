@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
-    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+    href='data:image/svg+xml,>svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">>circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
   <link rel="stylesheet" href="styles/style.css" />
 
   <!-- Chat + minor overrides -->
@@ -220,7 +220,7 @@
       display: none;
     }
 
-    /* AUTH password field: keep structure, rely on global styles for svg position */
+    /* AUTH password field */
     .pw-field {
       position: relative;
       display: flex;
@@ -229,19 +229,16 @@
 
     .pw-field input {
       width: 100%;
-      padding-right: 2.5rem; /* space for the eye icon */
+      padding-right: 2.5rem;
     }
 
     /* MOBILE OVERRIDES – ONLY mobile changed */
     @media (max-width: 768px) {
-      /* Shrink modal ONLY in Sign Up mode (mobile only) */
       #submitBtn[data-mode="signup"] ~ .form-feedback,
       #submitBtn[data-mode="signup"] {
-        /* selector anchor, no styling needed here */
       }
 
       #submitBtn[data-mode="signup"]::before {
-        /* enable parent selector functionality */
         content: "";
       }
 
@@ -363,8 +360,6 @@
       }
 
       /* HERO MOBILE: Sign Up + View Plans as SEPARATE glass cylinders */
-
-      /* Container that used to show inline text; now it becomes the Sign Up pill */
       .hero-auth-inline {
         display: flex;
         align-items: flex-start;
@@ -372,12 +367,10 @@
         margin-bottom: 0.4rem;
       }
 
-      /* Hide hero sign-in text – nav already has Sign In */
       .hero-auth-inline .hero-sign-in {
         display: none;
       }
 
-      /* Sign Up cylinder */
       .hero-auth-inline .hero-sign-up {
         border-radius: 999px;
         padding: 0.55rem 1.7rem;
@@ -394,7 +387,6 @@
         color: #ffffff;
       }
 
-      /* View Plans cylinder below Sign Up */
       .hero .cta-buttons {
         display: flex;
         flex-direction: column;
@@ -404,7 +396,6 @@
       }
 
       .hero .cta-buttons .primary-btn {
-        /* View Plans on mobile */
         border-radius: 999px;
         padding: 0.55rem 1.7rem;
         background: rgba(255, 255, 255, 0.06);
@@ -414,7 +405,6 @@
         -webkit-backdrop-filter: blur(18px);
       }
 
-      /* Hide secondary hero button (Explore Infrastructure) on mobile */
       .hero .cta-buttons .secondary-btn {
         display: none !important;
       }
@@ -470,8 +460,8 @@
       </ul>
 
       <div class="auth-buttons">
-        <a href="#" class="sign-in" id="openLogin">Sign In</a>
-        <a href="#" class="sign-up-btn" id="openSignup">Sign Up</a>
+        <a href="signin.html" class="sign-in">Sign In</a>
+        <a href="signup.html" class="sign-up-btn">Sign Up</a>
       </div>
     </nav>
 
@@ -487,8 +477,8 @@
 
         <!-- MOBILE ONLY: Sign Up becomes a cylinder via CSS -->
         <div class="hero-auth-inline">
-          <a href="#" class="hero-sign-in"></a>
-          <a href="#" class="hero-sign-up">Sign Up</a>
+          <a href="signup.html" class="hero-btn hero-sign-up">Sign Up</a>
+          <a href="signin.html" class="hero-btn hero-sign-in ghost">Sign In</a>
         </div>
 
         <!-- Desktop styling is unchanged; mobile styles applied in @media -->
@@ -720,7 +710,7 @@
               autocomplete="new-password"
               minlength="8"
             />
-            <!-- Eye icon copied from broker.html -->
+            <!-- Eye icon -->
             <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 24 24"
                  role="button"
@@ -768,7 +758,7 @@
     </div>
   </div>
 
-  <!-- Unified logic: on reload or #hero/#home, go straight to .hero -->
+  <!-- Unified logic: go straight to hero on reload, #home/#hero or coming back from auth -->
   <script>
     (function () {
       var hash = window.location.hash;
@@ -778,12 +768,16 @@
         performance.getEntriesByType('navigation')[0]) || null;
 
       var isReload = navEntry
-        ? navEntry.type === 'reload'
+        ? (navEntry.type === 'reload' || navEntry.type === 'back_forward')
         : (performance && performance.navigation && performance.navigation.type === 1);
 
       var isHeroHash = (hash === '#home' || hash === '#hero');
 
-      var shouldGoHero = isReload || isHeroHash;
+      // NEW: coming back from signin/signup should always land on hero
+      var ref = document.referrer || '';
+      var fromAuth = ref.indexOf('signin.html') !== -1 || ref.indexOf('signup.html') !== -1;
+
+      var shouldGoHero = isReload || isHeroHash || fromAuth;
 
       if (!shouldGoHero) return;
 
@@ -844,26 +838,24 @@
     })();
   </script>
 
-  <!-- Hero Sign In / Sign Up wiring to open the same modal -->
+  <!-- Hero Sign In / Sign Up: force navigation to pages -->
   <script>
     (function () {
       document.addEventListener('DOMContentLoaded', function () {
         var heroSignIn = document.querySelector('.hero-sign-in');
         var heroSignUp = document.querySelector('.hero-sign-up');
-        var navSignIn = document.getElementById('openLogin');
-        var navSignUp = document.getElementById('openSignup');
 
-        if (heroSignIn && navSignIn) {
-          heroSignIn.addEventListener('click', function (e) {
+        if (heroSignUp) {
+          heroSignUp.addEventListener('click', function (e) {
             e.preventDefault();
-            navSignIn.click();
+            window.location.href = 'signup.html';
           });
         }
 
-        if (heroSignUp && navSignUp) {
-          heroSignUp.addEventListener('click', function (e) {
+        if (heroSignIn) {
+          heroSignIn.addEventListener('click', function (e) {
             e.preventDefault();
-            navSignUp.click();
+            window.location.href = 'signin.html';
           });
         }
       });

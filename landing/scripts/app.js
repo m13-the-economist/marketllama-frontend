@@ -36,7 +36,7 @@ function clearForceFlag() { try { sessionStorage.removeItem('forceScreen2'); } c
 window.addEventListener('DOMContentLoaded', (e) => {
   if (shouldForceScreen2(e)) { ensureScreen2(); clearForceFlag(); }
   maybeOpenChatFromHash();
-  initializeAuth();
+ // initializeAuth();
   initializeDropdowns(); // Initialize dropdowns
 });
 
