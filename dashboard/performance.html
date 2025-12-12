@@ -2431,5 +2431,180 @@
       }
     });
   </script>
+
+  <!-- BACKEND PERFORMANCE HOOK – ONLY WIRES DATA, DOESN'T TOUCH LAYOUT -->
+  <script>
+    (function () {
+      const API_BASE_URL = "http://72.61.201.223:8000";
+
+      const token = localStorage.getItem("ml_access_token");
+      if (!token) {
+        console.warn("[ML] No token – performance will stay on dummy data.");
+        return;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initPerformance().catch(err => {
+          console.error("[ML] Failed to initialise performance:", err);
+        });
+      });
+
+      async function initPerformance() {
+        try {
+          const res = await fetch(API_BASE_URL + "/api/accounts", {
+            headers: {
+              "Accept": "application/json",
+              "Authorization": "Bearer " + token
+            }
+          });
+
+          if (!res.ok) {
+            throw new Error("GET /api/accounts failed: " + res.status);
+          }
+
+          const accounts = await res.json();
+          if (!Array.isArray(accounts) || !accounts.length) {
+            console.log("[ML] No accounts returned – leaving dummy UI.");
+            return;
+          }
+
+          const defaultAccount =
+            accounts.find(a => a.is_primary) ||
+            accounts.find(a => !a.is_demo) ||
+            accounts[0];
+
+          await loadPerformance(defaultAccount.id);
+        } catch (err) {
+          console.error("[ML] Error loading accounts for performance:", err);
+        }
+      }
+
+      async function loadPerformance(accountId) {
+        try {
+          console.log("[ML] Loading performance for account", accountId);
+          const res = await fetch(
+            API_BASE_URL + "/api/performance/summary?account_id=" + encodeURIComponent(accountId),
+            {
+              headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+              }
+            }
+          );
+          if (!res.ok) throw new Error("GET /api/performance/summary failed: " + res.status);
+          const data = await res.json();
+          renderPerformance(data);
+        } catch (err) {
+          console.error("[ML] Performance load error:", err);
+        }
+      }
+
+      function renderPerformance(data) {
+        if (!data || !data.kpis) return;
+
+        // ===== KPIs → existing IDs =====
+        setText("kpiDays", data.kpis.trading_days);
+        setText("kpiTrades", data.kpis.total_trades);
+        if (typeof data.kpis.total_lots === "number") {
+          setText("kpiLots", data.kpis.total_lots.toFixed(2));
+        }
+        setMoney("kpiWin", data.kpis.biggest_win);
+        setMoney("kpiLoss", data.kpis.biggest_loss);
+
+        // ===== Weekly summary → rebuild #weekList =====
+        if (Array.isArray(data.weekly_summary)) {
+          const weekList = document.getElementById("weekList");
+          if (weekList) {
+            weekList.innerHTML = "";
+            data.weekly_summary.forEach(week => {
+              const card = document.createElement("div");
+              card.className = "week-card";
+              const pnlClass =
+                week.pnl > 0 ? "green" :
+                week.pnl < 0 ? "red" : "";
+
+              const pnlText =
+                week.pnl === 0
+                  ? "$ 0.00"
+                  : (week.pnl > 0
+                      ? "$ " + week.pnl.toFixed(2)
+                      : "-$ " + Math.abs(week.pnl).toFixed(2));
+
+              card.innerHTML = `
+                <div class="week-top">
+                  <div class="week-name">${week.week_label || ""}</div>
+                  <div class="week-range">${week.range || ""}</div>
+                </div>
+                <div class="week-bottom">
+                  <div class="week-pnl ${pnlClass}">${pnlText}</div>
+                  <div class="week-days">Days: ${week.days ?? 0}</div>
+                </div>
+              `;
+              weekList.appendChild(card);
+            });
+          }
+        }
+
+        // ===== Trade history → reuse #tradeBody =====
+        const tbody = document.getElementById("tradeBody");
+        if (tbody && Array.isArray(data.trade_history)) {
+          tbody.innerHTML = "";
+          data.trade_history.forEach(trade => {
+            const tr = document.createElement("tr");
+            const isBuy = (trade.side || "").toLowerCase() === "buy";
+            const pnl = Number(trade.pnl || 0);
+            const pnlClass = pnl >= 0 ? "pnl-pos" : "pnl-neg";
+            const pnlText =
+              (pnl >= 0 ? "$ " : "-$ ") + Math.abs(pnl).toFixed(2);
+
+            tr.innerHTML = `
+              <td><iconify-icon class="ic share-icon" icon="mdi:share-variant-outline"></iconify-icon></td>
+              <td>${trade.symbol || "-"}</td>
+              <td><span class="badge-type ${isBuy ? "badge-buy" : "badge-sell"}">
+                ${isBuy ? "Buy" : "Sell"}
+              </span></td>
+              <td>${formatDateTime(trade.open_time)}</td>
+              <td>${trade.open_price ?? "-"}</td>
+              <td>${formatDateTime(trade.close_time)}</td>
+              <td>${trade.close_price ?? "-"}</td>
+              <td>${trade.tp ?? "-"}</td>
+              <td>${trade.sl ?? "-"}</td>
+              <td class="${pnlClass}">${pnlText}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+
+        // Calendar + charts can be wired later with data.calendar / data.breakdown if you want.
+      }
+
+      function setText(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (value === undefined || value === null) return;
+        el.textContent = value;
+      }
+
+      function setMoney(id, value) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (value === undefined || value === null || isNaN(value)) return;
+        const num = Number(value);
+        const sign = num >= 0 ? "" : "-";
+        el.textContent = `${sign}$${Math.abs(num).toFixed(2)}`;
+      }
+
+      function formatDateTime(isoString) {
+        if (!isoString) return "-";
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return "-";
+        return (
+          d.toLocaleDateString() +
+          " " +
+          d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        );
+      }
+    })();
+  </script>
 </body>
 </html>

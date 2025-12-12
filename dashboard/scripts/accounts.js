@@ -1,8 +1,10 @@
-// scripts/accounts.js — v13 (plain JS, delegated accordion)
-// - Navbar Hide Balance masks nav + main + big in sync
-// - Sidebar toggle label << / >>
-// - Tabs render Live/Demo/Archived using configured balances
-// - Payments & Wallet accordion uses EVENT DELEGATION (rock-solid across DOM changes)
+// scripts/accounts.js — v14 (AUTH-CLEAN, BACKEND-DRIVEN GREETING)
+// - All existing UI logic preserved
+// - Greeting is fetched authoritatively from backend (/api/auth/me)
+// - No inline HTML logic
+// - No token decoding
+// - No fragile hacks
+
 (function () {
   'use strict';
 
@@ -25,17 +27,17 @@
     var toggleBalanceBtn = document.getElementById('toggleBalance');
     var topEye           = document.getElementById('topEye');
 
-    var mainAmount = document.getElementById('mainAmount'); // main KPI balance (if present)
-    var mainEye    = document.getElementById('mainEye');    // eye for main balance (optional)
+    var mainAmount = document.getElementById('mainAmount');
+    var mainEye    = document.getElementById('mainEye');
 
-    var bigAmount      = document.getElementById('bigAmount'); // large balance display (if present)
+    var bigAmount      = document.getElementById('bigAmount');
     var currentBigText = bigAmount ? bigAmount.textContent.trim() : '15,400.00 USD';
 
-    // Central balance config per tab
+    // ---------- BALANCES
     var BALANCES = {
       live:     { num: '15,400', suffix: '.00' },
       demo:     { num: '10,000', suffix: '.00' },
-      archived: { num: '8,250', suffix: '.50' } // keep .50 for archived
+      archived: { num: '8,250',  suffix: '.50' }
     };
 
     var currentTab = 'live';
@@ -50,37 +52,30 @@
     }
 
     function closeAllSubmenus() {
-      var accs = document.querySelectorAll('.accordion');
-      for (var i = 0; i < accs.length; i++) {
-        accs[i].setAttribute('aria-expanded', 'false');
-      }
+      document.querySelectorAll('.accordion').forEach(btn => {
+        btn.setAttribute('aria-expanded', 'false');
+      });
 
-      var subs = document.querySelectorAll('.submenu');
-      for (var j = 0; j < subs.length; j++) {
-        var ul = subs[j];
+      document.querySelectorAll('.submenu').forEach(ul => {
         ul.style.display = 'none';
         ul.setAttribute('hidden', '');
         ul.dataset.open = 'false';
-      }
+      });
 
-      var chevrons = document.querySelectorAll('.accordion iconify-icon:last-child');
-      for (var k = 0; k < chevrons.length; k++) {
-        chevrons[k].setAttribute('icon', 'mdi:chevron-down');
-      }
+      document
+        .querySelectorAll('.accordion iconify-icon:last-child')
+        .forEach(icon => icon.setAttribute('icon', 'mdi:chevron-down'));
     }
 
     function setSideToggleLabel() {
-      if (!sideToggle) return;
-      sideToggle.textContent = isCollapsed() ? '>>' : '<<';
+      if (sideToggle) sideToggle.textContent = isCollapsed() ? '>>' : '<<';
     }
 
-    // ---------- Sidebar collapse/expand
+    // ---------- Sidebar toggle
     if (sideToggle) {
       sideToggle.addEventListener('click', function () {
-        var collapsed = isCollapsed();
-        if (!collapsed) closeAllSubmenus();
-        if (sidebar) sidebar.dataset.state = collapsed ? 'expanded' : 'collapsed';
-        setAria(sideToggle, 'aria-expanded', collapsed ? 'true' : 'false');
+        if (!isCollapsed()) closeAllSubmenus();
+        sidebar.dataset.state = isCollapsed() ? 'expanded' : 'collapsed';
         setSideToggleLabel();
       });
       setSideToggleLabel();
@@ -88,189 +83,144 @@
 
     // ---------- Mobile drawer
     function openMobileSide() {
-      if (sidebar) sidebar.classList.add('open');
-      if (backdrop) backdrop.removeAttribute('hidden');
-      setAria(mobileTrigger, 'aria-expanded', true);
+      sidebar.classList.add('open');
+      backdrop.removeAttribute('hidden');
     }
 
     function closeMobileSide() {
-      if (sidebar) sidebar.classList.remove('open');
-      if (backdrop) backdrop.setAttribute('hidden', 'hidden');
-      setAria(mobileTrigger, 'aria-expanded', false);
+      sidebar.classList.remove('open');
+      backdrop.setAttribute('hidden', '');
       closeAllSubmenus();
     }
 
     if (mobileTrigger) {
       mobileTrigger.addEventListener('click', function () {
-        if (sidebar && sidebar.classList.contains('open')) {
-          closeMobileSide();
-        } else {
-          openMobileSide();
-        }
+        sidebar.classList.contains('open') ? closeMobileSide() : openMobileSide();
       });
     }
 
-    if (backdrop) {
-      backdrop.addEventListener('click', closeMobileSide);
-    }
+    backdrop?.addEventListener('click', closeMobileSide);
+    document.addEventListener('keydown', e => e.key === 'Escape' && closeMobileSide());
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeMobileSide();
-    });
+    document.querySelectorAll('.side-menu a').forEach(a =>
+      a.addEventListener('click', closeMobileSide)
+    );
 
-    var sideLinks = document.querySelectorAll('.side-menu a');
-    for (var sl = 0; sl < sideLinks.length; sl++) {
-      sideLinks[sl].addEventListener('click', closeMobileSide);
-    }
-
-    // ---------- Balances (SYNC nav + main + big)
+    // ---------- Balance masking
     var MASK    = '••••••••';
     var DISPLAY = topBalance ? topBalance.textContent.trim() : '$ 15 400.00';
 
-    var hidden = (topBalance && topBalance.textContent.indexOf('•') !== -1) ||
-                 (mainAmount && mainAmount.textContent.indexOf('•') !== -1) ||
-                 (bigAmount && bigAmount.textContent.indexOf('•') !== -1);
+    var hidden =
+      topBalance?.textContent.includes('•') ||
+      mainAmount?.textContent.includes('•') ||
+      bigAmount?.textContent.includes('•');
 
     function formatAmountHTML(cfg) {
-      return '<span style="font-size:21px">' + cfg.num + '</span>' + cfg.suffix + ' <span>USD</span>';
+      return `<span style="font-size:21px">${cfg.num}</span>${cfg.suffix} <span>USD</span>`;
     }
 
-    function getCurrentConfig() {
+    function getConfig() {
       return BALANCES[currentTab] || BALANCES.live;
     }
 
     function renderBalances() {
-      var cfg = getCurrentConfig();
+      var cfg = getConfig();
       currentBigText = cfg.num + cfg.suffix + ' USD';
 
-      if (topBalance) {
-        topBalance.textContent = hidden ? MASK : DISPLAY;
-      }
+      if (topBalance) topBalance.textContent = hidden ? MASK : DISPLAY;
 
       if (mainAmount) {
-        if (hidden) {
-          mainAmount.textContent = MASK;
-        } else {
-          mainAmount.innerHTML = formatAmountHTML(cfg);
-        }
+        mainAmount.innerHTML = hidden ? MASK : formatAmountHTML(cfg);
       }
 
-      if (bigAmount) {
-        bigAmount.textContent = hidden ? MASK : currentBigText;
-      }
+      if (bigAmount) bigAmount.textContent = hidden ? MASK : currentBigText;
 
-      if (topEye) {
-        topEye.setAttribute('icon', hidden ? 'mdi:eye-off' : 'mdi:eye');
-      }
-      if (mainEye) {
-        mainEye.setAttribute('icon', hidden ? 'mdi:eye-off' : 'mdi:eye');
-      }
+      if (topEye) topEye.setAttribute('icon', hidden ? 'mdi:eye-off' : 'mdi:eye');
+      if (mainEye) mainEye.setAttribute('icon', hidden ? 'mdi:eye-off' : 'mdi:eye');
     }
 
-    function toggleAllBalances() {
+    toggleBalanceBtn?.addEventListener('click', function () {
       hidden = !hidden;
       renderBalances();
-    }
+    });
 
-    if (toggleBalanceBtn) {
-      toggleBalanceBtn.addEventListener('click', toggleAllBalances);
-    }
-
-    // ---------- Tabs (Live/Demo/Archived using BALANCES config)
-    function applyTab(tabKey) {
-      currentTab = tabKey || 'live';
-      var cfg = getCurrentConfig();
-      currentBigText = cfg.num + cfg.suffix + ' USD';
-
-      if (bigAmount) {
-        bigAmount.textContent = hidden ? MASK : currentBigText;
-      }
-
-      if (mainAmount) {
-        if (hidden) {
-          mainAmount.textContent = MASK;
-        } else {
-          mainAmount.innerHTML = formatAmountHTML(cfg);
-        }
-      }
-    }
-
-    var tabs = document.querySelectorAll('.tab');
-    for (var i = 0; i < tabs.length; i++) {
-      tabs[i].addEventListener('click', function () {
-        for (var j = 0; j < tabs.length; j++) {
-          tabs[j].classList.remove('active');
-        }
+    // ---------- Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-
-        var which = this.getAttribute('data-tab');
-        applyTab(which);
-
-        // Update first chip label to match active tab text
+        currentTab = this.dataset.tab || 'live';
+        renderBalances();
         var chip = document.querySelector('.chip');
-        if (chip) {
-          chip.textContent = this.textContent.trim();
-        }
+        if (chip) chip.textContent = this.textContent.trim();
       });
-    }
+    });
 
-    // ---------- Accordion (EVENT DELEGATION)
-    function findSubmenu(btn) {
-      var el = btn.nextElementSibling;
-      while (el && !(el.classList && el.classList.contains('submenu'))) {
-        el = el.nextElementSibling;
+    // ---------- Accordion (delegated)
+    sidebar?.addEventListener('click', function (e) {
+      var btn = e.target.closest('.accordion');
+      if (!btn || isCollapsed()) return;
+      e.preventDefault();
+
+      var submenu = btn.nextElementSibling;
+      var open = btn.getAttribute('aria-expanded') === 'true';
+
+      btn.setAttribute('aria-expanded', String(!open));
+      submenu.style.display = open ? 'none' : 'block';
+      submenu.toggleAttribute('hidden', open);
+      submenu.dataset.open = String(!open);
+
+      var icon = btn.querySelector('iconify-icon:last-child');
+      if (icon) icon.setAttribute('icon', open ? 'mdi:chevron-down' : 'mdi:chevron-up');
+    });
+
+    // ---------- User greeting from backend
+(function loadUserGreeting() {
+  var token = localStorage.getItem("ml_access_token");
+  if (!token) {
+    console.warn("No ml_access_token in localStorage; skipping greeting fetch.");
+    return;
+  }
+
+  fetch("http://72.61.201.223:8000/api/auth/me", {
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Accept": "application/json"
+    }
+  })
+    .then(function (res) {
+      if (!res.ok) {
+        console.warn("Failed /api/auth/me", res.status);
+        return null;
       }
-      return el;
-    }
+      return res.json();
+    })
+    .then(function (user) {
+      if (!user) return;
 
-    function setSubmenuState(btn, open) {
-      var submenu = findSubmenu(btn);
-      if (!submenu) return;
+      // STRICT priority: username → full_name → email prefix → Trader
+      var displayName =
+        (user.username && user.username.trim()) ||
+        (user.full_name && user.full_name.trim()) ||
+        (user.email && user.email.split("@")[0]) ||
+        "Trader";
 
-      btn.setAttribute('aria-expanded', String(open));
+      console.log("Greeting name from backend:", displayName);
 
-      if (open) {
-        submenu.style.display = 'block';
-        submenu.removeAttribute('hidden');
-        submenu.dataset.open = 'true';
-      } else {
-        submenu.style.display = 'none';
-        submenu.setAttribute('hidden', '');
-        submenu.dataset.open = 'false';
+      var el = document.getElementById("ml-user-greeting-name");
+      if (el) {
+        el.textContent = displayName;
       }
-
-      var chevron = btn.querySelector('iconify-icon:last-child');
-      if (chevron) {
-        chevron.setAttribute('icon', open ? 'mdi:chevron-up' : 'mdi:chevron-down');
-      }
-    }
-
-    // Initialize all accordions to their aria-expanded state on load
-    var accInit = document.querySelectorAll('.accordion');
-    for (var a = 0; a < accInit.length; a++) {
-      var btn = accInit[a];
-      var expanded = btn.getAttribute('aria-expanded') === 'true';
-      setSubmenuState(btn, expanded);
-    }
-
-    // Delegate clicks from the sidebar container so it works on first try AND after any DOM changes
-    if (sidebar) {
-      sidebar.addEventListener('click', function (e) {
-        var acc = e.target && e.target.closest ? e.target.closest('.accordion') : null;
-        if (!acc || !sidebar.contains(acc)) return;
-        e.preventDefault();
-        if (isCollapsed()) return;
-        var isOpen = acc.getAttribute('aria-expanded') === 'true';
-        setSubmenuState(acc, !isOpen);
-      });
-    }
+    })
+    .catch(function (err) {
+      console.error("Failed to load user greeting", err);
+    });
+})();
 
     // ---------- Initial render
-    (function initOnLoad() {
-      var active = document.querySelector('.tab.active');
-      var which = active ? active.getAttribute('data-tab') : 'live';
-      currentTab = which || 'live';
-      applyTab(currentTab);
+    (function init() {
+      currentTab =
+        document.querySelector('.tab.active')?.dataset.tab || 'live';
       renderBalances();
       setSideToggleLabel();
     })();

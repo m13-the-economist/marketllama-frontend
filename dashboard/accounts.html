@@ -1203,12 +1203,15 @@
         </button>
       </div>
 
+      <!-- Greeting now controlled only by JS, not translations -->
       <div class="greeting">
-        <div class="hello" style="margin-bottom:25px;" data-i18n="greeting">Hi, Gafar Akinfolayan .</div>
+        <div class="hello" style="margin-bottom:25px;">
+          Hi, <span id="ml-user-greeting-name">Trader</span> .
+        </div>
         <div class="tier">
-          <span class="badge badge-pro" style="margin-right:70px">
+          <span class="badge badge-pro" style="margin-right:70px; display:none">
             <iconify-icon class="ic" icon="mdi:medal-outline"></iconify-icon>
-            <span data-i18n="pro">Pro</span>
+            <span id="ml-user-plan-label" data-i18n="pro">Pro</span>
           </span>
         </div>
       </div>
@@ -1219,7 +1222,12 @@
       </div>
 
       <!-- Live card -->
-      <div class="account-card active" data-account-type="live">
+      <div
+  class="account-card active"
+  data-account-type="live"
+  data-balance="15400"
+  data-currency="USD"
+>
         <div class="card-head">
           <span class="chip chip-live" data-i18n="live">Live</span>
           <span class="chip chip-broker">Deriv</span>
@@ -1236,7 +1244,13 @@
       </div>
 
       <!-- Demo card -->
-      <div class="account-card" data-account-type="demo" hidden>
+      <div
+      class="account-card"
+      data-account-type="demo"
+      data-balance="10000"
+      data-currency="USD"
+      hidden
+    >
         <div class="card-head">
           <span class="chip chip-demo" data-i18n="demo">Demo</span>
           <span class="chip chip-broker">Deriv</span>
@@ -1414,7 +1428,6 @@
           practice: "Practice",
           restore: "Restore",
           delete: "Delete",
-          greeting: "Hi, Gafar Akinfolayan .",
           pro: "Pro"
         },
         de: {
@@ -1437,7 +1450,6 @@
           practice: "Üben",
           restore: "Wiederherstellen",
           delete: "Löschen",
-          greeting: "Hallo, Gafar Akinfolayan.",
           pro: "Profi"
         },
         es: {
@@ -1460,7 +1472,6 @@
           practice: "Practicar",
           restore: "Restaurar",
           delete: "Eliminar",
-          greeting: "Hola, Gafar Akinfolayan.",
           pro: "Pro"
         },
         fr: {
@@ -1483,7 +1494,6 @@
           practice: "Pratique",
           restore: "Restaurer",
           delete: "Supprimer",
-          greeting: "Bonjour, Gafar Akinfolayan.",
           pro: "Pro"
         },
         ar: {
@@ -1506,7 +1516,6 @@
           practice: "تجربة",
           restore: "استعادة",
           delete: "حذف",
-          greeting: "مرحباً، غفار أكنفولاين.",
           pro: "محترف"
         }
       };
@@ -1648,40 +1657,82 @@
         });
       }
 
-      // Balance visibility sync
       const toggleBalance = document.getElementById('toggleBalance');
-      const cardBalanceToggle = document.getElementById('cardBalanceToggle');
-      const cardBalanceToggleDemo = document.getElementById('cardBalanceToggleDemo');
-      const topBalance = document.getElementById('topBalance');
-      const topEye = document.getElementById('topEye');
-      const cardEye = document.getElementById('cardEye');
-      const cardEyeDemo = document.getElementById('cardEyeDemo');
-      let balanceHidden = false;
+       const cardBalanceToggle = document.getElementById('cardBalanceToggle');
+       const cardBalanceToggleDemo = document.getElementById('cardBalanceToggleDemo');
+       const topBalance = document.getElementById('topBalance');
+       const topEye = document.getElementById('topEye');
+       const cardEye = document.getElementById('cardEye');
+       const cardEyeDemo = document.getElementById('cardEyeDemo');
+       let balanceHidden = false;
+
+      function formatCardAmount(amount, currency) {
+        const num = Number(amount || 0);
+        const formatted = num.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        const parts = formatted.split(".");
+        const main = parts[0] ?? formatted;
+        const frac = parts[1] ?? "00";
+        return `<span style="font-size:21px">${main}</span>.${frac} <span>${currency}</span>`;
+      }
 
       function setBalanceVisibility(hidden) {
         balanceHidden = hidden;
 
+        const liveCard = document.querySelector('.account-card[data-account-type="live"]');
+        const demoCard = document.querySelector('.account-card[data-account-type="demo"]');
+
         if (hidden) {
           if (topBalance) topBalance.textContent = '•••••';
+
           document.querySelectorAll('.big-amount').forEach(el => {
             el.innerHTML = '<span style="font-size:21px">•••••</span>.•• <span>USD</span>';
           });
         } else {
-          if (topBalance) topBalance.textContent = '$ 15 400.00';
-          const cards = document.querySelectorAll('.account-card');
-          cards.forEach(card => {
-            const type = card.getAttribute('data-account-type');
-            const el = card.querySelector('.big-amount');
-            if (!el) return;
-            if (type === 'live') el.innerHTML = '<span style="font-size:21px">15,400</span>.00 <span>USD</span>';
-            if (type === 'demo') el.innerHTML = '<span style="font-size:21px">10,000</span>.00 <span>USD</span>';
-          });
+          const liveBalance = liveCard ? (liveCard.getAttribute('data-balance') || "0") : "0";
+          const liveCurrency = liveCard ? (liveCard.getAttribute('data-currency') || "USD") : "USD";
+
+          const demoBalance = demoCard ? (demoCard.getAttribute('data-balance') || "0") : "0";
+          const demoCurrency = demoCard ? (demoCard.getAttribute('data-currency') || "USD") : "USD";
+
+          // Header uses live if it exists, else demo, else 0
+          if (topBalance) {
+            const headerAmount = liveCard ? liveBalance : (demoCard ? demoBalance : "0");
+            const headerCurrency = liveCard ? liveCurrency : (demoCard ? demoCurrency : "USD");
+            const headerNum = Number(headerAmount || 0);
+            topBalance.textContent = headerNum.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }) + " " + headerCurrency;
+          }
+
+          if (liveCard) {
+            const liveAmountEl = liveCard.querySelector('.big-amount');
+            if (liveAmountEl) {
+              liveAmountEl.innerHTML = formatCardAmount(liveBalance, liveCurrency);
+            }
+          }
+
+          if (demoCard) {
+            const demoAmountEl = demoCard.querySelector('.big-amount');
+            if (demoAmountEl) {
+              demoAmountEl.innerHTML = formatCardAmount(demoBalance, demoCurrency);
+            }
+          }
         }
 
         if (topEye) topEye.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
         if (cardEye) cardEye.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
         if (cardEyeDemo) cardEyeDemo.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
       }
+
+      // expose for the API script
+      window.mlSetBalanceVisibility = setBalanceVisibility;
+
+      // initial render using whatever data-* is on the cards
+      setBalanceVisibility(false);
 
       if (toggleBalance) {
         toggleBalance.addEventListener('click', (e) => {
@@ -1923,47 +1974,84 @@
       });
 
       if (addAccountForm && addAccountSaveBtn) {
-        addAccountForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          clearErrors();
+  addAccountForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearErrors();
 
-          const nameVal = accountNameInput.value.trim();
-          const brokerVal = brokerInput.value.trim();
-          const loginVal = accountLoginInput.value.trim();
-          const tokenVal = apiTokenInput.value.trim();
+    const nameVal  = accountNameInput.value.trim();
+    const brokerVal = brokerInput.value.trim();
+    const loginVal = accountLoginInput.value.trim();
+    const tokenVal = apiTokenInput.value.trim();
 
-          let valid = true;
-          if (!nameVal) {
-            showError('name', 'Please enter an account name.');
-            valid = false;
-          }
-          if (!brokerVal) {
-            showError('broker', 'Please select a broker.');
-            valid = false;
-          }
-          if (!loginVal) {
-            showError('login', 'Please enter your login ID.');
-            valid = false;
-          }
-          if (!tokenVal) {
-            showError('token', 'Please enter your API token.');
-            valid = false;
-          }
+    let valid = true;
+    if (!nameVal) {
+      showError('name', 'Please enter an account name.');
+      valid = false;
+    }
+    if (!brokerVal) {
+      showError('broker', 'Please select a broker.');
+      valid = false;
+    }
+    if (!loginVal) {
+      showError('login', 'Please enter your login ID.');
+      valid = false;
+    }
+    if (!tokenVal) {
+      showError('token', 'Please enter your API token.');
+      valid = false;
+    }
+    if (!valid) return;
 
-          if (!valid) return;
+    addAccountSaveBtn.disabled = true;
+    const originalText = addAccountSaveBtn.textContent;
+    addAccountSaveBtn.textContent = 'Saving…';
 
-          addAccountSaveBtn.disabled = true;
-          const originalText = addAccountSaveBtn.textContent;
-          addAccountSaveBtn.textContent = 'Saving…';
-
-          setTimeout(() => {
-            addAccountSaveBtn.disabled = false;
-            addAccountSaveBtn.textContent = originalText;
-            closeAddAccountModal();
-            showToast();
-          }, 1500);
-        });
-      }
+    fetch(API_BASE_URL + "/api/accounts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token,
+      },
+      body: JSON.stringify({
+        broker: brokerVal,          // "Deriv"
+        account_number: loginVal,   // CR1234567
+        label: nameVal,             // your custom name
+        api_key: tokenVal,          // Deriv API token
+      }),
+    })
+      .then(async (res) => {
+        if (res.status === 400) {
+          // backend sends {"detail": "..."}
+          const data = await res.json().catch(() => ({}));
+          const msg = data.detail || "Invalid account or token.";
+          throw new Error(msg);
+        }
+        if (!res.ok) {
+          throw new Error("Something went wrong (" + res.status + ").");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("[ML] Account created:", data);
+        closeAddAccountModal();
+        showToast();
+        // reload to re-run the /api/accounts GET and show real balances
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+      })
+      .catch((err) => {
+        console.error("[ML] Failed to create account:", err);
+        // surface error under the token field for now
+        showError('token', err.message || 'Unable to connect account. Check your details.');
+      })
+      .finally(() => {
+        addAccountSaveBtn.disabled = false;
+        addAccountSaveBtn.textContent = originalText;
+      });
+  });
+}
 
       applyLanguage(currentLang);
     });
@@ -2053,5 +2141,314 @@
       }
     });
   </script>
+
+<script>
+  (function () {
+    const API_BASE_URL = "http://72.61.201.223:8000";
+
+    const token = localStorage.getItem("ml_access_token");
+    if (!token) {
+      console.warn("[ML] No access token found – redirecting to login.");
+      // Optional redirect later:
+      // window.location.href = "/landing/index.html#home";
+      return;
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el && value) el.textContent = value;
+    }
+
+    function formatMoney(value) {
+      const num = Number(value || 0);
+      return num.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
+
+    function updateAccountsUi(accounts) {
+      const liveCard = document.querySelector('.account-card[data-account-type="live"]');
+      const demoCard = document.querySelector('.account-card[data-account-type="demo"]');
+
+      if (!Array.isArray(accounts)) {
+        console.warn("[ML] /api/accounts returned non-array:", accounts);
+        return;
+      }
+
+      const liveAccounts = accounts.filter(a => !a.is_demo);
+      const demoAccounts = accounts.filter(a => a.is_demo);
+
+      const live = liveAccounts[0] || null;
+      const demo = demoAccounts[0] || null;
+
+      // Write balances into data-* attributes.
+      if (live && liveCard) {
+        const liveBalance = live.balance ?? 0;
+        const liveCurrency = live.currency || "USD";
+        liveCard.setAttribute("data-balance", liveBalance);
+        liveCard.setAttribute("data-currency", liveCurrency);
+        liveCard.hidden = false;
+      }
+
+      if (demo && demoCard) {
+        const demoBalance = demo.balance ?? 0;
+        const demoCurrency = demo.currency || "USD";
+        demoCard.setAttribute("data-balance", demoBalance);
+        demoCard.setAttribute("data-currency", demoCurrency);
+        // Only show demo card if we actually have one
+        demoCard.hidden = false;
+      }
+
+      // Re-render amounts using the shared visibility helper if it exists
+      if (window.mlSetBalanceVisibility) {
+        window.mlSetBalanceVisibility(false);
+      } else {
+        const topBalance = document.getElementById("topBalance");
+        if (live && topBalance) {
+          topBalance.textContent = formatMoney(live.balance ?? 0) + " " + (live.currency || "USD");
+        }
+      }
+    }
+
+    // 1) BASE USER INFO – username FIRST
+    fetch(API_BASE_URL + "/api/auth/me", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("auth/me failed: " + res.status);
+        return res.json();
+      })
+      .then((data) => {
+        const rawUsername =
+          (data.username ||
+            data.handle ||
+            data.preferred_username ||
+            "").trim();
+        const fullName = (data.full_name || "").trim();
+        const email = data.email || "";
+        const emailPrefix = email ? email.split("@")[0] : "";
+
+        const displayName =
+          rawUsername ||
+          fullName ||
+          emailPrefix ||
+          "Trader";
+
+        console.log("[ML] Greeting from /api/auth/me:", displayName);
+        setText("ml-user-greeting-name", displayName);
+      })
+      .catch((err) => {
+        console.error("[ML] Failed to load user for greeting:", err);
+      });
+
+    // 2) ACCOUNTS – real balances
+    fetch(API_BASE_URL + "/api/accounts", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("accounts failed: " + res.status);
+        return res.json();
+      })
+      .then(updateAccountsUi)
+      .catch((err) => {
+        console.error("[ML] Failed to load accounts:", err);
+      });
+  })();
+</script>
+<script>
+  (function () {
+    const API_BASE_URL = "http://72.61.201.223:8000";
+
+    const token = localStorage.getItem("ml_access_token");
+    if (!token) {
+      console.warn("[ML] No token – redirecting to login.");
+      // adjust this URL if your landing path is different
+      window.location.href = "/landing/index.html#home";
+      return;
+    }
+
+    // --- helpers ---
+    function formatMoney(amount, currency) {
+      if (amount == null || isNaN(amount)) amount = 0;
+      const sign = amount < 0 ? "-" : "";
+      const abs = Math.abs(amount);
+      const formatted = abs.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return {
+        full: `${sign}${formatted} ${currency || "USD"}`,
+        main: `${sign}${formatted}`,
+        currency: currency || "USD",
+      };
+    }
+
+    function setTopBalance(text) {
+      const el = document.getElementById("topBalance");
+      if (el) el.textContent = text;
+    }
+
+    // Grab DOM bits we will update
+    const liveCard       = document.querySelector('.account-card[data-account-type="live"]');
+    const demoCard       = document.querySelector('.account-card[data-account-type="demo"]');
+    const liveAmountEl   = liveCard ? liveCard.querySelector(".big-amount") : null;
+    const demoAmountEl   = demoCard ? demoCard.querySelector(".big-amount") : null;
+    const liveBrokerChip = liveCard ? liveCard.querySelector(".chip-broker") : null;
+    const demoBrokerChip = demoCard ? demoCard.querySelector(".chip-broker") : null;
+
+    // Empty state message
+    let emptyMsgEl = document.getElementById("noAccountsMessage");
+    if (!emptyMsgEl) {
+      const tabs = document.querySelector(".tabs");
+      emptyMsgEl = document.createElement("p");
+      emptyMsgEl.id = "noAccountsMessage";
+      emptyMsgEl.textContent =
+        "No accounts connected yet. Tap “Add Account” to connect your first Deriv account.";
+      emptyMsgEl.style.marginTop = "12px";
+      emptyMsgEl.style.fontSize = "0.9rem";
+      emptyMsgEl.style.color = "#9ca3af";
+      emptyMsgEl.style.padding = "8px 4px";
+      if (tabs && tabs.parentNode) {
+        tabs.parentNode.insertBefore(emptyMsgEl, tabs.nextSibling);
+      } else {
+        document.querySelector(".content")?.appendChild(emptyMsgEl);
+      }
+    }
+    emptyMsgEl.style.display = "none";
+
+    function showEmptyState() {
+      if (liveCard) liveCard.style.display = "none";
+      if (demoCard) demoCard.style.display = "none";
+      emptyMsgEl.style.display = "block";
+      setTopBalance("$ 0.00");
+    }
+
+    function showCards() {
+      if (liveCard) liveCard.style.display = "";
+      if (demoCard) demoCard.style.display = "";
+      emptyMsgEl.style.display = "none";
+    }
+
+    // --- fetch accounts from backend ---
+    fetch(API_BASE_URL + "/api/accounts", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + token,
+      },
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          console.warn("[ML] /api/accounts 401 – redirecting to login.");
+          window.location.href = "/landing/index.html#home";
+          return [];
+        }
+        if (!res.ok) {
+          throw new Error("Failed to load accounts: " + res.status);
+        }
+        return res.json();
+      })
+      .then((accounts) => {
+        if (!Array.isArray(accounts) || accounts.length === 0) {
+          console.log("[ML] No accounts yet.");
+          showEmptyState();
+          return;
+        }
+
+        showCards();
+
+        // separate live & demo
+        const liveAccounts = accounts.filter(a => !a.is_demo);
+        const demoAccounts = accounts.filter(a => a.is_demo);
+
+        // choose primary account for header
+        const primary = accounts.find(a => a.is_primary) || accounts[0];
+
+        // pick first live/demo (you can refine later)
+        const liveAcc = liveAccounts[0] || (!primary.is_demo ? primary : null);
+        const demoAcc = demoAccounts[0] || null;
+
+        // header balance = primary equity if present, else balance
+        if (primary) {
+          const money = formatMoney(
+            primary.equity != null ? primary.equity : primary.balance,
+            primary.currency
+          );
+          setTopBalance(`${money.full}`);
+        } else {
+          setTopBalance("$ 0.00");
+        }
+
+        // update live card
+        if (liveAcc && liveAmountEl && liveCard) {
+          const money = formatMoney(
+            liveAcc.equity != null ? liveAcc.equity : liveAcc.balance,
+            liveAcc.currency
+          );
+          liveAmountEl.innerHTML =
+            `<span style="font-size:21px">${money.main}</span> <span>${money.currency}</span>`;
+          if (liveBrokerChip) {
+            liveBrokerChip.textContent = liveAcc.broker || "Broker";
+          }
+          liveCard.setAttribute("data-account-id", liveAcc.id || "");
+        } else if (liveCard) {
+          // if no live account, hide live card
+          liveCard.style.display = "none";
+        }
+
+        // update demo card
+        if (demoAcc && demoAmountEl && demoCard) {
+          const money = formatMoney(
+            demoAcc.equity != null ? demoAcc.equity : demoAcc.balance,
+            demoAcc.currency
+          );
+          demoAmountEl.innerHTML =
+            `<span style="font-size:21px">${money.main}</span> <span>${money.currency}</span>`;
+          if (demoBrokerChip) {
+            demoBrokerChip.textContent = demoAcc.broker || "Broker";
+          }
+          demoCard.setAttribute("data-account-id", demoAcc.id || "");
+        } else if (demoCard) {
+          // no demo account – hide the demo tab/card
+          demoCard.style.display = "none";
+        }
+      })
+      .catch((err) => {
+        console.error("[ML] Error loading accounts:", err);
+        // On error, don't crash UI – just show empty state
+        showEmptyState();
+      });
+  })();
+</script>
+<script>
+  (function () {
+    const badge = document.querySelector(".badge.badge-pro");
+    const labelEl = document.getElementById("ml-user-plan-label");
+    if (!badge) return;
+
+    // Temporary rule:
+    //   - "pro" or "premium" in localStorage => show badge
+    //   - anything else => hide badge
+    const plan = (localStorage.getItem("ml_user_plan") || "").toLowerCase();
+
+    if (plan === "pro" || plan === "premium") {
+      badge.style.display = "inline-flex";
+      if (labelEl) {
+        labelEl.textContent = plan === "premium" ? "Premium" : "Pro";
+      }
+    } else {
+      badge.style.display = "none";
+    }
+  })();
+</script>
 </body>
 </html>

@@ -884,171 +884,239 @@
     </form>
   </div>
 
-  <!-- PURE INLINE VALIDATION, NO auth.js DEPENDENCY -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const form = document.getElementById('finalStepForm');
-      if (!form) return;
+  <!-- INLINE VALIDATION + BACKEND PROFILE SAVE -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const API_BASE_URL = "http://72.61.201.223:8000";
+    const token = localStorage.getItem("ml_access_token");
 
-      const fullNameInput = document.getElementById('fullName');
-      const usernameInput = document.getElementById('username');
-      const dobInput = document.getElementById('dob');
-      const countrySelect = document.getElementById('country');
-      const globalError = document.getElementById('finalStepError');
+    const form          = document.getElementById('finalStepForm');
+    if (!form) return;
 
-      function getErrorEl(field) {
-        if (!field) return null;
-        const key = field.id || field.name;
-        if (!key) return null;
-        return form.querySelector('.field-error[data-error-for="' + key + '"]');
+    const fullNameInput = document.getElementById('fullName');
+    const usernameInput = document.getElementById('username');
+    const dobInput      = document.getElementById('dob');
+    const countrySelect = document.getElementById('country');
+    const globalError   = document.getElementById('finalStepError');
+
+    function getErrorEl(field) {
+      if (!field) return null;
+      const key = field.id || field.name;
+      if (!key) return null;
+      return form.querySelector('.field-error[data-error-for="' + key + '"]');
+    }
+
+    function setFieldError(field, msg) {
+      if (!field) return;
+      const el = getErrorEl(field);
+      if (el) {
+        el.textContent = msg;
+        el.classList.add('is-visible');
       }
+      field.classList.add('input-invalid');
+    }
 
-      function setFieldError(field, msg) {
-        if (!field) return;
-        const el = getErrorEl(field);
-        if (el) {
-          el.textContent = msg;
-          el.classList.add('is-visible');
-        }
-        field.classList.add('input-invalid');
+    function clearFieldError(field) {
+      if (!field) return;
+      const el = getErrorEl(field);
+      if (el) {
+        el.textContent = '';
+        el.classList.remove('is-visible');
       }
+      field.classList.remove('input-invalid');
+    }
 
-      function clearFieldError(field) {
-        if (!field) return;
-        const el = getErrorEl(field);
-        if (el) {
-          el.textContent = '';
-          el.classList.remove('is-visible');
-        }
-        field.classList.remove('input-invalid');
-      }
-
-      function clearAllErrors() {
-        form.querySelectorAll('.field-error').forEach(el => {
-          el.textContent = '';
-          el.classList.remove('is-visible');
-        });
-        form.querySelectorAll('.input-invalid').forEach(el => {
-          el.classList.remove('input-invalid');
-        });
-        if (globalError) {
-          globalError.textContent = '';
-          globalError.style.display = 'none';
-        }
-      }
-
-      function focusFirst(field) {
-        if (!field) return;
-        try {
-          field.focus({ preventScroll: true });
-        } catch (_) {
-          try { field.focus(); } catch (_) {}
-        }
-        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      function calculateAge(dobDate) {
-        const today = new Date();
-        let age = today.getFullYear() - dobDate.getFullYear();
-        const m = today.getMonth() - dobDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
-          age--;
-        }
-        return age;
-      }
-
-      [fullNameInput, usernameInput, dobInput, countrySelect].forEach(field => {
-        if (!field) return;
-        const evt = field.tagName === 'SELECT' ? 'change' : 'input';
-        field.addEventListener(evt, () => clearFieldError(field));
+    function clearAllErrors() {
+      form.querySelectorAll('.field-error').forEach(el => {
+        el.textContent = '';
+        el.classList.remove('is-visible');
       });
+      form.querySelectorAll('.input-invalid').forEach(el => {
+        el.classList.remove('input-invalid');
+      });
+      if (globalError) {
+        globalError.textContent = '';
+        globalError.style.display = 'none';
+      }
+    }
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        clearAllErrors();
+    function focusFirst(field) {
+      if (!field) return;
+      try {
+        field.focus({ preventScroll: true });
+      } catch (_) {
+        try { field.focus(); } catch (_) {}
+      }
+      field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
-        let hasError = false;
-        let firstInvalid = null;
+    function calculateAge(dobDate) {
+      const today = new Date();
+      let age = today.getFullYear() - dobDate.getFullYear();
+      const m = today.getMonth() - dobDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+        age--;
+      }
+      return age;
+    }
 
-        const fullName = fullNameInput ? fullNameInput.value.trim() : '';
-        const username = usernameInput ? usernameInput.value.trim() : '';
-        const dobValue = dobInput ? dobInput.value : '';
-        const country = countrySelect ? countrySelect.value : '';
+    // Clear error on change
+    [fullNameInput, usernameInput, dobInput, countrySelect].forEach(field => {
+      if (!field) return;
+      const evt = field.tagName === 'SELECT' ? 'change' : 'input';
+      field.addEventListener(evt, () => clearFieldError(field));
+    });
 
-        // FULL NAME: must exist + at least two words
-        if (!fullName) {
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      clearAllErrors();
+
+      if (!token) {
+        if (globalError) {
+          globalError.textContent = 'Session expired. Please sign in again.';
+          globalError.style.display = 'block';
+        }
+        // optional: redirect to sign-in
+        // window.location.href = 'signin.html';
+        return;
+      }
+
+      let hasError = false;
+      let firstInvalid = null;
+
+      const fullName = fullNameInput ? fullNameInput.value.trim() : '';
+      const username = usernameInput ? usernameInput.value.trim() : '';
+      const dobValue = dobInput ? dobInput.value : '';
+      const country  = countrySelect ? countrySelect.value : '';
+
+      // FULL NAME: must exist + at least two words
+      if (!fullName) {
+        hasError = true;
+        firstInvalid = firstInvalid || fullNameInput;
+        setFieldError(fullNameInput, 'Enter your full name.');
+      } else {
+        const nameParts = fullName.split(/\s+/).filter(Boolean);
+        if (nameParts.length < 2) {
           hasError = true;
           firstInvalid = firstInvalid || fullNameInput;
-          setFieldError(fullNameInput, 'Enter your full name.');
-        } else {
-          const nameParts = fullName.split(/\s+/).filter(Boolean);
-          if (nameParts.length < 2) {
-            hasError = true;
-            firstInvalid = firstInvalid || fullNameInput;
-            setFieldError(fullNameInput, 'Enter your first and last name.');
-          }
+          setFieldError(fullNameInput, 'Enter your first and last name.');
         }
+      }
 
-        // USERNAME: required
-        if (!username) {
-          hasError = true;
-          firstInvalid = firstInvalid || usernameInput;
-          setFieldError(usernameInput, 'Enter a username.');
-        }
+      // USERNAME: required
+      if (!username) {
+        hasError = true;
+        firstInvalid = firstInvalid || usernameInput;
+        setFieldError(usernameInput, 'Enter a username.');
+      }
 
-        // DOB: required + not future + at least 18 years old + not insane old
-        if (!dobValue) {
+      // DOB: required + not future + at least 18 years old + not insane old
+      if (!dobValue) {
+        hasError = true;
+        firstInvalid = firstInvalid || dobInput;
+        setFieldError(dobInput, 'Enter your date of birth.');
+      } else {
+        const dobDate = new Date(dobValue);
+        if (isNaN(dobDate.getTime())) {
           hasError = true;
           firstInvalid = firstInvalid || dobInput;
-          setFieldError(dobInput, 'Enter your date of birth.');
+          setFieldError(dobInput, 'Enter a valid date of birth.');
         } else {
-          const dobDate = new Date(dobValue);
-          if (isNaN(dobDate.getTime())) {
+          const today = new Date();
+          if (dobDate > today) {
             hasError = true;
             firstInvalid = firstInvalid || dobInput;
             setFieldError(dobInput, 'Enter a valid date of birth.');
           } else {
-            const today = new Date();
-            if (dobDate > today) {
+            const age = calculateAge(dobDate);
+            if (age < 18) {
+              hasError = true;
+              firstInvalid = firstInvalid || dobInput;
+              setFieldError(dobInput, 'You must be at least 18 to use Market Llama.');
+            } else if (age > 120) {
               hasError = true;
               firstInvalid = firstInvalid || dobInput;
               setFieldError(dobInput, 'Enter a valid date of birth.');
-            } else {
-              const age = calculateAge(dobDate);
-              if (age < 18) {
-                hasError = true;
-                firstInvalid = firstInvalid || dobInput;
-                setFieldError(dobInput, 'You must be at least 18 to use Market Llama.');
-              } else if (age > 120) {
-                hasError = true;
-                firstInvalid = firstInvalid || dobInput;
-                setFieldError(dobInput, 'Enter a valid date of birth.');
-              }
             }
           }
         }
+      }
 
-        // COUNTRY: required
-        if (!country) {
-          hasError = true;
-          firstInvalid = firstInvalid || countrySelect;
-          setFieldError(countrySelect, 'Select your country.');
+      // COUNTRY: required
+      if (!country) {
+        hasError = true;
+        firstInvalid = firstInvalid || countrySelect;
+        setFieldError(countrySelect, 'Select your country.');
+      }
+
+      if (hasError) {
+        if (firstInvalid) focusFirst(firstInvalid);
+        if (globalError) {
+          globalError.textContent = 'Please fix the highlighted fields to continue.';
+          globalError.style.display = 'block';
+        }
+        return;
+      }
+
+      // ✅ All frontend checks passed – now hit backend for username uniqueness + profile save
+      const payload = {
+        full_name: fullName || null,
+        username:  username || null,
+        dob:       dobValue || null,
+        country:   country || null,
+      };
+
+      try {
+        const res = await fetch(API_BASE_URL + "/api/auth/me/profile", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer " + token,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          // profile saved, username unique → go to dashboard
+          window.location.href = "/dashboard/accounts.html?lang=en";
+          return;
         }
 
-        if (hasError) {
-          if (firstInvalid) focusFirst(firstInvalid);
+        if (res.status === 400) {
+          let data = null;
+          try {
+            data = await res.json();
+          } catch (_) {}
+
+          if (data && data.detail === "Username already taken.") {
+            setFieldError(usernameInput, 'That username is already taken. Please choose another one.');
+            focusFirst(usernameInput);
+            return;
+          }
+
           if (globalError) {
-            globalError.textContent = 'Please fix the highlighted fields to continue.';
+            globalError.textContent = (data && data.detail) || 'We could not save your profile. Please check your details and try again.';
             globalError.style.display = 'block';
           }
           return;
         }
 
-        // ✅ All good – simple redirect for now
-        window.location.href = '/dashboard/accounts.html';
-      });
+        // Any other error code
+        if (globalError) {
+          globalError.textContent = 'Something went wrong while saving your profile. Please try again.';
+          globalError.style.display = 'block';
+        }
+      } catch (err) {
+        console.error("[ML] final-step profile error:", err);
+        if (globalError) {
+          globalError.textContent = 'Network error. Check your connection and try again.';
+          globalError.style.display = 'block';
+        }
+      }
     });
-  </script>
+  });
+</script>
 
   <!-- Chat wiring with smooth outside-click close -->
   <script>
