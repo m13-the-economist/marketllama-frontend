@@ -5,12 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Subscription Plan — Market Llama</title>
-  <meta name="description"
-        content="Manage your Market Llama subscription plans and compare account tiers." />
+  <meta name="description" content="Manage your Market Llama subscription plans and compare account tiers." />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
-        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
   <!-- Keep landing stylesheet so auth overlay/back-to-top etc remain styled -->
   <link rel="stylesheet" href="../landing/styles/style.css" />
 
@@ -58,6 +57,7 @@
       z-index: -1;
     }
 
+    /* ===== HEADER ===== */
     .site-header {
       position: fixed;
       inset: 0 0 auto 0;
@@ -211,10 +211,7 @@
       opacity: 1;
     }
 
-    .side .ic {
-      font-size: 18px;
-    }
-
+    /* ===== LAYOUT ===== */
     .dashboard {
       min-height: 100vh;
       padding-top: var(--header-h);
@@ -285,14 +282,10 @@
       cursor: pointer;
     }
 
-    .side-menu li.active > a {
+    .side-menu li.active>a {
       background: var(--glass);
       border-color: var(--ring);
       color: var(--text);
-    }
-
-    .has-submenu {
-      position: relative;
     }
 
     .accordion {
@@ -331,7 +324,6 @@
       border-left: 2px solid #4169E1;
       border-radius: 0 0 8px 8px;
       overflow: hidden;
-      transition: all 0.3s ease;
     }
 
     .side[data-state="collapsed"] .submenu {
@@ -372,7 +364,7 @@
       transition: margin-left 0.25s ease;
     }
 
-    .side[data-state="collapsed"] ~ .content {
+    .side[data-state="collapsed"]~.content {
       margin-left: 68px;
     }
 
@@ -398,6 +390,7 @@
       backdrop-filter: blur(2px);
     }
 
+    /* ===== FOOTER ===== */
     .legal-footer {
       margin-left: 240px;
       margin-top: 24px;
@@ -407,7 +400,7 @@
       font-size: 13px;
     }
 
-    .side[data-state="collapsed"] ~ .legal-footer {
+    .side[data-state="collapsed"]~.legal-footer {
       margin-left: 68px;
     }
 
@@ -449,7 +442,7 @@
       text-decoration: underline;
     }
 
-    /* ===== Chat widget — teal variant (same as chart/reset/insight/profile) ===== */
+    /* ===== Chat widget — teal variant ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -585,8 +578,162 @@
       cursor: pointer;
     }
 
-    /* ===== PLANS / COMPARISON FROM YOUR SECOND FILE ===== */
+    /* ===== EARLY ADOPTER HERO (NEAT) ===== */
+    .early-hero {
+      margin: 10px 0 20px;
+      background: linear-gradient(135deg, #1a6d72, #1f8a96);
+      border-radius: 24px;
+      padding: 22px 22px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, .14);
+    }
 
+    .early-hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .early-hero-heading {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .early-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, .18);
+      border: 1px solid rgba(255, 255, 255, .18);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-top: 10px;
+      width: fit-content;
+    }
+
+    .early-hero-sub {
+      margin-top: 10px;
+      max-width: 760px;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      opacity: 0.95;
+    }
+
+    .early-hero-meta-title {
+      margin-top: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      opacity: 0.95;
+    }
+
+    /* scroll container */
+    .early-hero-scroll {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      max-height: 230px;
+      overflow: auto;
+      backdrop-filter: blur(10px);
+    }
+
+    .early-hero-scroll::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .early-hero-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, .10);
+      border-radius: 999px;
+    }
+
+    .early-hero-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, .32);
+      border-radius: 999px;
+    }
+
+    .early-hero-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .early-hero-list li {
+      margin: 0;
+      white-space: pre-line;
+    }
+
+    /* right column actions */
+    .early-hero-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(0, 0, 0, .14);
+      border: 1px solid rgba(255, 255, 255, .18);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: calc(var(--header-h) + 14px);
+    }
+
+    .early-hero-price {
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: .02em;
+    }
+
+    .early-hero-note {
+      font-size: .9rem;
+      opacity: .95;
+      line-height: 1.45;
+    }
+
+    .early-hero-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+      white-space: nowrap;
+    }
+
+    .early-hero-btn.primary {
+      background: #ffffff;
+      color: #0b2430;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .early-hero-btn.primary:hover {
+      transform: translateY(-1px);
+    }
+
+    .early-hero-btn.secondary {
+      background: rgba(8, 10, 14, 0.95);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .early-hero-btn.secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    /* ===== PLANS / COMPARISON ===== */
     .pricing {
       padding: 2rem 4rem 1rem;
       position: relative;
@@ -668,12 +815,31 @@
       filter: blur(18px);
     }
 
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ffffff;
+      background: transparent;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
     .plan .name {
       font-weight: 700;
       text-align: center;
       margin-top: .25rem;
       margin-bottom: 1.25rem;
       opacity: .95;
+      position: relative;
+      z-index: 1;
     }
 
     .price {
@@ -879,6 +1045,7 @@
       fill: #fff;
     }
 
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 1100px) {
       .desktop-only {
         display: none;
@@ -954,10 +1121,6 @@
         margin-bottom: 1.5rem;
       }
 
-      .compare-wrap {
-        border-radius: 10px;
-      }
-
       .table-compare {
         font-size: 0.85rem;
       }
@@ -967,13 +1130,21 @@
         padding: 10px 8px;
       }
 
-      .table-compare thead th:first-child {
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
+      /* Early hero: stack and remove sticky */
+      .early-hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .early-hero-actions {
+        position: static;
+      }
+
+      .early-hero-scroll {
+        max-height: 210px;
       }
     }
 
-    @media (max-width:540px) {
+    @media (max-width: 540px) {
       .chat-fab {
         right: 14px;
         bottom: 88px;
@@ -984,12 +1155,6 @@
         bottom: 148px;
       }
     }
-
-    @media (min-width: 769px) {
-      .content {
-        margin-left: 240px;
-      }
-    }
   </style>
 
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
@@ -998,11 +1163,11 @@
 <body class="app dark">
   <div class="profile-background"></div>
 
-  <!-- DASHBOARD HEADER WITH RESPONSES (LANGUAGE, BALANCE, ETC.) -->
+  <!-- DASHBOARD HEADER -->
   <header class="site-header" id="siteHeader">
     <div class="left">
       <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar"
-              aria-expanded="false">
+        aria-expanded="false">
         <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
       </button>
       <a href="plans.html" class="brand" data-link="accounts">
@@ -1012,10 +1177,12 @@
         <span class="brand-name">Market Llama</span>
       </a>
     </div>
+
     <nav class="site-actions">
       <button class="icon-btn" id="qrBtn" aria-label="Scan QR">
         <iconify-icon class="ic" icon="mdi:qrcode-scan"></iconify-icon>
       </button>
+
       <div class="balance-wrap">
         <span class="balance-amount" id="topBalance">$ 15 400.00</span>
         <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
@@ -1049,11 +1216,12 @@
   <div class="backdrop" id="backdrop" hidden></div>
 
   <main class="dashboard">
-    <!-- SIDEBAR NAV (SAME STRUCTURE AS PROFILE) -->
+    <!-- SIDEBAR -->
     <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
       <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
         <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
       </div>
+
       <ul class="side-menu">
         <li>
           <a href="plans.html" data-link="accounts">
@@ -1121,13 +1289,75 @@
       </ul>
     </aside>
 
-    <!-- PAGE CONTENT: YOUR PLANS + COMPARISON -->
+    <!-- CONTENT -->
     <section class="content" id="content">
+
+      <!-- EARLY ADOPTER HERO (SCROLLABLE CONTENT) -->
+      <section class="early-hero" id="early-adopter">
+        <div class="early-hero-grid">
+          <div>
+            <h1 class="early-hero-heading">Early Adopter Test Mode</h1>
+            <div class="early-pill">Limited Access • Live Validation</div>
+
+            <p class="early-hero-sub">
+              Controlled live-market validation for a limited group of early adopters. Backtests show a 71% win rate
+              across 8 months — this phase verifies execution, risk-handling and real-world performance.
+            </p>
+
+            <div class="early-hero-meta-title">Details</div>
+
+            <div class="early-hero-scroll" aria-label="Early Adopter details (scrollable)">
+              <ul class="early-hero-list">
+                <li>
+Early Adopter Test Mode — $14.99/month
+
+This trading system has been extensively backtested over the past 8 months, achieving a 71% win rate. We are now moving into controlled live-market validation and opening access to a limited group of early adopters.
+
+What You Need to Know
+Trading involves risk, and losses are possible. Backtested results do not guarantee identical performance in live markets. This phase is designed to validate execution, risk handling, and performance under real conditions.
+
+Early adopters participate with full awareness that the system is in its first live deployment stage.
+
+Your $14.99/month subscription directly supports:
+  • Infrastructure costs
+  • Ongoing development
+  • Live performance monitoring and improvement
+
+Two Ways to Support the Project
+1. Subscribe & Participate in Early Testing ($14.99/month)
+For users who understand the risks and want early access to the system as it transitions into live operation.
+
+2. Support Development (Optional Contribution)
+If you’re not ready to participate in live testing but want to support development, you can contribute any amount toward production and platform completion.
+
+We appreciate every form of support.
+
+Questions? Contact us at [your email].
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="early-hero-actions">
+            <div class="early-hero-price">$14.99 / month</div>
+            <div class="early-hero-note">
+              Early access. Controlled testing. Transparent expectations.
+            </div>
+            <a href="javascript:void(0)" class="early-hero-btn primary">
+              Subscribe &amp; Test – $14.99/mo
+            </a>
+            <a href="mailto:support@marketllama.com" class="early-hero-btn secondary">
+              Donate to Support
+            </a>
+          </div>
+        </div>
+      </section>
+
       <div class="content-top">
         <h1 class="page-title" data-i18n="subscription">Subscription Plan</h1>
       </div>
 
-      <!-- Pricing section -->
+      <!-- PRICING -->
       <section class="pricing" id="plans">
         <h2>Plans</h2>
 
@@ -1140,12 +1370,11 @@
           <!-- Basic -->
           <article class="plan" data-plan="Basic">
             <div>
+              <div class="plan-badge">EARLY ADOPTERS</div>
               <div class="name">Basic</div>
               <div class="price">
-                <span class="amount" data-price data-monthly="14.99"
-                      data-annually="144.99">$ 19.99</span>
-                <span class="old-price" data-old-monthly="19.99"
-                      data-old-annually="199.99">$ 19.99</span>
+                <span class="amount" data-price data-monthly="14.99" data-annually="144.99">$ 19.99</span>
+                <span class="old-price" data-old-monthly="19.99" data-old-annually="199.99">$ 19.99</span>
                 <span class="per" data-per>/ month</span>
               </div>
               <ul class="features">
@@ -1165,10 +1394,8 @@
             <div>
               <div class="name">Pro</div>
               <div class="price">
-                <span class="amount" data-price data-monthly="19.99"
-                      data-annually="199.99">$ 19.99</span>
-                <span class="old-price" data-old-monthly="49.99"
-                      data-old-annually="499.99">$ 49.99</span>
+                <span class="amount" data-price data-monthly="19.99" data-annually="199.99">$ 19.99</span>
+                <span class="old-price" data-old-monthly="49.99" data-old-annually="499.99">$ 49.99</span>
                 <span class="per" data-per>/ month</span>
               </div>
               <ul class="features">
@@ -1188,10 +1415,8 @@
             <div>
               <div class="name">Premium</div>
               <div class="price">
-                <span class="amount" data-price data-monthly="99.99"
-                      data-annually="999.99">$ 99.99</span>
-                <span class="old-price" data-old-monthly="149.99"
-                      data-old-annually="1499.99">$ 149.99</span>
+                <span class="amount" data-price data-monthly="99.99" data-annually="999.99">$ 99.99</span>
+                <span class="old-price" data-old-monthly="149.99" data-old-annually="1499.99">$ 149.99</span>
                 <span class="per" data-per>/ month</span>
               </div>
               <ul class="features">
@@ -1210,10 +1435,8 @@
             <div>
               <div class="name">Elite</div>
               <div class="price">
-                <span class="amount" data-price data-monthly="499.99"
-                      data-annually="4999.99">$ 499.99</span>
-                <span class="old-price" data-old-monthly="699.99"
-                      data-old-annually="6999.99">$ 699.99</span>
+                <span class="amount" data-price data-monthly="499.99" data-annually="4999.99">$ 499.99</span>
+                <span class="old-price" data-old-monthly="699.99" data-old-annually="6999.99">$ 699.99</span>
                 <span class="per" data-per>/ month</span>
               </div>
               <ul class="features">
@@ -1229,7 +1452,7 @@
         </div>
       </section>
 
-      <!-- Comparison table -->
+      <!-- COMPARISON -->
       <section class="compare" id="plan-compare">
         <h3>COMPARE SUBSCRIPTIONS?</h3>
 
@@ -1307,7 +1530,7 @@
       </section>
     </section>
 
-    <!-- DASHBOARD FOOTER -->
+    <!-- FOOTER -->
     <footer class="legal-footer">
       <div class="footer-inner">
         <p class="footer-risk">
@@ -1350,8 +1573,8 @@
 
   <!-- CHAT WIDGET -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">
       <path d="M20 3H4a2 2 0 0 0-2 2v12l4-4h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z" />
       <circle cx="9" cy="10" r="1.25" />
       <circle cx="12" cy="10" r="1.25" />
@@ -1359,8 +1582,8 @@
     </svg>
   </button>
 
-  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat"
-       aria-modal="true" aria-hidden="true">
+  <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
+    aria-hidden="true">
     <div class="chat-header">
       <div class="chat-title">Assistant</div>
       <button id="chatClose" class="chat-close" aria-label="Close chat">×</button>
@@ -1374,16 +1597,16 @@
     </form>
   </div>
 
-  <!-- SIMPLE BACK-TO-TOP BUTTON -->
+  <!-- BACK-TO-TOP -->
   <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14.17 12 8.17 6 14.17z" />
     </svg>
   </button>
 
-  <!-- AUTH OVERLAY (for plan selection sign-up) -->
+  <!-- AUTH OVERLAY (kept as-is; your landing/style.css controls look) -->
   <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
-       aria-hidden="true">
+    aria-hidden="true">
     <div class="auth-container" id="authContainer">
       <button class="close-btn" id="closeAuth" aria-label="Close">&times;</button>
       <h2 id="authTitle">Create Account</h2>
@@ -1391,12 +1614,12 @@
         <div class="form-group signup-field" id="firstNameGroup">
           <label for="authFirstName">First Name</label>
           <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
-                 autocomplete="given-name">
+            autocomplete="given-name">
         </div>
         <div class="form-group signup-field" id="lastNameGroup">
           <label for="authLastName">Last Name</label>
           <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
-                 autocomplete="family-name">
+            autocomplete="family-name">
         </div>
         <div class="form-group signup-field" id="dobGroup">
           <label for="authDob">Date of Birth</label>
@@ -1405,7 +1628,7 @@
         <div class="form-group signup-field" id="usernameGroup">
           <label for="authUsername">Username</label>
           <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
-                 autocomplete="username">
+            autocomplete="username">
         </div>
         <div class="form-group signup-field" id="countryGroup">
           <label for="authCountry">Select Country</label>
@@ -1421,16 +1644,16 @@
 
         <div class="form-group" id="emailGroup">
           <label for="authEmail">Email</label>
-          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required
-                 autocomplete="email" inputmode="email">
+          <input id="authEmail" name="email" type="email" placeholder="Enter your email" required autocomplete="email"
+            inputmode="email">
         </div>
         <div class="form-group" id="passwordGroup">
           <label for="authPassword">Password</label>
           <div class="pw-field">
-            <input id="authPassword" name="password" type="password" placeholder="Enter your password"
-                   required autocomplete="new-password" minlength="8" />
+            <input id="authPassword" name="password" type="password" placeholder="Enter your password" required
+              autocomplete="new-password" minlength="8" />
             <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
-                 aria-label="Toggle password visibility">
+              aria-label="Toggle password visibility">
               <path
                 d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a 4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
             </svg>
@@ -1443,6 +1666,9 @@
       </form>
     </div>
   </div>
+
+  <!-- ICONIFY -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
   <!-- LANGUAGE + SIDEBAR + BALANCE LOGIC -->
   <script>
@@ -1533,7 +1759,6 @@
           });
         });
 
-        // explicit link for subscription plan in submenu
         document.querySelectorAll('[href^="subscriptionplan.html"]').forEach(a => {
           const url = new URL(window.location.href);
           url.pathname = 'subscriptionplan.html';
@@ -1550,12 +1775,7 @@
           if (t[key]) el.textContent = t[key];
         });
 
-        if (lang === 'ar') {
-          document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-          document.documentElement.setAttribute('dir', 'ltr');
-        }
-
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
         updateNavLinks();
       }
 
@@ -1578,7 +1798,7 @@
           const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
           accordion.setAttribute('aria-expanded', String(!isExpanded));
           submenu.hidden = isExpanded;
-          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
+          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down');
         });
       }
 
@@ -1652,17 +1872,13 @@
           toggleLanguageDropdown();
         });
 
-        languageDropdown.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
+        languageDropdown.addEventListener('click', (e) => e.stopPropagation());
 
-        const langOptions = languageDropdown.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
+        languageDropdown.querySelectorAll('.lang-option').forEach(option => {
           option.addEventListener('click', () => {
             const lang = option.getAttribute('data-lang');
             if (!translations[lang]) return;
             currentLang = lang;
-
             const url = new URL(window.location.href);
             url.searchParams.set('lang', currentLang);
             window.location.href = url.pathname + '?' + url.searchParams.toString();
@@ -1674,15 +1890,12 @@
         });
       }
 
-      document.addEventListener('click', () => {
-        closeDropdown();
-      });
-
+      document.addEventListener('click', () => closeDropdown());
       applyLanguage(currentLang);
     });
   </script>
 
-  <!-- CHAT WIDGET LOGIC (teal variant logic from chart page) -->
+  <!-- CHAT WIDGET LOGIC -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -1695,9 +1908,7 @@
       function openChat() {
         chatPanel.classList.add('open');
         chatPanel.setAttribute('aria-hidden', 'false');
-        if (chatInput) {
-          setTimeout(() => chatInput.focus(), 80);
-        }
+        if (chatInput) setTimeout(() => chatInput.focus(), 80);
       }
 
       function closeChat() {
@@ -1708,11 +1919,7 @@
       if (chatFab) {
         chatFab.addEventListener('click', function (e) {
           e.stopPropagation();
-          if (chatPanel.classList.contains('open')) {
-            closeChat();
-          } else {
-            openChat();
-          }
+          chatPanel.classList.contains('open') ? closeChat() : openChat();
         });
       }
 
@@ -1723,13 +1930,10 @@
         });
       }
 
-      // Close chat by clicking/tapping anywhere outside, swallowing the click
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-
         const target = e.target;
         if (chatPanel.contains(target) || chatFab.contains(target)) return;
-
         e.preventDefault();
         e.stopPropagation();
         closeChat();
@@ -1754,7 +1958,6 @@
   <!-- PRICING + AUTH + BACK-TO-TOP LOGIC -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      /* ---------- Plans / Pricing ---------- */
       const billMonthlyBtn = document.getElementById('billMonthly');
       const billAnnuallyBtn = document.getElementById('billAnnually');
       const priceEls = document.querySelectorAll('[data-price]');
@@ -1794,7 +1997,6 @@
       })();
       setBilling(storedMode || 'monthly');
 
-      /* ---------- Auth buttons / plan selection ---------- */
       function handleAuthClick(e, mode, planName) {
         e.preventDefault();
         e.stopPropagation();
@@ -1802,21 +2004,16 @@
         const authOverlay = document.getElementById('authOverlay');
         const authTitle = document.getElementById('authTitle');
         const authContainer = document.getElementById('authContainer');
-
         if (!authOverlay || !authTitle || !authContainer) return;
 
         if (mode === 'signup') {
           authTitle.textContent = planName ? `Create Account — ${planName}` : "Create Account";
           authContainer.classList.add('bubble');
-          document.querySelectorAll('.signup-field').forEach(el => {
-            el.style.display = 'block';
-          });
+          document.querySelectorAll('.signup-field').forEach(el => el.style.display = 'block');
         } else {
           authTitle.textContent = "Sign In";
           authContainer.classList.remove('bubble');
-          document.querySelectorAll('.signup-field').forEach(el => {
-            el.style.display = 'none';
-          });
+          document.querySelectorAll('.signup-field').forEach(el => el.style.display = 'none');
         }
 
         authOverlay.classList.add('active');
@@ -1840,7 +2037,6 @@
         });
       });
 
-      /* ---------- Close auth overlay ---------- */
       const authOverlay = document.getElementById('authOverlay');
       const closeAuth = document.getElementById('closeAuth');
 
@@ -1851,31 +2047,13 @@
       }
 
       if (closeAuth && authOverlay) {
-        closeAuth.addEventListener('click', (e) => {
-          e.preventDefault();
-          closeAuthOverlay();
-        });
-
-        authOverlay.addEventListener('click', (e) => {
-          if (e.target === authOverlay) {
-            closeAuthOverlay();
-          }
-        });
-
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            closeAuthOverlay();
-          }
-        });
+        closeAuth.addEventListener('click', (e) => { e.preventDefault(); closeAuthOverlay(); });
+        authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthOverlay(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAuthOverlay(); });
       }
 
-      /* ---------- Simple back-to-top ---------- */
       const backToTop = document.getElementById('backToTop');
-      if (backToTop) {
-        backToTop.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      }
+      if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     });
   </script>
 </body>

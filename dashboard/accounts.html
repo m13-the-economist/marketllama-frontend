@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Accounts — Fintech Platform</title>
-  <meta name="description" content="Manage live, demo, and archived trading accounts." />
+  <title>Accounts — Market Llama</title>
+  <meta name="description" content="Manage your live and demo trading accounts." />
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
-    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
   <style>
     :root {
       --header-h: 60px;
@@ -16,27 +18,22 @@
       --panel: #121214;
       --muted: #8f8f92;
       --text: #ffffff;
+
       --accent: #ffffff;
       --accent-plain: #dadada;
+
       --glow: rgba(255, 255, 255, .06);
       --glass: rgba(255, 255, 255, .04);
       --ring: rgba(255, 255, 255, .12);
       --pill: #16171a;
       --shadow: 0 8px 24px rgba(0, 0, 0, .45);
-      --accent-main: #00c8ff;
+
       --nav-teal: #1a6d72;
+      --header-blue: #0097b2;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 14px;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
     body.app.dark {
       background: var(--bg);
       color: var(--text);
@@ -44,7 +41,28 @@
       overflow-x: hidden;
     }
 
-    /* Header */
+    /* ===== PROFILE BACKGROUND ===== */
+    .profile-background {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 150vw;
+      height: 120vh;
+      top: -10%;
+      left: 15%;
+      background:
+        radial-gradient(200px 260px at 20% 30%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(180px 240px at 40% 20%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(140px 200px at 25% 70%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(100px 140px at 75% 25%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(160px 220px at 80% 60%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(120px 180px at 60% 80%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%);
+      filter: blur(60px);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* ===== HEADER (NAVBAR) ===== */
     .site-header {
       position: fixed;
       inset: 0 0 auto 0;
@@ -55,7 +73,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 8px 14px;
-      background: #0097b2;
+      background: var(--header-blue);
       border-bottom: 1px solid var(--ring);
       backdrop-filter: blur(8px);
     }
@@ -64,6 +82,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      min-width: 220px;
     }
 
     .brand {
@@ -73,6 +92,7 @@
       color: var(--text);
       text-decoration: none;
       font-weight: 700;
+      white-space: nowrap;
     }
 
     .logo {
@@ -83,8 +103,8 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      flex: 0 0 auto;
     }
-
     .logo-img {
       width: 100%;
       height: 100%;
@@ -92,11 +112,7 @@
       border-radius: 6px;
       display: block;
     }
-
-    .brand-name {
-      letter-spacing: .2px;
-      font-size: 1rem;
-    }
+    .brand-name { letter-spacing: .2px; font-size: 1rem; }
 
     .site-actions {
       position: relative;
@@ -113,22 +129,15 @@
       border-radius: 10px;
       cursor: pointer;
       line-height: 1;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
       text-decoration: none;
     }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
 
-    .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .icon-btn.sm {
-      padding: 5px;
-      border-radius: 9px;
-    }
+    .icon-btn.sm { padding: 5px; border-radius: 9px; }
 
     .balance-wrap {
       display: flex;
@@ -139,13 +148,8 @@
       border-radius: 10px;
       background: var(--glass);
     }
+    .balance-amount { letter-spacing: .2px; font-size: .95rem; }
 
-    .balance-amount {
-      letter-spacing: .2px;
-      font-size: .95rem;
-    }
-
-    /* Language Dropdown */
     .language-dropdown {
       position: absolute;
       top: 100%;
@@ -157,7 +161,7 @@
       min-width: 160px;
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
-      z-index: 1000;
+      z-index: 1000; /* FIXED: removed invalid "z-index hookup" */
     }
 
     .lang-option {
@@ -174,23 +178,13 @@
       transition: all 0.2s ease;
       font-family: inherit;
       font-size: 14px;
+      text-align: left;
     }
+    .lang-option:hover { background: rgba(255, 255, 255, 0.1); }
+    .flag { font-size: 16px; }
 
-    .lang-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .flag {
-      font-size: 16px;
-    }
-
-    .mobile-only {
-      display: none;
-    }
-
-    .desktop-only {
-      display: inline-flex;
-    }
+    .mobile-only { display: none; }
+    .desktop-only { display: inline-flex; }
 
     .ic {
       font-size: 18px;
@@ -199,20 +193,10 @@
       opacity: 0.9;
       transition: opacity 0.2s ease;
     }
+    .icon-btn:hover .ic { opacity: 1; }
 
-    .icon-btn:hover .ic {
-      opacity: 1;
-    }
-
-    .side .ic {
-      font-size: 18px;
-    }
-
-    /* Layout */
-    .dashboard {
-      min-height: 100vh;
-      padding-top: var(--header-h);
-    }
+    /* ===== LAYOUT ===== */
+    .dashboard { min-height: 100vh; padding-top: var(--header-h); }
 
     .side {
       position: fixed;
@@ -227,25 +211,15 @@
       transition: left .3s ease, width .25s ease;
     }
 
-    .side[data-state="collapsed"] {
-      width: 68px;
-    }
-
-    .side .label {
-      transition: opacity .2s ease;
-    }
-
-    .side[data-state="collapsed"] .label {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .side[data-state="collapsed"] { width: 68px; }
+    .side .label { transition: opacity .2s ease; }
+    .side[data-state="collapsed"] .label { opacity: 0; pointer-events: none; }
 
     .side-toggle {
       position: sticky;
-      bottom: 0;
+      top: 0;
       width: 100%;
       background: rgb(75, 75, 75);
-      margin-top: 6px;
       border: none;
       color: white;
       padding: 10px;
@@ -253,6 +227,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 2;
     }
 
     .side-menu {
@@ -279,41 +254,26 @@
       cursor: pointer;
     }
 
-    .side-menu li.active>a {
+    .side-menu li.active > a {
       background: var(--glass);
       border-color: var(--ring);
       color: var(--text);
     }
 
-    .has-submenu {
-      position: relative;
-    }
+    .has-submenu { position: relative; }
 
     .accordion {
       background: none;
       border: none;
       transition: all 0.3s ease;
+      font-family: inherit;
+      font-size: inherit;
     }
+    .accordion:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--ring); }
 
-    .accordion:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--ring);
-    }
-
-    .accordion .chevron {
-      margin-left: auto;
-      transition: transform 0.3s ease;
-    }
-
-    .accordion[aria-expanded="true"] .chevron {
-      transform: rotate(180deg);
-    }
-
-    .accordion[aria-expanded="true"] {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
+    .accordion .chevron { margin-left: auto; transition: transform 0.3s ease; }
+    .accordion[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+    .accordion[aria-expanded="true"] { background: var(--glass); border-color: var(--ring); color: var(--text); }
 
     .submenu {
       list-style: none;
@@ -325,18 +285,10 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
+    .side[data-state="collapsed"] .submenu { display: none !important; }
 
-    .side[data-state="collapsed"] .submenu {
-      display: none !important;
-    }
-
-    .submenu li {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .submenu li:last-child {
-      border-bottom: none;
-    }
+    .submenu li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .submenu li:last-child { border-bottom: none; }
 
     .submenu a {
       display: flex;
@@ -352,21 +304,15 @@
       margin: 2px 4px;
       width: calc(100% - 8px);
     }
+    .submenu a:hover { background: rgba(255, 255, 255, 0.1); color: white; }
 
-    .submenu a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-
+    /* ===== CONTENT (expands when sidebar collapses) ===== */
     .content {
       margin-left: 240px;
       padding: 18px clamp(12px, 2vw, 24px);
       transition: margin-left 0.25s ease;
     }
-
-    .side[data-state="collapsed"]~.content {
-      margin-left: 68px;
-    }
+    .side[data-state="collapsed"] ~ .content { margin-left: 68px; }
 
     .content-top {
       display: flex;
@@ -385,8 +331,8 @@
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
+      gap: 8px;
+      padding: 10px 16px;
       border-radius: 12px;
       border: 1px solid var(--ring);
       background: var(--glass);
@@ -394,42 +340,20 @@
       cursor: pointer;
       box-shadow: var(--shadow);
       font-size: .95rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      white-space: nowrap;
     }
+    .btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
 
-    .btn.btn-primary {
-      background: #1a1b1f;
-    }
-
-    .btn.btn-pill {
-      border-radius: 999px;
-    }
-
-    .badge.badge-pro {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: #cc7a00;
-      border: 1px solid var(--ring);
-      padding: 5px 8px;
-      border-radius: 999px;
-      margin-left: 6px;
-      font-size: .85rem;
-    }
-
-    .greeting {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
+    /* ===== ACCOUNTS UI ===== */
+    .greeting { color: rgba(255,255,255,.9); margin: 6px 0 16px; }
 
     .tabs {
       display: flex;
       gap: 8px;
       margin: 8px 0 14px;
     }
-
     .tab {
       background: #1a1b1f;
       border: 1px solid var(--ring);
@@ -438,13 +362,16 @@
       border-radius: 999px;
       cursor: pointer;
       font-size: .95rem;
+      font-family: inherit;
+      transition: transform .15s ease, background .15s ease;
     }
-
+    .tab:hover { transform: translateY(-1px); background: rgba(255,255,255,.07); }
     .tab.active {
       background: var(--text);
       color: #000;
     }
 
+    /* ===== OLD BOX STYLE (FROM YOUR FINTECH CODE) ===== */
     .chip {
       display: inline-block;
       padding: 5px 10px;
@@ -453,22 +380,11 @@
       border: 1px solid var(--ring);
       font-size: .8rem;
       margin-right: 8px;
+      color: #fff;
     }
-
-    .chip-live {
-      background: #4CAF50;
-      color: white;
-    }
-
-    .chip-demo {
-      background: #FF9800;
-      color: white;
-    }
-
-    .chip-broker {
-      background: #2196F3;
-      color: white;
-    }
+    .chip-live { background: #4CAF50; color: #fff; border-color: rgba(255,255,255,.14); }
+    .chip-demo { background: #FF9800; color: #fff; border-color: rgba(255,255,255,.14); }
+    .chip-broker { background: #2196F3; color: #fff; border-color: rgba(255,255,255,.14); }
 
     .account-card {
       position: relative;
@@ -479,6 +395,13 @@
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 10px;
+
+      width: min(1400px, 100%);
+      transition: width 0.25s ease;
+    }
+
+    .side[data-state="collapsed"] ~ .content .account-card {
+      width: min(1700px, 100%);
     }
 
     .card-head {
@@ -500,18 +423,13 @@
       font-size: 16px;
       font-weight: 500;
       letter-spacing: 1.4px;
+      color: #fff;
     }
 
     .card-actions {
       display: flex;
       gap: 10px;
       align-items: center;
-    }
-
-    .btn-ghost {
-      background: #1a1b1f;
-      padding: 10px 14px;
-      border: 1px solid var(--ring);
     }
 
     .line-art {
@@ -528,6 +446,39 @@
         radial-gradient(160px 220px at 65% 60%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%);
     }
 
+    /* ===== FOOTER ===== */
+    .legal-footer {
+      margin-left: 240px;
+      margin-top: 24px;
+      padding: 18px clamp(12px, 2vw, 24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 13px;
+      transition: margin-left 0.25s ease;
+    }
+    .side[data-state="collapsed"] ~ .legal-footer { margin-left: 68px; }
+
+    .footer-inner {
+      max-width: none;
+      margin: 0;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .footer-risk { line-height: 1.7; max-width: 720px; }
+    .footer-links { text-align: right; font-size: 13px; }
+    .footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .footer-links a {
+      color: var(--accent-plain);
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+    }
+    .footer-links a:hover { opacity: 1; text-decoration: underline; }
+
+    /* ===== BACKDROP (mobile sidebar) ===== */
     .backdrop {
       position: fixed;
       inset: 0;
@@ -536,392 +487,7 @@
       backdrop-filter: blur(2px);
     }
 
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
-
-    .video-background video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    /* Add Account Modal */
-    .add-account-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(10px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-
-    .add-account-modal-overlay.open {
-      display: flex;
-    }
-
-    .add-account-modal {
-      width: 100%;
-      max-width: 520px;
-      background: #080b11;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
-      padding: 22px 24px 20px;
-      position: relative;
-    }
-
-    .add-account-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-
-    .add-account-modal-title {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .add-account-modal-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .modal-close-btn {
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 999px;
-      line-height: 1;
-    }
-
-    .modal-close-btn:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-    }
-
-    .input-group {
-      margin-bottom: 14px;
-    }
-
-    .input-label {
-      font-size: 12px;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .input-control {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: #05070d;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .input-control::placeholder {
-      color: rgba(255, 255, 255, 0.35);
-    }
-
-    .input-control:focus {
-      border-color: var(--accent-main);
-      box-shadow: 0 0 0 1px rgba(0, 200, 255, 0.2);
-      background: #050812;
-    }
-
-    .helper-text {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .error-message {
-      font-size: 11px;
-      color: #ff6b6b;
-      margin-top: 4px;
-      display: none;
-    }
-
-    /* Broker searchable dropdown */
-    .broker-select {
-      position: relative;
-    }
-
-    .broker-input {
-      padding-right: 32px;
-    }
-
-    .broker-dropdown-toggle {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .broker-dropdown-toggle:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-    }
-
-    .broker-options {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: calc(100% + 6px);
-      background: #05070d;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
-      max-height: 180px;
-      overflow-y: auto;
-      display: none;
-      z-index: 20;
-    }
-
-    .broker-options.open {
-      display: block;
-    }
-
-    .broker-option {
-      width: 100%;
-      text-align: left;
-      padding: 8px 12px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 13px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .broker-option:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .broker-option-empty {
-      color: var(--muted);
-      cursor: default;
-    }
-
-    .add-account-modal-footer {
-      margin-top: 16px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding-inline: 16px;
-      font-size: 13px;
-    }
-
-    .btn-primary-main {
-      border-radius: 999px;
-      border: none;
-      background: var(--accent-main);
-      color: #020308;
-      font-weight: 600;
-      padding-inline: 20px;
-      font-size: 13px;
-    }
-
-    .btn-primary-main[disabled] {
-      opacity: 0.6;
-      cursor: default;
-    }
-
-    @media (max-width: 600px) {
-      .add-account-modal {
-        margin: 0 14px;
-        padding-inline: 18px;
-      }
-
-      .add-account-modal-footer {
-        flex-direction: column-reverse;
-        align-items: stretch;
-      }
-
-      .add-account-modal-footer .btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: rgba(8, 12, 20, 0.95);
-      border-radius: 999px;
-      padding: 10px 16px;
-      font-size: 12px;
-      border: 1px solid rgba(0, 200, 255, 0.5);
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      z-index: 60;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    @media (max-width: 600px) {
-      .toast {
-        left: 50%;
-        right: auto;
-        transform: translate(-50%, 10px);
-      }
-
-      .toast.show {
-        transform: translate(-50%, 0);
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .desktop-only {
-        display: none;
-      }
-      .mobile-only {
-        display: inline-flex;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .side[data-state="expanded"] {
-        width: 200px;
-      }
-      .content {
-        margin-left: 200px;
-      }
-      .legal-footer {
-        margin-left: 200px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .side {
-        left: -240px;
-        width: 240px;
-      }
-      .side.open {
-        left: 0;
-      }
-      .content {
-        margin-left: 0;
-      }
-      .language-dropdown {
-        right: 10px;
-        min-width: 140px;
-      }
-      .legal-footer {
-        margin-left: 0;
-      }
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-      }
-      .footer-links {
-        text-align: left;
-      }
-    }
-
-    @media (min-width: 769px) {
-      .content {
-        margin-left: 240px;
-      }
-    }
-
-    /* Persistent Legal Footer – a bit lower */
-    .legal-footer {
-      margin-left: 240px;
-      margin-top: 24px;
-      padding: 18px clamp(12px, 2vw, 24px);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .side[data-state="collapsed"] ~ .legal-footer {
-      margin-left: 68px;
-    }
-
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 24px;
-    }
-
-    .footer-risk {
-      line-height: 1.7;
-      max-width: 720px;
-    }
-
-    .footer-links {
-      text-align: right;
-      font-size: 13px;
-    }
-
-    .footer-links-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .footer-links a {
-      color: var(--accent-plain);
-      text-decoration: none;
-      opacity: 0.9;
-      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    /* ===== Chat widget – teal variant (aligned with chart page) ===== */
+    /* ===== CHAT (unchanged teal style) ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -941,18 +507,8 @@
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
-
-    .chat-fab:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
-      background: #20848a;
-    }
-
-    .chat-fab svg {
-      width: 24px;
-      height: 24px;
-      stroke: currentColor;
-    }
+    .chat-fab:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0, 0, 0, .5); background: #20848a; }
+    .chat-fab svg { width: 24px; height: 24px; stroke: currentColor; }
 
     .chat-panel {
       position: fixed;
@@ -974,12 +530,7 @@
       color: #fff;
       overflow: hidden;
     }
-
-    .chat-panel.open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
+    .chat-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 
     .chat-header {
       display: flex;
@@ -989,28 +540,10 @@
       border-bottom: 1px solid rgba(255, 255, 255, .06);
       background: var(--nav-teal);
     }
+    .chat-title { font-weight: 600; }
+    .chat-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; line-height: 1; }
 
-    .chat-title {
-      font-weight: 600;
-    }
-
-    .chat-close {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .chat-body {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow: auto;
-    }
-
+    .chat-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: auto; }
     .chat-msg {
       font-size: .92rem;
       line-height: 1.4;
@@ -1020,16 +553,8 @@
       border-radius: 12px;
       max-width: 85%;
     }
-
-    .chat-msg.bot {
-      align-self: flex-start;
-    }
-
-    .chat-msg.user {
-      align-self: flex-end;
-      background: var(--nav-teal);
-      color: #fff;
-    }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; background: var(--nav-teal); color: #fff; }
 
     .chat-input-row {
       display: flex;
@@ -1038,7 +563,6 @@
       border-top: 1px solid rgba(255, 255, 255, .06);
       background: rgba(6, 14, 16, 0.96);
     }
-
     .chat-input-row input {
       flex: 1;
       background: rgba(255, 255, 255, .06);
@@ -1046,8 +570,8 @@
       color: #fff;
       border-radius: 12px;
       padding: 10px 12px;
+      font-family: inherit;
     }
-
     .chat-send {
       background: var(--nav-teal);
       color: #fff;
@@ -1055,45 +579,65 @@
       border-radius: 12px;
       padding: 10px 14px;
       cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px) {
+      .desktop-only { display: none; }
+      .mobile-only { display: inline-flex; }
+    }
+
+    @media (max-width: 1024px) {
+      .side[data-state="expanded"] { width: 200px; }
+      .content { margin-left: 200px; }
+      .legal-footer { margin-left: 200px; }
+    }
+
+    @media (max-width: 768px) {
+      .side { left: -240px; width: 240px; }
+      .side.open { left: 0; }
+      .content { margin-left: 0 !important; }
+      .legal-footer { margin-left: 0 !important; }
+
+      .language-dropdown { right: 10px; min-width: 140px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { text-align: left; }
     }
 
     @media (max-width:540px) {
-      .chat-fab {
-        right: 14px;
-        bottom: 88px;
-      }
-
-      .chat-panel {
-        right: 14px;
-        bottom: 148px;
-      }
+      .chat-fab { right: 14px; bottom: 88px; }
+      .chat-panel { right: 14px; bottom: 148px; }
     }
   </style>
+
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 </head>
+
 <body class="app dark">
+  <div class="profile-background"></div>
 
-  <div class="video-background">
-    <video autoplay muted playsinline>
-      <source src="hi5.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
-
+  <!-- ===== NAVBAR ===== -->
   <header class="site-header" id="siteHeader">
     <div class="left">
       <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="false">
         <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
       </button>
-      <a href="plans.html" class="brand">
+
+      <a href="accounts.html" class="brand" data-link="accounts">
         <div class="logo">
           <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
         </div>
         <span class="brand-name">Market Llama</span>
       </a>
     </div>
+
     <nav class="site-actions">
-      <button class="icon-btn" id="qrBtn" aria-label="QR"><iconify-icon class="ic" icon="mdi:qrcode"></iconify-icon></button>
+      <button class="icon-btn" id="qrBtn" aria-label="Scan QR">
+        <iconify-icon class="ic" icon="mdi:qrcode-scan"></iconify-icon>
+      </button>
+
       <div class="balance-wrap">
         <span class="balance-amount" id="topBalance">$ 15 400.00</span>
         <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
@@ -1104,6 +648,7 @@
       <button class="icon-btn" id="languageBtn" aria-label="Language">
         <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
       </button>
+
       <div class="language-dropdown" id="languageDropdown" hidden>
         <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
         <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
@@ -1112,8 +657,14 @@
         <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
       </div>
 
-      <button class="icon-btn" aria-label="Notifications"><iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon></button>
-      <button class="icon-btn" aria-label="Support"><iconify-icon class="ic" icon="mdi:headphones"></iconify-icon></button>
+      <button class="icon-btn" aria-label="Notifications">
+        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
+      </button>
+
+      <button class="icon-btn" aria-label="Support">
+        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
+      </button>
+
       <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
         <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
       </a>
@@ -1123,13 +674,15 @@
   <div class="backdrop" id="backdrop" hidden></div>
 
   <main class="dashboard">
+    <!-- ===== SIDEBAR ===== -->
     <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
-      <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
+      <button class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
         <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
-      </div>
+      </button>
+
       <ul class="side-menu">
         <li class="active">
-          <a href="#">
+          <a href="accounts.html" data-link="accounts">
             <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
             <span class="label" data-i18n="accounts">Accounts</span>
           </a>
@@ -1141,15 +694,16 @@
             <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
             <iconify-icon class="ic chevron" icon="mdi:chevron-down"></iconify-icon>
           </button>
+
           <ul class="submenu" hidden>
             <li>
-              <a href="subscriptionplan.html">
+              <a href="subscriptionplan.html" data-link="subscriptionplan">
                 <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
                 <span data-i18n="subscription">Subscription Plan</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" data-link="transactionHistory">
                 <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
                 <span data-i18n="transactionHistory">Transaction History</span>
               </a>
@@ -1194,86 +748,72 @@
       </ul>
     </aside>
 
+    <!-- ===== CONTENT ===== -->
     <section class="content" id="content">
       <div class="content-top">
-        <h1 class="page-title" data-i18n="accounts">Accounts</h1>
-        <button class="btn btn-primary btn-pill add-account-btn" style="margin-right:10px" data-i18n-button="openNewAccount">
+        <div>
+          <h1 class="page-title" data-i18n="accounts">Accounts</h1>
+          <div class="greeting" data-i18n="greeting">Hi, Trader.</div>
+        </div>
+
+        <button class="btn" id="addAccountBtn">
           <iconify-icon class="ic" icon="mdi:plus"></iconify-icon>
-          <span>Add Account</span>
+          <span data-i18n="addAccount">Add Account</span>
         </button>
       </div>
 
-      <!-- Greeting now controlled only by JS, not translations -->
-      <div class="greeting">
-        <div class="hello" style="margin-bottom:25px;">
-          Hi, <span id="ml-user-greeting-name">Trader</span> .
-        </div>
-        <div class="tier">
-          <span class="badge badge-pro" style="margin-right:70px; display:none">
-            <iconify-icon class="ic" icon="mdi:medal-outline"></iconify-icon>
-            <span id="ml-user-plan-label" data-i18n="pro">Pro</span>
-          </span>
-        </div>
+      <div class="tabs" role="tablist" aria-label="Account type">
+        <button class="tab active" id="tabLive" role="tab" aria-selected="true" aria-controls="panelLive" data-i18n="live">Live</button>
+        <button class="tab" id="tabDemo" role="tab" aria-selected="false" aria-controls="panelDemo" data-i18n="demo">Demo</button>
       </div>
 
-      <div class="tabs">
-        <button class="tab active" data-tab="live" data-i18n="live">Live</button>
-        <button class="tab" data-tab="demo" data-i18n="demo">Demo</button>
-      </div>
-
-      <!-- Live card -->
-      <div
-  class="account-card active"
-  data-account-type="live"
-  data-balance="15400"
-  data-currency="USD"
->
-        <div class="card-head">
-          <span class="chip chip-live" data-i18n="live">Live</span>
-          <span class="chip chip-broker">Deriv</span>
-        </div>
-        <div class="card-body">
-          <div class="big-amount">
-            <span style="font-size:21px">15,400</span>.00 <span>USD</span>
+      <!-- LIVE (old box) -->
+      <div id="panelLive" role="tabpanel" aria-labelledby="tabLive">
+        <div class="account-card" data-account-type="live" data-balance="15400" data-currency="USD">
+          <div class="card-head">
+            <span class="chip chip-live" data-i18n="live">Live</span>
+            <span class="chip chip-broker">Deriv</span>
           </div>
-          <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
-            <iconify-icon class="ic" id="cardEye" icon="mdi:eye-outline"></iconify-icon>
-          </button>
-        </div>
-        <div class="line-art" aria-hidden="true"></div>
-      </div>
 
-      <!-- Demo card -->
-      <div
-      class="account-card"
-      data-account-type="demo"
-      data-balance="10000"
-      data-currency="USD"
-      hidden
-    >
-        <div class="card-head">
-          <span class="chip chip-demo" data-i18n="demo">Demo</span>
-          <span class="chip chip-broker">Deriv</span>
-        </div>
-        <div class="card-body">
-          <div class="big-amount">
-            <span style="font-size:21px">10,000</span>.00 <span>USD</span>
-          </div>
-          <div class="card-actions">
-            <button class="btn btn-ghost demo-reset">
-              <iconify-icon class="ic" icon="mdi:download"></iconify-icon>
-              <span data-i18n="reset">Reset</span>
-            </button>
-            <button class="icon-btn sm" id="cardBalanceToggleDemo" aria-label="Hide balance">
-              <iconify-icon class="ic" id="cardEyeDemo" icon="mdi:eye-outline"></iconify-icon>
+          <div class="card-body">
+            <div class="big-amount" id="liveAmount">
+              <span style="font-size:21px">15,400</span>.00 <span>USD</span>
+            </div>
+            <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
+              <iconify-icon class="ic" id="cardEye" icon="mdi:eye-outline"></iconify-icon>
             </button>
           </div>
+
+          <div class="line-art" aria-hidden="true"></div>
         </div>
-        <div class="line-art" aria-hidden="true"></div>
+      </div>
+
+      <!-- DEMO (old box) -->
+      <div id="panelDemo" role="tabpanel" aria-labelledby="tabDemo" hidden>
+        <div class="account-card" data-account-type="demo" data-balance="5000" data-currency="USD">
+          <div class="card-head">
+            <span class="chip chip-demo" data-i18n="demo">Demo</span>
+            <span class="chip chip-broker">Deriv</span>
+          </div>
+
+          <div class="card-body">
+            <div class="big-amount" id="demoAmount">
+              <span style="font-size:21px">5,000</span>.00 <span>USD</span>
+            </div>
+
+            <div class="card-actions">
+              <button class="icon-btn sm" id="cardBalanceToggleDemo" aria-label="Hide balance">
+                <iconify-icon class="ic" id="cardEyeDemo" icon="mdi:eye-outline"></iconify-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="line-art" aria-hidden="true"></div>
+        </div>
       </div>
     </section>
-    
 
+    <!-- ===== FOOTER ===== -->
     <footer class="legal-footer">
       <div class="footer-inner">
         <p class="footer-risk">
@@ -1289,7 +829,7 @@
           market fluctuations more effectively, but they are still subject to market risk and temporary
           performance deviations.
           <br><br>
-          Market Llama operates as a technology-enabled, professional account management platform  similar
+          Market Llama operates as a technology-enabled, professional account management platform similar
           to institutional asset managers providing users with sophisticated trading systems, automated
           execution, and real-time risk controls. Our purpose is to optimize performance, protect user
           capital, and deliver institutional-grade trading outcomes.
@@ -1299,22 +839,23 @@
           transparently, managing accounts responsibly, and applying disciplined, data driven strategies
           designed to achieve consistent long-term performance.
         </p>
+
         <div class="footer-links">
           <ul class="footer-links-list">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms &amp; Conditions</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms &amp; Conditions</a></li>
             <li><a href="#">Refund &amp; Billing Policy</a></li>
-            <li><a href="#">support</a></li>
+            <li><a href="#">Support</a></li>
             <li><a href="#">Whatsapp</a></li>
             <li><a href="#">Twitter</a></li>
-            <li><a href="#">instagram</a></li>
+            <li><a href="#">Instagram</a></li>
           </ul>
         </div>
       </div>
     </footer>
   </main>
 
-  <!-- CHAT WIDGET -->
+  <!-- ===== CHAT WIDGET ===== -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1340,68 +881,6 @@
     </form>
   </div>
 
-  <div class="add-account-modal-overlay" id="addAccountOverlay" aria-hidden="true">
-    <div class="add-account-modal" role="dialog" aria-modal="true" aria-labelledby="addAccountTitle">
-      <div class="add-account-modal-header">
-        <h2 class="add-account-modal-title" id="addAccountTitle">Add Account</h2>
-        <button class="modal-close-btn" id="addAccountCloseBtn" aria-label="Close">
-          <iconify-icon icon="mdi:close"></iconify-icon>
-        </button>
-      </div>
-      <p class="add-account-modal-subtitle">
-        Securely connect your trading account to Market Llama.
-      </p>
-
-      <form id="addAccountForm" novalidate>
-        <div class="input-group" data-field="name">
-          <label class="input-label" for="accountName">Account Name</label>
-          <input id="accountName" class="input-control" type="text" placeholder="e.g. VIX75 Scalping Account">
-          <div class="error-message">Please enter an account name.</div>
-        </div>
-
-        <div class="input-group" data-field="broker">
-          <label class="input-label" for="brokerInput">Broker</label>
-          <div class="broker-select">
-            <input
-              id="brokerInput"
-              class="input-control broker-input"
-              type="text"
-              placeholder="Search broker e.g. Deriv"
-              autocomplete="off"
-            >
-            <button type="button" class="broker-dropdown-toggle" id="brokerToggle" aria-label="Toggle broker list">
-              <iconify-icon icon="mdi:chevron-down"></iconify-icon>
-            </button>
-            <div class="broker-options" id="brokerOptions"></div>
-          </div>
-          <div class="error-message">Please select a broker.</div>
-        </div>
-
-        <div class="input-group" data-field="login">
-          <label class="input-label" for="accountLogin">Account Login ID</label>
-          <input id="accountLogin" class="input-control" type="text" placeholder="e.g. CR1234567">
-          <div class="error-message">Please enter your login ID.</div>
-        </div>
-
-        <div class="input-group" data-field="token">
-          <label class="input-label" for="apiToken">API Token</label>
-          <input id="apiToken" class="input-control" type="password" placeholder="Paste your API token here.">
-          <div class="helper-text">
-            Generate this from your dashboard. We never show it again after saving.
-          </div>
-          <div class="error-message">Please enter your API token.</div>
-        </div>
-
-        <div class="add-account-modal-footer">
-          <button type="button" class="btn btn-secondary" id="addAccountCancelBtn">Cancel</button>
-          <button type="submit" class="btn btn-primary-main" id="addAccountSaveBtn">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="toast" id="addAccountToast"> account added successfully.</div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
@@ -1410,141 +889,89 @@
       const translations = {
         en: {
           accounts: "Accounts",
+          greeting: "Hi, Trader.",
+          addAccount: "Add Account",
+          live: "Live",
+          demo: "Demo",
           paymentsWallet: "Payments & Wallet",
           subscription: "Subscription Plan",
-          deposit: "Deposit",
-          withdrawal: "Withdrawal",
           transactionHistory: "Transaction History",
           insight: "Insight",
           performance: "Performance",
           chart: "Chart",
-          settings: "Settings",
           instructions: "Instructions",
-          openNewAccount: "Add Account",
-          live: "Live",
-          demo: "Demo",
-          archived: "Archived",
-          reset: "Reset",
-          practice: "Practice",
-          restore: "Restore",
-          delete: "Delete",
-          pro: "Pro"
+          settings: "Settings"
         },
         de: {
           accounts: "Konten",
+          greeting: "Hi, Trader.",
+          addAccount: "Konto hinzufügen",
+          live: "Live",
+          demo: "Demo",
           paymentsWallet: "Zahlungen & Wallet",
           subscription: "Abonnementplan",
-          deposit: "Einzahlung",
-          withdrawal: "Auszahlung",
           transactionHistory: "Transaktionsverlauf",
           insight: "Einblicke",
           performance: "Leistung",
           chart: "Diagramm",
-          settings: "Einstellungen",
           instructions: "Anleitung",
-          openNewAccount: "Konto hinzufügen",
-          live: "Live",
-          demo: "Demo",
-          archived: "Archiviert",
-          reset: "Zurücksetzen",
-          practice: "Üben",
-          restore: "Wiederherstellen",
-          delete: "Löschen",
-          pro: "Profi"
+          settings: "Einstellungen"
         },
         es: {
           accounts: "Cuentas",
+          greeting: "Hola, Trader.",
+          addAccount: "Agregar cuenta",
+          live: "Real",
+          demo: "Demo",
           paymentsWallet: "Pagos & Cartera",
           subscription: "Plan de Suscripción",
-          deposit: "Depositar",
-          withdrawal: "Retirar",
           transactionHistory: "Historial de Transacciones",
           insight: "Perspectiva",
           performance: "Rendimiento",
           chart: "Gráfico",
-          settings: "Configuración",
           instructions: "Instrucciones",
-          openNewAccount: "Agregar cuenta",
-          live: "En Vivo",
-          demo: "Demo",
-          archived: "Archivado",
-          reset: "Reiniciar",
-          practice: "Practicar",
-          restore: "Restaurar",
-          delete: "Eliminar",
-          pro: "Pro"
+          settings: "Configuración"
         },
         fr: {
           accounts: "Comptes",
+          greeting: "Salut, Trader.",
+          addAccount: "Ajouter un compte",
+          live: "Réel",
+          demo: "Démo",
           paymentsWallet: "Paiements & Portefeuille",
           subscription: "Plan d'abonnement",
-          deposit: "Dépôt",
-          withdrawal: "Retrait",
           transactionHistory: "Historique des transactions",
           insight: "Aperçu",
           performance: "Performance",
           chart: "Graphique",
-          settings: "Paramètres",
           instructions: "Instructions",
-          openNewAccount: "Ajouter un compte",
-          live: "En Direct",
-          demo: "Démo",
-          archived: "Archivé",
-          reset: "Réinitialiser",
-          practice: "Pratique",
-          restore: "Restaurer",
-          delete: "Supprimer",
-          pro: "Pro"
+          settings: "Paramètres"
         },
         ar: {
           accounts: "الحسابات",
+          greeting: "مرحباً، المتداول.",
+          addAccount: "إضافة حساب",
+          live: "حقيقي",
+          demo: "تجريبي",
           paymentsWallet: "المدفوعات والمحفظة",
           subscription: "خطة الاشتراك",
-          deposit: "إيداع",
-          withdrawal: "سحب",
           transactionHistory: "سجل المعاملات",
           insight: "رؤى",
           performance: "الأداء",
           chart: "الرسم البياني",
-          settings: "الإعدادات",
           instructions: "التعليمات",
-          openNewAccount: "إضافة حساب",
-          live: "حقيقي",
-          demo: "تجريبي",
-          archived: "مؤرشف",
-          reset: "إعادة تعيين",
-          practice: "تجربة",
-          restore: "استعادة",
-          delete: "حذف",
-          pro: "محترف"
+          settings: "الإعدادات"
         }
       };
 
       if (!translations[currentLang]) currentLang = 'en';
 
       function updateNavLinks() {
-        const profileLinks = document.querySelectorAll('[data-link="profile"]');
-        profileLinks.forEach(a => {
-          const href = a.getAttribute('href') || 'profile.html';
-          const url = new URL(href, window.location.origin + window.location.pathname);
-          url.searchParams.set('lang', currentLang);
-          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-        });
-
-        const insightLinks = document.querySelectorAll('[data-link="insight"]');
-        insightLinks.forEach(a => {
-          const href = a.getAttribute('href') || 'insight.html';
-          const url = new URL(href, window.location.origin + window.location.pathname);
-          url.searchParams.set('lang', currentLang);
-          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-        });
-
-        const chartLinks = document.querySelectorAll('[data-link="chart"]');
-        chartLinks.forEach(a => {
-          const href = a.getAttribute('href') || 'chart.html';
-          const url = new URL(href, window.location.origin + window.location.pathname);
-          url.searchParams.set('lang', currentLang);
-          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
+        const pages = ['accounts','insight','performance','chart','instructions','profile','subscriptionplan'];
+        pages.forEach(type => {
+          document.querySelectorAll('[data-link="' + type + '"]').forEach(a => {
+            a.href = type + '.html?lang=' + currentLang;
+          });
         });
       }
 
@@ -1556,47 +983,11 @@
           if (t[key]) el.textContent = t[key];
         });
 
-        const openBtn = document.querySelector('[data-i18n-button="openNewAccount"]');
-        if (openBtn) {
-          const icon = openBtn.querySelector('iconify-icon');
-          openBtn.innerHTML = '';
-          if (icon) openBtn.appendChild(icon);
-          const span = document.createElement('span');
-          span.textContent = t.openNewAccount;
-          openBtn.appendChild(span);
-        }
-
-        if (lang === 'ar') {
-          document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-          document.documentElement.setAttribute('dir', 'ltr');
-        }
-
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
         updateNavLinks();
       }
 
-      const tabs = document.querySelectorAll('.tab');
-      const cards = document.querySelectorAll('.account-card');
-
-      tabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const type = tab.getAttribute('data-tab');
-          tabs.forEach(t => t.classList.remove('active'));
-          tab.classList.add('active');
-          cards.forEach(card => {
-            const ct = card.getAttribute('data-account-type');
-            if (ct === type) {
-              card.hidden = false;
-              card.classList.add('active');
-            } else {
-              card.hidden = true;
-              card.classList.remove('active');
-            }
-          });
-        });
-      });
-
+      // Accordion submenu
       const accordion = document.querySelector('.accordion');
       const submenu = document.querySelector('.submenu');
       const chevron = document.querySelector('.chevron');
@@ -1620,6 +1011,7 @@
         });
       }
 
+      // Mobile sidebar
       const mobileSideTrigger = document.getElementById('mobileSideTrigger');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('backdrop');
@@ -1642,6 +1034,7 @@
         });
       }
 
+      // Desktop collapse (fills screen correctly)
       const sideToggle = document.getElementById('sideToggle');
       if (sideToggle && sidebar) {
         sideToggle.addEventListener('click', (e) => {
@@ -1649,6 +1042,7 @@
           const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
           sideToggle.setAttribute('aria-expanded', String(!isExpanded));
           sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
+
           const chevronIcon = sideToggle.querySelector('iconify-icon');
           if (chevronIcon) {
             chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
@@ -1657,70 +1051,75 @@
         });
       }
 
+      // Tabs (Live/Demo)
+      const tabLive = document.getElementById('tabLive');
+      const tabDemo = document.getElementById('tabDemo');
+      const panelLive = document.getElementById('panelLive');
+      const panelDemo = document.getElementById('panelDemo');
+
+      function setTab(which) {
+        const isLive = which === 'live';
+        tabLive.classList.toggle('active', isLive);
+        tabDemo.classList.toggle('active', !isLive);
+        tabLive.setAttribute('aria-selected', String(isLive));
+        tabDemo.setAttribute('aria-selected', String(!isLive));
+        panelLive.hidden = !isLive;
+        panelDemo.hidden = isLive;
+      }
+
+      if (tabLive && tabDemo && panelLive && panelDemo) {
+        tabLive.addEventListener('click', () => setTab('live'));
+        tabDemo.addEventListener('click', () => setTab('demo'));
+      }
+
+      // Hide/show balance (header + both cards)
       const toggleBalance = document.getElementById('toggleBalance');
-       const cardBalanceToggle = document.getElementById('cardBalanceToggle');
-       const cardBalanceToggleDemo = document.getElementById('cardBalanceToggleDemo');
-       const topBalance = document.getElementById('topBalance');
-       const topEye = document.getElementById('topEye');
-       const cardEye = document.getElementById('cardEye');
-       const cardEyeDemo = document.getElementById('cardEyeDemo');
-       let balanceHidden = false;
+      const topBalance = document.getElementById('topBalance');
+      const topEye = document.getElementById('topEye');
+
+      const liveCard = document.querySelector('.account-card[data-account-type="live"]');
+      const demoCard = document.querySelector('.account-card[data-account-type="demo"]');
+      const liveAmount = document.getElementById('liveAmount');
+      const demoAmount = document.getElementById('demoAmount');
+
+      const cardBalanceToggle = document.getElementById('cardBalanceToggle');
+      const cardBalanceToggleDemo = document.getElementById('cardBalanceToggleDemo');
+      const cardEye = document.getElementById('cardEye');
+      const cardEyeDemo = document.getElementById('cardEyeDemo');
+
+      let balanceHidden = false;
 
       function formatCardAmount(amount, currency) {
         const num = Number(amount || 0);
-        const formatted = num.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+        const formatted = num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const parts = formatted.split(".");
-        const main = parts[0] ?? formatted;
-        const frac = parts[1] ?? "00";
-        return `<span style="font-size:21px">${main}</span>.${frac} <span>${currency}</span>`;
+        const main = parts[0] || formatted;
+        const frac = parts[1] || "00";
+        return `<span style="font-size:21px">${main}</span>.${frac} <span>${currency || "USD"}</span>`;
       }
 
       function setBalanceVisibility(hidden) {
         balanceHidden = hidden;
 
-        const liveCard = document.querySelector('.account-card[data-account-type="live"]');
-        const demoCard = document.querySelector('.account-card[data-account-type="demo"]');
-
         if (hidden) {
-          if (topBalance) topBalance.textContent = '•••••';
-
-          document.querySelectorAll('.big-amount').forEach(el => {
-            el.innerHTML = '<span style="font-size:21px">•••••</span>.•• <span>USD</span>';
-          });
+          if (topBalance) topBalance.textContent = "•••••";
+          if (liveAmount) liveAmount.innerHTML = `<span style="font-size:21px">•••••</span>.•• <span>USD</span>`;
+          if (demoAmount) demoAmount.innerHTML = `<span style="font-size:21px">•••••</span>.•• <span>USD</span>`;
         } else {
-          const liveBalance = liveCard ? (liveCard.getAttribute('data-balance') || "0") : "0";
-          const liveCurrency = liveCard ? (liveCard.getAttribute('data-currency') || "USD") : "USD";
+          const liveBal = liveCard ? liveCard.getAttribute("data-balance") : "0";
+          const liveCur = liveCard ? liveCard.getAttribute("data-currency") : "USD";
+          const demoBal = demoCard ? demoCard.getAttribute("data-balance") : "0";
+          const demoCur = demoCard ? demoCard.getAttribute("data-currency") : "USD";
 
-          const demoBalance = demoCard ? (demoCard.getAttribute('data-balance') || "0") : "0";
-          const demoCurrency = demoCard ? (demoCard.getAttribute('data-currency') || "USD") : "USD";
-
-          // Header uses live if it exists, else demo, else 0
           if (topBalance) {
-            const headerAmount = liveCard ? liveBalance : (demoCard ? demoBalance : "0");
-            const headerCurrency = liveCard ? liveCurrency : (demoCard ? demoCurrency : "USD");
-            const headerNum = Number(headerAmount || 0);
-            topBalance.textContent = headerNum.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }) + " " + headerCurrency;
+            const headerNum = Number(liveBal || 0);
+            topBalance.textContent =
+              headerNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
+              " " + (liveCur || "USD");
           }
 
-          if (liveCard) {
-            const liveAmountEl = liveCard.querySelector('.big-amount');
-            if (liveAmountEl) {
-              liveAmountEl.innerHTML = formatCardAmount(liveBalance, liveCurrency);
-            }
-          }
-
-          if (demoCard) {
-            const demoAmountEl = demoCard.querySelector('.big-amount');
-            if (demoAmountEl) {
-              demoAmountEl.innerHTML = formatCardAmount(demoBalance, demoCurrency);
-            }
-          }
+          if (liveAmount) liveAmount.innerHTML = formatCardAmount(liveBal, liveCur);
+          if (demoAmount) demoAmount.innerHTML = formatCardAmount(demoBal, demoCur);
         }
 
         if (topEye) topEye.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
@@ -1728,370 +1127,66 @@
         if (cardEyeDemo) cardEyeDemo.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
       }
 
-      // expose for the API script
-      window.mlSetBalanceVisibility = setBalanceVisibility;
+      if (toggleBalance) toggleBalance.addEventListener('click', (e) => { e.stopPropagation(); setBalanceVisibility(!balanceHidden); });
+      if (cardBalanceToggle) cardBalanceToggle.addEventListener('click', (e) => { e.stopPropagation(); setBalanceVisibility(!balanceHidden); });
+      if (cardBalanceToggleDemo) cardBalanceToggleDemo.addEventListener('click', (e) => { e.stopPropagation(); setBalanceVisibility(!balanceHidden); });
 
-      // initial render using whatever data-* is on the cards
-      setBalanceVisibility(false);
-
-      if (toggleBalance) {
-        toggleBalance.addEventListener('click', (e) => {
-          e.stopPropagation();
-          setBalanceVisibility(!balanceHidden);
-        });
-      }
-
-      if (cardBalanceToggle) {
-        cardBalanceToggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          setBalanceVisibility(!balanceHidden);
-        });
-      }
-
-      if (cardBalanceToggleDemo) {
-        cardBalanceToggleDemo.addEventListener('click', (e) => {
-          e.stopPropagation();
-          setBalanceVisibility(!balanceHidden);
-        });
-      }
-
+      // Language dropdown
       const languageBtn = document.getElementById('languageBtn');
       const languageDropdown = document.getElementById('languageDropdown');
 
-      function toggleLanguageDropdown() {
-        if (!languageDropdown) return;
-        languageDropdown.hidden = !languageDropdown.hidden;
-      }
-
       if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleLanguageDropdown();
-        });
+        languageBtn.addEventListener('click', (e) => { e.stopPropagation(); languageDropdown.hidden = !languageDropdown.hidden; });
+        languageDropdown.addEventListener('click', (e) => e.stopPropagation());
 
-        languageDropdown.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
-
-        const langOptions = languageDropdown.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
+        languageDropdown.querySelectorAll('.lang-option').forEach(option => {
           option.addEventListener('click', () => {
             const lang = option.getAttribute('data-lang');
             if (!translations[lang]) return;
             currentLang = lang;
-
             const url = new URL(window.location.href);
             url.searchParams.set('lang', currentLang);
-            window.history.replaceState({}, '', url.pathname + '?' + url.searchParams.toString());
-
-            applyLanguage(currentLang);
-            languageDropdown.hidden = true;
+            window.location.href = url.pathname + '?' + url.searchParams.toString();
           });
         });
 
-        document.addEventListener('click', () => {
-          languageDropdown.hidden = true;
-        });
+        document.addEventListener('click', () => { languageDropdown.hidden = true; });
       }
 
-      document.addEventListener('click', () => {
-        closeDropdown();
-      });
+      // Click outside closes submenu
+      document.addEventListener('click', () => closeDropdown());
 
-      const addAccountBtn = document.querySelector('.add-account-btn');
-      const addAccountOverlay = document.getElementById('addAccountOverlay');
-      const addAccountForm = document.getElementById('addAccountForm');
-      const addAccountCancelBtn = document.getElementById('addAccountCancelBtn');
-      const addAccountCloseBtn = document.getElementById('addAccountCloseBtn');
-      const addAccountSaveBtn = document.getElementById('addAccountSaveBtn');
-      const addAccountToast = document.getElementById('addAccountToast');
-
-      const accountNameInput = document.getElementById('accountName');
-      const brokerInput = document.getElementById('brokerInput');
-      const brokerToggle = document.getElementById('brokerToggle');
-      const brokerOptions = document.getElementById('brokerOptions');
-      const accountLoginInput = document.getElementById('accountLogin');
-      const apiTokenInput = document.getElementById('apiToken');
-
-      function clearErrors() {
-        addAccountForm.querySelectorAll('.error-message').forEach(msg => {
-          msg.style.display = 'none';
-        });
-      }
-
-      function showError(fieldKey, message) {
-        const group = addAccountForm.querySelector(`.input-group[data-field="${fieldKey}"]`);
-        if (!group) return;
-        const msg = group.querySelector('.error-message');
-        if (msg) {
-          msg.textContent = message;
-          msg.style.display = 'block';
-        }
-      }
-
-      function openAddAccountModal() {
-        if (!addAccountOverlay) return;
-        addAccountOverlay.classList.add('open');
-        addAccountOverlay.setAttribute('aria-hidden', 'false');
-        clearErrors();
-        accountNameInput.focus();
-      }
-
-      function closeAddAccountModal() {
-        if (!addAccountOverlay) return;
-        addAccountOverlay.classList.remove('open');
-        addAccountOverlay.setAttribute('aria-hidden', 'true');
-        addAccountForm.reset();
-        clearErrors();
-        closeBrokerOptions();
-      }
-
-      function showToast() {
-        if (!addAccountToast) return;
-        addAccountToast.classList.add('show');
-        setTimeout(() => {
-          addAccountToast.classList.remove('show');
-        }, 2500);
-      }
-
-      if (addAccountBtn && addAccountOverlay) {
-        addAccountBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openAddAccountModal();
-        });
-      }
-
-      if (addAccountCancelBtn) {
-        addAccountCancelBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          closeAddAccountModal();
-        });
-      }
-
-      if (addAccountCloseBtn) {
-        addAccountCloseBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          closeAddAccountModal();
-        });
-      }
-
-      if (addAccountOverlay) {
-        addAccountOverlay.addEventListener('click', (e) => {
-          if (e.target === addAccountOverlay) {
-            closeAddAccountModal();
-          }
-        });
-      }
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && addAccountOverlay && addAccountOverlay.classList.contains('open')) {
-          closeAddAccountModal();
-        }
-      });
-
-      const brokers = ['Deriv'];
-
-      function closeBrokerOptions() {
-        if (!brokerOptions) return;
-        brokerOptions.classList.remove('open');
-      }
-
-      function attachBrokerOptionHandlers() {
-        if (!brokerOptions) return;
-        const optionEls = brokerOptions.querySelectorAll('.broker-option');
-        optionEls.forEach(btn => {
-          if (btn.classList.contains('broker-option-empty')) return;
-          btn.addEventListener('click', () => {
-            const val = btn.getAttribute('data-broker') || btn.textContent.trim();
-            brokerInput.value = val;
-            closeBrokerOptions();
-            clearErrors();
-          });
-        });
-      }
-
-      function renderBrokerOptions(filterText = '') {
-        if (!brokerOptions) return;
-        const f = filterText.toLowerCase();
-        const filtered = brokers.filter(b => b.toLowerCase().includes(f));
-        if (!filtered.length) {
-          brokerOptions.innerHTML = '<div class="broker-option broker-option-empty">No brokers found</div>';
-          brokerOptions.classList.add('open');
-          return;
-        }
-        brokerOptions.innerHTML = filtered
-          .map(b => `<button type="button" class="broker-option" data-broker="${b}">${b}</button>`)
-          .join('');
-        brokerOptions.classList.add('open');
-        attachBrokerOptionHandlers();
-      }
-
-      function openBrokerOptions() {
-        if (!brokerOptions) return;
-        brokerOptions.classList.add('open');
-      }
-
-      if (brokerInput && brokerOptions) {
-        renderBrokerOptions('');
-        brokerInput.addEventListener('focus', () => {
-          renderBrokerOptions(brokerInput.value.trim());
-          openBrokerOptions();
-        });
-        brokerInput.addEventListener('input', () => {
-          renderBrokerOptions(brokerInput.value.trim());
-        });
-      }
-
-      if (brokerToggle && brokerOptions) {
-        brokerToggle.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (brokerOptions.classList.contains('open')) {
-            closeBrokerOptions();
-          } else {
-            renderBrokerOptions(brokerInput.value.trim());
-          }
-        });
-      }
-
-      if (brokerOptions) {
-        brokerOptions.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
-      }
-
-      document.addEventListener('click', (e) => {
-        if (!brokerOptions) return;
-        if (
-          brokerOptions.contains(e.target) ||
-          e.target === brokerInput ||
-          e.target === brokerToggle
-        ) {
-          return;
-        }
-        closeBrokerOptions();
-      });
-
-      if (addAccountForm && addAccountSaveBtn) {
-  addAccountForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    clearErrors();
-
-    const nameVal  = accountNameInput.value.trim();
-    const brokerVal = brokerInput.value.trim();
-    const loginVal = accountLoginInput.value.trim();
-    const tokenVal = apiTokenInput.value.trim();
-
-    let valid = true;
-    if (!nameVal) {
-      showError('name', 'Please enter an account name.');
-      valid = false;
-    }
-    if (!brokerVal) {
-      showError('broker', 'Please select a broker.');
-      valid = false;
-    }
-    if (!loginVal) {
-      showError('login', 'Please enter your login ID.');
-      valid = false;
-    }
-    if (!tokenVal) {
-      showError('token', 'Please enter your API token.');
-      valid = false;
-    }
-    if (!valid) return;
-
-    addAccountSaveBtn.disabled = true;
-    const originalText = addAccountSaveBtn.textContent;
-    addAccountSaveBtn.textContent = 'Saving…';
-
-    fetch(API_BASE_URL + "/api/accounts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Bearer " + token,
-      },
-      body: JSON.stringify({
-        broker: brokerVal,          // "Deriv"
-        account_number: loginVal,   // CR1234567
-        label: nameVal,             // your custom name
-        api_key: tokenVal,          // Deriv API token
-      }),
-    })
-      .then(async (res) => {
-        if (res.status === 400) {
-          // backend sends {"detail": "..."}
-          const data = await res.json().catch(() => ({}));
-          const msg = data.detail || "Invalid account or token.";
-          throw new Error(msg);
-        }
-        if (!res.ok) {
-          throw new Error("Something went wrong (" + res.status + ").");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("[ML] Account created:", data);
-        closeAddAccountModal();
-        showToast();
-        // reload to re-run the /api/accounts GET and show real balances
-        setTimeout(() => {
-          window.location.reload();
-        }, 800);
-      })
-      .catch((err) => {
-        console.error("[ML] Failed to create account:", err);
-        // surface error under the token field for now
-        showError('token', err.message || 'Unable to connect account. Check your details.');
-      })
-      .finally(() => {
-        addAccountSaveBtn.disabled = false;
-        addAccountSaveBtn.textContent = originalText;
-      });
-  });
-}
-
+      // initial
       applyLanguage(currentLang);
+      setBalanceVisibility(false);
     });
+  </script>
 
-    // ===== CHAT WIDGET LOGIC (with preview assistant response) =====
+  <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const chatFab   = document.getElementById('chatFab');
+      const chatFab = document.getElementById('chatFab');
       const chatPanel = document.getElementById('chatPanel');
       const chatClose = document.getElementById('chatClose');
-      const chatForm  = document.getElementById('chatForm');
+      const chatForm = document.getElementById('chatForm');
       const chatInput = document.getElementById('chatInput');
-      const chatBody  = document.getElementById('chatBody');
-
-      if (!chatFab || !chatPanel) return;
+      const chatBody = document.getElementById('chatBody');
 
       function openChat() {
         chatPanel.classList.add('open');
         chatPanel.setAttribute('aria-hidden', 'false');
-        if (chatInput) {
-          setTimeout(() => chatInput.focus(), 80);
-        }
+        if (chatInput) setTimeout(() => chatInput.focus(), 80);
       }
-
       function closeChat() {
         chatPanel.classList.remove('open');
         chatPanel.setAttribute('aria-hidden', 'true');
       }
 
-      chatFab.addEventListener('click', function (e) {
-        e.stopPropagation();
-        if (chatPanel.classList.contains('open')) {
-          closeChat();
-        } else {
-          openChat();
-        }
-      });
-
-      chatPanel.addEventListener('click', function (e) {
-        e.stopPropagation();
-      });
+      if (chatFab) {
+        chatFab.addEventListener('click', function (e) {
+          e.stopPropagation();
+          chatPanel.classList.contains('open') ? closeChat() : openChat();
+        });
+      }
 
       if (chatClose) {
         chatClose.addEventListener('click', function (e) {
@@ -2100,355 +1195,29 @@
         });
       }
 
-      // Close when tapping anywhere outside chat
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-        const onFab = chatFab.contains(e.target);
-        const insidePanel = chatPanel.contains(e.target);
-        if (!onFab && !insidePanel) {
-          closeChat();
-        }
-      });
+        const target = e.target;
+        if (chatPanel.contains(target) || chatFab.contains(target)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        closeChat();
+      }, true);
 
-      // ESC key closes
-      document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-          closeChat();
-        }
-      });
-
-      function appendMsg(text, role) {
-        if (!chatBody) return;
-        const div = document.createElement('div');
-        div.className = 'chat-msg ' + (role === 'user' ? 'user' : 'bot');
-        div.textContent = text;
-        chatBody.appendChild(div);
-        chatBody.scrollTop = chatBody.scrollHeight;
-      }
-
-      if (chatForm && chatInput) {
+      if (chatForm && chatInput && chatBody) {
         chatForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          const msg = chatInput.value.trim();
-          if (!msg) return;
-          appendMsg(msg, 'user');
+          const text = chatInput.value.trim();
+          if (!text) return;
+          const msg = document.createElement('div');
+          msg.className = 'chat-msg user';
+          msg.textContent = text;
+          chatBody.appendChild(msg);
           chatInput.value = '';
-
-          setTimeout(() => {
-            appendMsg("This is a preview assistant on the accounts page. Your real AI trading assistant will be wired here later.", 'bot');
-          }, 400);
+          chatBody.scrollTop = chatBody.scrollHeight;
         });
       }
     });
   </script>
-
-<script>
-  (function () {
-    const API_BASE_URL = "http://72.61.201.223:8000";
-
-    const token = localStorage.getItem("ml_access_token");
-    if (!token) {
-      console.warn("[ML] No access token found – redirecting to login.");
-      // Optional redirect later:
-      // window.location.href = "/landing/index.html#home";
-      return;
-    }
-
-    function setText(id, value) {
-      const el = document.getElementById(id);
-      if (el && value) el.textContent = value;
-    }
-
-    function formatMoney(value) {
-      const num = Number(value || 0);
-      return num.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    }
-
-    function updateAccountsUi(accounts) {
-      const liveCard = document.querySelector('.account-card[data-account-type="live"]');
-      const demoCard = document.querySelector('.account-card[data-account-type="demo"]');
-
-      if (!Array.isArray(accounts)) {
-        console.warn("[ML] /api/accounts returned non-array:", accounts);
-        return;
-      }
-
-      const liveAccounts = accounts.filter(a => !a.is_demo);
-      const demoAccounts = accounts.filter(a => a.is_demo);
-
-      const live = liveAccounts[0] || null;
-      const demo = demoAccounts[0] || null;
-
-      // Write balances into data-* attributes.
-      if (live && liveCard) {
-        const liveBalance = live.balance ?? 0;
-        const liveCurrency = live.currency || "USD";
-        liveCard.setAttribute("data-balance", liveBalance);
-        liveCard.setAttribute("data-currency", liveCurrency);
-        liveCard.hidden = false;
-      }
-
-      if (demo && demoCard) {
-        const demoBalance = demo.balance ?? 0;
-        const demoCurrency = demo.currency || "USD";
-        demoCard.setAttribute("data-balance", demoBalance);
-        demoCard.setAttribute("data-currency", demoCurrency);
-        // Only show demo card if we actually have one
-        demoCard.hidden = false;
-      }
-
-      // Re-render amounts using the shared visibility helper if it exists
-      if (window.mlSetBalanceVisibility) {
-        window.mlSetBalanceVisibility(false);
-      } else {
-        const topBalance = document.getElementById("topBalance");
-        if (live && topBalance) {
-          topBalance.textContent = formatMoney(live.balance ?? 0) + " " + (live.currency || "USD");
-        }
-      }
-    }
-
-    // 1) BASE USER INFO – username FIRST
-    fetch(API_BASE_URL + "/api/auth/me", {
-      method: "GET",
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer " + token,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("auth/me failed: " + res.status);
-        return res.json();
-      })
-      .then((data) => {
-        const rawUsername =
-          (data.username ||
-            data.handle ||
-            data.preferred_username ||
-            "").trim();
-        const fullName = (data.full_name || "").trim();
-        const email = data.email || "";
-        const emailPrefix = email ? email.split("@")[0] : "";
-
-        const displayName =
-          rawUsername ||
-          fullName ||
-          emailPrefix ||
-          "Trader";
-
-        console.log("[ML] Greeting from /api/auth/me:", displayName);
-        setText("ml-user-greeting-name", displayName);
-      })
-      .catch((err) => {
-        console.error("[ML] Failed to load user for greeting:", err);
-      });
-
-    // 2) ACCOUNTS – real balances
-    fetch(API_BASE_URL + "/api/accounts", {
-      method: "GET",
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer " + token,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("accounts failed: " + res.status);
-        return res.json();
-      })
-      .then(updateAccountsUi)
-      .catch((err) => {
-        console.error("[ML] Failed to load accounts:", err);
-      });
-  })();
-</script>
-<script>
-  (function () {
-    const API_BASE_URL = "http://72.61.201.223:8000";
-
-    const token = localStorage.getItem("ml_access_token");
-    if (!token) {
-      console.warn("[ML] No token – redirecting to login.");
-      // adjust this URL if your landing path is different
-      window.location.href = "/landing/index.html#home";
-      return;
-    }
-
-    // --- helpers ---
-    function formatMoney(amount, currency) {
-      if (amount == null || isNaN(amount)) amount = 0;
-      const sign = amount < 0 ? "-" : "";
-      const abs = Math.abs(amount);
-      const formatted = abs.toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      return {
-        full: `${sign}${formatted} ${currency || "USD"}`,
-        main: `${sign}${formatted}`,
-        currency: currency || "USD",
-      };
-    }
-
-    function setTopBalance(text) {
-      const el = document.getElementById("topBalance");
-      if (el) el.textContent = text;
-    }
-
-    // Grab DOM bits we will update
-    const liveCard       = document.querySelector('.account-card[data-account-type="live"]');
-    const demoCard       = document.querySelector('.account-card[data-account-type="demo"]');
-    const liveAmountEl   = liveCard ? liveCard.querySelector(".big-amount") : null;
-    const demoAmountEl   = demoCard ? demoCard.querySelector(".big-amount") : null;
-    const liveBrokerChip = liveCard ? liveCard.querySelector(".chip-broker") : null;
-    const demoBrokerChip = demoCard ? demoCard.querySelector(".chip-broker") : null;
-
-    // Empty state message
-    let emptyMsgEl = document.getElementById("noAccountsMessage");
-    if (!emptyMsgEl) {
-      const tabs = document.querySelector(".tabs");
-      emptyMsgEl = document.createElement("p");
-      emptyMsgEl.id = "noAccountsMessage";
-      emptyMsgEl.textContent =
-        "No accounts connected yet. Tap “Add Account” to connect your first Deriv account.";
-      emptyMsgEl.style.marginTop = "12px";
-      emptyMsgEl.style.fontSize = "0.9rem";
-      emptyMsgEl.style.color = "#9ca3af";
-      emptyMsgEl.style.padding = "8px 4px";
-      if (tabs && tabs.parentNode) {
-        tabs.parentNode.insertBefore(emptyMsgEl, tabs.nextSibling);
-      } else {
-        document.querySelector(".content")?.appendChild(emptyMsgEl);
-      }
-    }
-    emptyMsgEl.style.display = "none";
-
-    function showEmptyState() {
-      if (liveCard) liveCard.style.display = "none";
-      if (demoCard) demoCard.style.display = "none";
-      emptyMsgEl.style.display = "block";
-      setTopBalance("$ 0.00");
-    }
-
-    function showCards() {
-      if (liveCard) liveCard.style.display = "";
-      if (demoCard) demoCard.style.display = "";
-      emptyMsgEl.style.display = "none";
-    }
-
-    // --- fetch accounts from backend ---
-    fetch(API_BASE_URL + "/api/accounts", {
-      method: "GET",
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer " + token,
-      },
-    })
-      .then((res) => {
-        if (res.status === 401) {
-          console.warn("[ML] /api/accounts 401 – redirecting to login.");
-          window.location.href = "/landing/index.html#home";
-          return [];
-        }
-        if (!res.ok) {
-          throw new Error("Failed to load accounts: " + res.status);
-        }
-        return res.json();
-      })
-      .then((accounts) => {
-        if (!Array.isArray(accounts) || accounts.length === 0) {
-          console.log("[ML] No accounts yet.");
-          showEmptyState();
-          return;
-        }
-
-        showCards();
-
-        // separate live & demo
-        const liveAccounts = accounts.filter(a => !a.is_demo);
-        const demoAccounts = accounts.filter(a => a.is_demo);
-
-        // choose primary account for header
-        const primary = accounts.find(a => a.is_primary) || accounts[0];
-
-        // pick first live/demo (you can refine later)
-        const liveAcc = liveAccounts[0] || (!primary.is_demo ? primary : null);
-        const demoAcc = demoAccounts[0] || null;
-
-        // header balance = primary equity if present, else balance
-        if (primary) {
-          const money = formatMoney(
-            primary.equity != null ? primary.equity : primary.balance,
-            primary.currency
-          );
-          setTopBalance(`${money.full}`);
-        } else {
-          setTopBalance("$ 0.00");
-        }
-
-        // update live card
-        if (liveAcc && liveAmountEl && liveCard) {
-          const money = formatMoney(
-            liveAcc.equity != null ? liveAcc.equity : liveAcc.balance,
-            liveAcc.currency
-          );
-          liveAmountEl.innerHTML =
-            `<span style="font-size:21px">${money.main}</span> <span>${money.currency}</span>`;
-          if (liveBrokerChip) {
-            liveBrokerChip.textContent = liveAcc.broker || "Broker";
-          }
-          liveCard.setAttribute("data-account-id", liveAcc.id || "");
-        } else if (liveCard) {
-          // if no live account, hide live card
-          liveCard.style.display = "none";
-        }
-
-        // update demo card
-        if (demoAcc && demoAmountEl && demoCard) {
-          const money = formatMoney(
-            demoAcc.equity != null ? demoAcc.equity : demoAcc.balance,
-            demoAcc.currency
-          );
-          demoAmountEl.innerHTML =
-            `<span style="font-size:21px">${money.main}</span> <span>${money.currency}</span>`;
-          if (demoBrokerChip) {
-            demoBrokerChip.textContent = demoAcc.broker || "Broker";
-          }
-          demoCard.setAttribute("data-account-id", demoAcc.id || "");
-        } else if (demoCard) {
-          // no demo account – hide the demo tab/card
-          demoCard.style.display = "none";
-        }
-      })
-      .catch((err) => {
-        console.error("[ML] Error loading accounts:", err);
-        // On error, don't crash UI – just show empty state
-        showEmptyState();
-      });
-  })();
-</script>
-<script>
-  (function () {
-    const badge = document.querySelector(".badge.badge-pro");
-    const labelEl = document.getElementById("ml-user-plan-label");
-    if (!badge) return;
-
-    // Temporary rule:
-    //   - "pro" or "premium" in localStorage => show badge
-    //   - anything else => hide badge
-    const plan = (localStorage.getItem("ml_user_plan") || "").toLowerCase();
-
-    if (plan === "pro" || plan === "premium") {
-      badge.style.display = "inline-flex";
-      if (labelEl) {
-        labelEl.textContent = plan === "premium" ? "Premium" : "Pro";
-      }
-    } else {
-      badge.style.display = "none";
-    }
-  })();
-</script>
 </body>
 </html>

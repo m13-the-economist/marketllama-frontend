@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deriv Connection — Market Llama</title>
+  <style>
+    :root { --bg:#000; --card: rgba(255,255,255,.06); --border: rgba(255,255,255,.12); --text:#fff; --muted: rgba(255,255,255,.7); }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--text); font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial; padding:24px; }
+    .card { width:min(680px,100%); background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px; }
+    h1 { font-size:18px; margin:0 0 10px; }
+    p { margin:0 0 14px; color:var(--muted); line-height:1.45; }
+    .log { white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px; padding:12px; border-radius:12px; border:1px solid var(--border); background: rgba(0,0,0,.35);
+      max-height: 260px; overflow:auto;
+    }
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    button, a.btn { appearance:none; border:1px solid var(--border); background: rgba(255,255,255,.08); color:var(--text);
+      padding:10px 14px; border-radius:12px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    }
+    button:hover, a.btn:hover { background: rgba(255,255,255,.12); }
+    .ok { color:#7CFFB2; }
+    .bad { color:#FF7C7C; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Connecting your Deriv account…</h1>
+    <p id="status">Please wait. Do not close this tab.</p>
+    <div id="log" class="log">Starting…</div>
+    <div class="row">
+      <a class="btn" id="backBtn" href=".accounts.html">Back to Accounts</a>
+      <button id="retryBtn" type="button">Retry</button>
+    </div>
+  </div>
+
+  <script>
+    // ✅ EDIT THESE if your backend base URL differs in prod/dev
+    const API_BASE_URL = "https://marketllama.com"; // backend behind nginx on same domain
+    const ACCOUNTS_URL = ".accounts.html";         // dashboard landing after success
+
+    const statusEl = document.getElementById("status");
+    const logEl = document.getElementById("log");
+    const retryBtn = document.getElementById("retryBtn");
+
+    function log(line) {
+      logEl.textContent += "\n" + line;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function parseFragment() {
+      // Deriv returns token in URL fragment (#token1=...&acct1=...&cur1=...)
+      const hash = window.location.hash || "";
+      const frag = hash.startsWith("#") ? hash.slice(1) : hash;
+      const params = new URLSearchParams(frag);
+
+      // common keys from Deriv implicit flow
+      const token1 = params.get("token1");
+      const acct1  = params.get("acct1");
+      const cur1   = params.get("cur1");
+
+      // some apps also include these
+      const error = params.get("error");
+      const errorDesc = params.get("error_description");
+
+      return { token1, acct1, cur1, error, errorDesc, raw: frag };
+    }
+
+    function getLoggedInUserId() {
+      // Your dashboard already uses JWT; we store user_id separately for simplicity.
+      // If you already store it under a different key, change this.
+      const v =
+        localStorage.getItem("ml_user_id") ||
+        localStorage.getItem("user_id") ||
+        "";
+
+      const n = parseInt(v, 10);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    async function connect() {
+      logEl.textContent = "Starting…";
+      statusEl.textContent = "Parsing Deriv response…";
+
+      const frag = parseFragment();
+      log("Fragment: " + (frag.raw ? frag.raw.slice(0, 120) + (frag.raw.length > 120 ? "…" : "") : "(empty)"));
+
+      if (frag.error) {
+        statusEl.innerHTML = `<span class="bad">Deriv returned an error.</span>`;
+        log("Deriv error: " + frag.error);
+        if (frag.errorDesc) log("Details: " + frag.errorDesc);
+        return;
+      }
+
+      if (!frag.token1 || !frag.acct1) {
+        statusEl.innerHTML = `<span class="bad">Missing token/account from Deriv.</span>`;
+        log("Expected token1 and acct1 in URL fragment.");
+        log("token1=" + (frag.token1 ? "present" : "missing"));
+        log("acct1=" + (frag.acct1 ? frag.acct1 : "missing"));
+        return;
+      }
+
+      const userId = getLoggedInUserId();
+      if (!userId) {
+        statusEl.innerHTML = `<span class="bad">Not logged in (missing user_id).</span>`;
+        log("Fix: store the user id in localStorage after login (e.g. ml_user_id).");
+        log("Or change getLoggedInUserId() to match your storage key.");
+        return;
+      }
+
+      statusEl.textContent = "Sending token to backend…";
+      log("User ID: " + userId);
+      log("Deriv acct: " + frag.acct1);
+      log("Currency: " + (frag.cur1 || "(none)"));
+
+      const body = {
+        user_id: userId,
+        deriv_account_id: frag.acct1,
+        session_token: frag.token1,
+        currency: frag.cur1 || null
+      };
+
+      // If your backend requires Authorization for this endpoint, add it here:
+      const jwt = localStorage.getItem("ml_access_token");
+      const headers = { "Content-Type": "application/json" };
+      if (jwt) headers["Authorization"] = "Bearer " + jwt;
+
+      try {
+        const res = await fetch(API_BASE_URL + "/api/deriv/accounts/connect", {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body)
+        });
+
+        const text = await res.text();
+        let json;
+        try { json = JSON.parse(text); } catch { json = { raw: text }; }
+
+        if (!res.ok) {
+          statusEl.innerHTML = `<span class="bad">Backend rejected the connect.</span>`;
+          log("HTTP " + res.status);
+          log(JSON.stringify(json, null, 2));
+          return;
+        }
+
+        statusEl.innerHTML = `<span class="ok">Connected successfully.</span>`;
+        log("Connected OK:");
+        log(JSON.stringify(json, null, 2));
+
+        // Clean URL (remove token from address bar) then redirect
+        history.replaceState(null, "", window.location.pathname);
+
+        setTimeout(() => {
+          window.location.href = ACCOUNTS_URL;
+        }, 700);
+
+      } catch (e) {
+        statusEl.innerHTML = `<span class="bad">Network error.</span>`;
+        log(String(e));
+      }
+    }
+
+    retryBtn.addEventListener("click", connect);
+    connect();
+  </script>
+</body>
+</html>

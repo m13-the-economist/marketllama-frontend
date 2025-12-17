@@ -24,25 +24,21 @@
       --pill: #16171a;
       --shadow: 0 8px 24px rgba(0, 0, 0, .45);
 
-      /* Chat / teal accent (same family as reset/insight) */
+      /* Chat / teal accent */
       --nav-teal: #1a6d72;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 14px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
 
     body.app.dark {
       background: var(--bg);
       color: var(--text);
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       overflow-x: hidden;
+
+      /* ✅ fixed header offset (navbar is injected) */
+      padding-top: var(--header-h);
     }
 
     .profile-background {
@@ -55,323 +51,16 @@
       z-index: -1;
     }
 
-    .site-header {
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: var(--header-h);
-      z-index: 40;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 8px 14px;
-      background: #0097b2;
-      border-bottom: 1px solid var(--ring);
-      backdrop-filter: blur(8px);
-    }
+    /* ✅ remove old header/sidebar styling impact on layout */
+    .dashboard { min-height: 100vh; }
 
-    .site-header .left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .logo {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-      display: block;
-    }
-
-    .brand-name {
-      letter-spacing: .2px;
-      font-size: 1rem;
-    }
-
-    .site-actions {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      background: transparent;
-      border: 1px solid var(--ring);
-      color: var(--text);
-      padding: 6px 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .balance-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 8px;
-      border: 1px solid var(--ring);
-      border-radius: 10px;
-      background: var(--glass);
-    }
-
-    .balance-amount {
-      letter-spacing: .2px;
-      font-size: .95rem;
-    }
-
-    .language-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 120px;
-      background: rgba(20, 20, 20, 0.95);
-      border: 1px solid var(--ring);
-      border-radius: 12px;
-      padding: 8px;
-      min-width: 160px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      z-index: 1000;
-    }
-
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 10px 12px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    .lang-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .flag {
-      font-size: 16px;
-    }
-
-    .mobile-only {
-      display: none;
-    }
-
-    .desktop-only {
-      display: inline-flex;
-    }
-
-    .ic {
-      font-size: 18px;
-      line-height: 1;
-      vertical-align: middle;
-      opacity: 0.9;
-      transition: opacity 0.2s ease;
-    }
-
-    .icon-btn:hover .ic {
-      opacity: 1;
-    }
-
-    .side .ic {
-      font-size: 18px;
-    }
-
-    .dashboard {
-      min-height: 100vh;
-      padding-top: var(--header-h);
-    }
-
-    .side {
-      position: fixed;
-      top: var(--header-h);
-      left: 0;
-      bottom: 0;
-      z-index: 30;
-      width: 240px;
-      overflow-y: auto;
-      border-right: 1px solid var(--ring);
-      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
-      transition: left .3s ease, width .25s ease;
-    }
-
-    .side[data-state="collapsed"] {
-      width: 68px;
-    }
-
-    .side .label {
-      transition: opacity .2s ease;
-    }
-
-    .side[data-state="collapsed"] .label {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .side-toggle {
-      position: sticky;
-      bottom: 0;
-      width: 100%;
-      background: rgb(75, 75, 75);
-      margin-top: 6px;
-      border: none;
-      color: white;
-      padding: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .side-menu {
-      list-style: none;
-      margin: 8px 0 48px;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .side-menu a,
-    .accordion {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      text-decoration: none;
-      color: var(--accent-plain);
-      background: transparent;
-      border: 1px solid transparent;
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .side-menu li.active > a {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
-
-    .has-submenu {
-      position: relative;
-    }
-
-    .accordion {
-      background: none;
-      border: none;
-      transition: all 0.3s ease;
-      font-family: inherit;
-      font-size: inherit;
-    }
-
-    .accordion:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--ring);
-    }
-
-    .accordion .chevron {
-      margin-left: auto;
-      transition: transform 0.3s ease;
-    }
-
-    .accordion[aria-expanded="true"] .chevron {
-      transform: rotate(180deg);
-    }
-
-    .accordion[aria-expanded="true"] {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
-
-    .submenu {
-      list-style: none;
-      padding-left: 20px;
-      margin: 4px 0 0;
-      background: rgba(0, 0, 0, 0.2);
-      border-left: 2px solid #4169E1;
-      border-radius: 0 0 8px 8px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .side[data-state="collapsed"] .submenu {
-      display: none !important;
-    }
-
-    .submenu li {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .submenu li:last-child {
-      border-bottom: none;
-    }
-
-    .submenu a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 6px;
-      margin: 2px 4px;
-      width: calc(100% - 8px);
-    }
-
-    .submenu a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-
+    /* Layout with injected sidebar */
     .content {
       margin-left: 240px;
       padding: 18px clamp(12px, 2vw, 24px);
       transition: margin-left 0.25s ease;
     }
-
-    .side[data-state="collapsed"] ~ .content {
-      margin-left: 68px;
-    }
+    .side[data-state="collapsed"] ~ .content { margin-left: 68px; }
 
     .content-top {
       display: flex;
@@ -472,10 +161,7 @@
       font-weight: 600;
     }
 
-    .info-grid {
-      display: grid;
-      gap: 16px;
-    }
+    .info-grid { display: grid; gap: 16px; }
 
     .info-item {
       display: flex;
@@ -484,19 +170,10 @@
       padding: 12px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
+    .info-item:last-child { border-bottom: none; }
 
-    .info-item:last-child {
-      border-bottom: none;
-    }
-
-    .info-label {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .info-value {
-      font-weight: 500;
-    }
+    .info-label { color: var(--muted); font-size: 14px; }
+    .info-value { font-weight: 500; }
 
     .btn {
       display: inline-flex;
@@ -514,32 +191,13 @@
       text-decoration: none;
     }
 
-    .btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
+    .btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-    }
+    .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; }
+    .btn-ghost { background: transparent; border: 1px solid var(--ring); }
+    .btn-full { width: 100%; justify-content: center; }
 
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--ring);
-    }
-
-    .btn-full {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .security-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #4CAF50;
-    }
+    .security-status { display: flex; align-items: center; gap: 8px; color: #4CAF50; }
 
     .verification-badge {
       display: inline-flex;
@@ -552,14 +210,6 @@
       font-size: 12px;
     }
 
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .45);
-      z-index: 35;
-      backdrop-filter: blur(2px);
-    }
-
     .legal-footer {
       margin-left: 240px;
       margin-top: 24px;
@@ -567,11 +217,9 @@
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--muted);
       font-size: 13px;
+      transition: margin-left .25s ease;
     }
-
-    .side[data-state="collapsed"] ~ .legal-footer {
-      margin-left: 68px;
-    }
+    .side[data-state="collapsed"] ~ .legal-footer { margin-left: 68px; }
 
     .footer-inner {
       max-width: 1200px;
@@ -581,23 +229,10 @@
       align-items: flex-start;
       gap: 24px;
     }
+    .footer-risk { line-height: 1.7; max-width: 720px; }
 
-    .footer-risk {
-      line-height: 1.7;
-      max-width: 720px;
-    }
-
-    .footer-links {
-      text-align: right;
-      font-size: 13px;
-    }
-
-    .footer-links-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .footer-links { text-align: right; font-size: 13px; }
+    .footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
 
     .footer-links a {
       color: var(--accent-plain);
@@ -605,14 +240,9 @@
       opacity: 0.9;
       transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
     }
+    .footer-links a:hover { opacity: 1; text-decoration: underline; }
 
-    .footer-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    /* ===== CHAT WIDGET – teal style (same logic/color as reset/insight) ===== */
-
+    /* ===== CHAT WIDGET – teal style ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -632,18 +262,8 @@
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
-
-    .chat-fab:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
-      background: #20848a;
-    }
-
-    .chat-fab svg {
-      width: 24px;
-      height: 24px;
-      stroke: currentColor;
-    }
+    .chat-fab:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0, 0, 0, .5); background: #20848a; }
+    .chat-fab svg { width: 24px; height: 24px; stroke: currentColor; }
 
     .chat-panel {
       position: fixed;
@@ -665,289 +285,46 @@
       color: #fff;
       overflow: hidden;
     }
-
-    .chat-panel.open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .chat-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, .06);
-      background: var(--nav-teal);
-    }
-
-    .chat-title {
-      font-weight: 600;
-    }
-
-    .chat-close {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .chat-body {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow: auto;
-    }
-
-    .chat-msg {
-      font-size: .92rem;
-      line-height: 1.4;
-      background: rgba(255, 255, 255, .06);
-      color: #eaeaea;
-      padding: 8px 10px;
-      border-radius: 12px;
-      max-width: 85%;
-    }
-
-    .chat-msg.bot {
-      align-self: flex-start;
-    }
-
-    .chat-msg.user {
-      align-self: flex-end;
-      background: var(--nav-teal);
-      color: #fff;
-    }
-
-    .chat-input-row {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 1px solid rgba(255, 255, 255, .06);
-      background: rgba(6, 14, 16, 0.96);
-    }
-
-    .chat-input-row input {
-      flex: 1;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .12);
-      color: #fff;
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
-
-    .chat-send {
-      background: var(--nav-teal);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 1100px) {
-      .desktop-only {
-        display: none;
-      }
-      .mobile-only {
-        display: inline-flex;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .side[data-state="expanded"] {
-        width: 200px;
-      }
-      .content {
-        margin-left: 200px;
-      }
-      .legal-footer {
-        margin-left: 200px;
-      }
-    }
+    .chat-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid rgba(255, 255, 255, .06); background: var(--nav-teal); }
+    .chat-title { font-weight: 600; }
+    .chat-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; line-height: 1; }
+    .chat-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: auto; }
+    .chat-msg { font-size: .92rem; line-height: 1.4; background: rgba(255, 255, 255, .06); color: #eaeaea; padding: 8px 10px; border-radius: 12px; max-width: 85%; }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; background: var(--nav-teal); color: #fff; }
+    .chat-input-row { display: flex; gap: 8px; padding: 12px; border-top: 1px solid rgba(255, 255, 255, .06); background: rgba(6, 14, 16, 0.96); }
+    .chat-input-row input { flex: 1; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #fff; border-radius: 12px; padding: 10px 12px; }
+    .chat-send { background: var(--nav-teal); color: #fff; border: none; border-radius: 12px; padding: 10px 14px; cursor: pointer; }
 
     @media (max-width: 768px) {
-      .side {
-        left: -240px;
-        width: 240px;
-      }
-      .side.open {
-        left: 0;
-      }
-      .content {
-        margin-left: 0;
-      }
-      .profile-grid {
-        grid-template-columns: 1fr;
-      }
-      .profile-avatar {
-        width: 100px;
-        height: 100px;
-        font-size: 36px;
-      }
-      .language-dropdown {
-        right: 10px;
-        min-width: 140px;
-      }
-      .legal-footer {
-        margin-left: 0;
-      }
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-      }
-      .footer-links {
-        text-align: left;
-      }
+      .content { margin-left: 0 !important; }
+      .profile-grid { grid-template-columns: 1fr; }
+      .profile-avatar { width: 100px; height: 100px; font-size: 36px; }
+      .legal-footer { margin-left: 0 !important; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { text-align: left; }
     }
-
-    @media (min-width: 769px) {
-      .content {
-        margin-left: 240px;
-      }
-    }
-
     @media (max-width:540px) {
-      .chat-fab {
-        right: 14px;
-        bottom: 88px;
-      }
-
-      .chat-panel {
-        right: 14px;
-        bottom: 148px;
-      }
+      .chat-fab { right: 14px; bottom: 88px; }
+      .chat-panel { right: 14px; bottom: 148px; }
     }
   </style>
-  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+
+  <!-- Iconify (navbar.js won’t double-load) -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js" defer></script>
+
+  <!-- ✅ Inject shared navbar.html + sidebar -->
+  <script src="components/navbar.js" defer></script>
 </head>
+
 <body class="app dark">
   <div class="profile-background"></div>
 
-  <header class="site-header" id="siteHeader">
-    <div class="left">
-      <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="false">
-        <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
-      </button>
-      <a href="accounts.html" class="brand">
-        <div class="logo">
-          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
-        </div>
-        <span class="brand-name">Market Llama</span>
-      </a>
-    </div>
-    <nav class="site-actions">
-      <button class="icon-btn" id="qrBtn" aria-label="Scan QR">
-        <iconify-icon class="ic" icon="mdi:qrcode-scan"></iconify-icon>
-      </button>
-      <div class="balance-wrap">
-        <span class="balance-amount" id="topBalance">$ 15 400.00</span>
-        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
-          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
-        </button>
-      </div>
-
-      <button class="icon-btn" id="languageBtn" aria-label="Language">
-        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
-      </button>
-      <div class="language-dropdown" id="languageDropdown" hidden>
-        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
-        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
-        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
-        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
-        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
-      </div>
-
-      <button class="icon-btn" aria-label="Notifications">
-        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
-      </button>
-      <button class="icon-btn" aria-label="Support">
-        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
-      </button>
-      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
-        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
-      </a>
-    </nav>
-  </header>
-
-  <div class="backdrop" id="backdrop" hidden></div>
+  <!-- ✅ Navbar mount (replaces old header + sidebar) -->
+  <div id="ml-navbar"></div>
 
   <main class="dashboard">
-    <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
-      <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
-        <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
-      </div>
-      <ul class="side-menu">
-        <li>
-          <a href="plans.html" data-link="accounts">
-            <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
-            <span class="label" data-i18n="accounts">Accounts</span>
-          </a>
-        </li>
-
-        <li class="has-submenu">
-          <button class="accordion" aria-expanded="false">
-            <iconify-icon class="ic" icon="mdi:wallet-outline"></iconify-icon>
-            <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
-            <iconify-icon class="ic chevron" icon="mdi:chevron-down"></iconify-icon>
-          </button>
-          <ul class="submenu" hidden>
-            <li>
-              <a href="subscriptionplan.html">
-                <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
-                <span data-i18n="subscription">Subscription Plan</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
-                <span data-i18n="transactionHistory">Transaction History</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="insight.html" data-link="insight">
-            <iconify-icon class="ic" icon="mdi:map-marker-outline"></iconify-icon>
-            <span class="label" data-i18n="insight">Insight</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="performance.html" data-link="performance">
-            <iconify-icon class="ic" icon="mdi:cpu-64-bit"></iconify-icon>
-            <span class="label" data-i18n="performance">Performance</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="chart.html" data-link="chart">
-            <iconify-icon class="ic" icon="mdi:chart-bar"></iconify-icon>
-            <span class="label" data-i18n="chart">Chart</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="instructions.html" data-link="instructions">
-            <iconify-icon class="ic" icon="mdi:book-open-outline"></iconify-icon>
-            <span class="label" data-i18n="instructions">Instructions</span>
-          </a>
-        </li>
-
-        <li class="active">
-          <a href="profile.html" data-link="profile">
-            <iconify-icon class="ic" icon="mdi:cog-outline"></iconify-icon>
-            <span class="label" data-i18n="settings">Settings</span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-
     <section class="content" id="content">
       <div class="content-top">
         <h1 class="page-title" data-i18n="profile">Profile</h1>
@@ -1147,7 +524,7 @@
     </footer>
   </main>
 
-  <!-- CHAT WIDGET (teal reset/insight variant) -->
+  <!-- CHAT -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1174,24 +551,16 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    // ✅ run page logic only after navbar is injected (so IDs exist)
+    document.addEventListener("ml:navbar-ready", initProfilePage, { once: true });
+
+    function initProfilePage() {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get('lang') || 'en';
 
       const translations = {
         en: {
           profile: "Profile",
-          accounts: "Accounts",
-          paymentsWallet: "Payments & Wallet",
-          subscription: "Subscription Plan",
-          deposit: "Deposit",
-          withdrawal: "Withdrawal",
-          transactionHistory: "Transaction History",
-          insight: "Insight",
-          performance: "Performance",
-          chart: "Chart",
-          settings: "Settings",
-          instructions: "Instructions",
           proMember: "Pro Member",
           personalInfo: "Personal Information",
           fullName: "Full Name",
@@ -1223,22 +592,10 @@
           renewalDate: "Renewal Date",
           features: "Features",
           featuresValue: "All Pro Features",
-          upgradePlan: "Upgrade Plan",
-          pro: "Pro"
+          upgradePlan: "Upgrade Plan"
         },
         de: {
           profile: "Profil",
-          accounts: "Konten",
-          paymentsWallet: "Zahlungen & Wallet",
-          subscription: "Abonnementplan",
-          deposit: "Einzahlung",
-          withdrawal: "Auszahlung",
-          transactionHistory: "Transaktionsverlauf",
-          insight: "Einblicke",
-          performance: "Leistung",
-          chart: "Diagramm",
-          settings: "Einstellungen",
-          instructions: "Anleitung",
           proMember: "Pro-Mitglied",
           personalInfo: "Persönliche Informationen",
           fullName: "Vollständiger Name",
@@ -1270,22 +627,10 @@
           renewalDate: "Verlängerungsdatum",
           features: "Funktionen",
           featuresValue: "Alle Pro-Funktionen",
-          upgradePlan: "Plan upgraden",
-          pro: "Profi"
+          upgradePlan: "Plan upgraden"
         },
         es: {
           profile: "Perfil",
-          accounts: "Cuentas",
-          paymentsWallet: "Pagos & Cartera",
-          subscription: "Plan de Suscripción",
-          deposit: "Depositar",
-          withdrawal: "Retirar",
-          transactionHistory: "Historial de Transacciones",
-          insight: "Perspectiva",
-          performance: "Rendimiento",
-          chart: "Gráfico",
-          settings: "Configuración",
-          instructions: "Instrucciones",
           proMember: "Miembro Pro",
           personalInfo: "Información Personal",
           fullName: "Nombre Completo",
@@ -1317,22 +662,10 @@
           renewalDate: "Fecha de renovación",
           features: "Características",
           featuresValue: "Todas las funciones Pro",
-          upgradePlan: "Mejorar Plan",
-          pro: "Pro"
+          upgradePlan: "Mejorar Plan"
         },
         fr: {
           profile: "Profil",
-          accounts: "Comptes",
-          paymentsWallet: "Paiements & Portefeuille",
-          subscription: "Plan d'abonnement",
-          deposit: "Dépôt",
-          withdrawal: "Retrait",
-          transactionHistory: "Historique des transactions",
-          insight: "Aperçu",
-          performance: "Performance",
-          chart: "Graphique",
-          settings: "Paramètres",
-          instructions: "Instructions",
           proMember: "Membre Pro",
           personalInfo: "Informations personnelles",
           fullName: "Nom complet",
@@ -1364,22 +697,10 @@
           renewalDate: "Date de renouvellement",
           features: "Fonctionnalités",
           featuresValue: "Toutes les fonctionnalités Pro",
-          upgradePlan: "Améliorer le plan",
-          pro: "Pro"
+          upgradePlan: "Améliorer le plan"
         },
         ar: {
           profile: "الملف الشخصي",
-          accounts: "الحسابات",
-          paymentsWallet: "المدفوعات والمحفظة",
-          subscription: "خطة الاشتراك",
-          deposit: "إيداع",
-          withdrawal: "سحب",
-          transactionHistory: "سجل المعاملات",
-          insight: "رؤى",
-          performance: "الأداء",
-          chart: "الرسم البياني",
-          settings: "الإعدادات",
-          instructions: "التعليمات",
           proMember: "عضو محترف",
           personalInfo: "المعلومات الشخصية",
           fullName: "الاسم الكامل",
@@ -1411,21 +732,11 @@
           renewalDate: "تاريخ التجديد",
           features: "الميزات",
           featuresValue: "كل ميزات برو",
-          upgradePlan: "ترقية الخطة",
-          pro: "محترف"
+          upgradePlan: "ترقية الخطة"
         }
       };
 
       if (!translations[currentLang]) currentLang = 'en';
-
-      function updateNavLinks() {
-        const pages = ['accounts', 'insight', 'performance', 'chart', 'instructions', 'profile'];
-        pages.forEach(type => {
-          document.querySelectorAll('[data-link="' + type + '"]').forEach(a => {
-            a.href = type + '.html?lang=' + currentLang;
-          });
-        });
-      }
 
       function applyLanguage(lang) {
         const t = translations[lang] || translations.en;
@@ -1445,139 +756,22 @@
           btn.appendChild(span);
         });
 
-        if (lang === 'ar') {
-          document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-          document.documentElement.setAttribute('dir', 'ltr');
-        }
-
-        updateNavLinks();
+        if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');
+        else document.documentElement.setAttribute('dir', 'ltr');
       }
 
-      const accordion = document.querySelector('.accordion');
-      const submenu = document.querySelector('.submenu');
-      const chevron = document.querySelector('.chevron');
-
-      function closeDropdown() {
-        if (submenu && !submenu.hidden) {
-          submenu.hidden = true;
-          if (accordion) accordion.setAttribute('aria-expanded', 'false');
-          if (chevron) chevron.setAttribute('icon', 'mdi:chevron-down');
-        }
-      }
-
-      if (accordion && submenu && chevron) {
-        accordion.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
-          accordion.setAttribute('aria-expanded', String(!isExpanded));
-          submenu.hidden = isExpanded;
-          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
-        });
-      }
-
-      const mobileSideTrigger = document.getElementById('mobileSideTrigger');
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('backdrop');
-
-      if (mobileSideTrigger && sidebar && backdrop) {
-        mobileSideTrigger.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = mobileSideTrigger.getAttribute('aria-expanded') === 'true';
-          mobileSideTrigger.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.classList.toggle('open');
-          backdrop.hidden = isExpanded;
-          if (!sidebar.classList.contains('open')) closeDropdown();
-        });
-
-        backdrop.addEventListener('click', () => {
-          mobileSideTrigger.setAttribute('aria-expanded', 'false');
-          sidebar.classList.remove('open');
-          backdrop.hidden = true;
-          closeDropdown();
-        });
-      }
-
-      const sideToggle = document.getElementById('sideToggle');
-      if (sideToggle && sidebar) {
-        sideToggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
-          sideToggle.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
-          const chevronIcon = sideToggle.querySelector('iconify-icon');
-          if (chevronIcon) {
-            chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
-          }
-          if (isExpanded) closeDropdown();
-        });
-      }
-
-      const toggleBalance = document.getElementById('toggleBalance');
-      const topBalance = document.getElementById('topBalance');
-      const topEye = document.getElementById('topEye');
-      let balanceHidden = false;
-
-      if (toggleBalance && topBalance && topEye) {
-        toggleBalance.addEventListener('click', (e) => {
-          e.stopPropagation();
-          balanceHidden = !balanceHidden;
-          if (balanceHidden) {
-            topBalance.textContent = '•••••';
-            topEye.setAttribute('icon', 'mdi:eye-off-outline');
-          } else {
-            topBalance.textContent = '$ 15 400.00';
-            topEye.setAttribute('icon', 'mdi:eye-outline');
-          }
-        });
-      }
-
-      const languageBtn = document.getElementById('languageBtn');
-      const languageDropdown = document.getElementById('languageDropdown');
-
-      function toggleLanguageDropdown() {
-        if (!languageDropdown) return;
-        languageDropdown.hidden = !languageDropdown.hidden;
-      }
-
-      if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleLanguageDropdown();
-        });
-
-        languageDropdown.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
-
-        const langOptions = languageDropdown.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
-          option.addEventListener('click', () => {
-            const lang = option.getAttribute('data-lang');
-            if (!translations[lang]) return;
-            currentLang = lang;
-
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', currentLang);
-            window.location.href = url.pathname + '?' + url.searchParams.toString();
-          });
-        });
-
-        document.addEventListener('click', () => {
-          languageDropdown.hidden = true;
-        });
-      }
-
-      document.addEventListener('click', () => {
-        closeDropdown();
-      });
+      // ✅ mark active (Settings/Profile) after injection
+      (function markActive() {
+        document.querySelectorAll(".side-menu li").forEach(li => li.classList.remove("active"));
+        const link = document.querySelector('.side-menu a[data-link="profile"]');
+        if (link && link.closest("li")) link.closest("li").classList.add("active");
+      })();
 
       applyLanguage(currentLang);
-    });
+    }
   </script>
 
-  <!-- CHAT WIRING (same logic as reset/insight: open, close, outside-click, user echo) -->
+  <!-- CHAT WIRING -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -1590,11 +784,8 @@
       function openChat() {
         chatPanel.classList.add('open');
         chatPanel.setAttribute('aria-hidden', 'false');
-        if (chatInput) {
-          setTimeout(() => chatInput.focus(), 80);
-        }
+        if (chatInput) setTimeout(() => chatInput.focus(), 80);
       }
-
       function closeChat() {
         chatPanel.classList.remove('open');
         chatPanel.setAttribute('aria-hidden', 'true');
@@ -1603,11 +794,7 @@
       if (chatFab) {
         chatFab.addEventListener('click', function (e) {
           e.stopPropagation();
-          if (chatPanel.classList.contains('open')) {
-            closeChat();
-          } else {
-            openChat();
-          }
+          chatPanel.classList.contains('open') ? closeChat() : openChat();
         });
       }
 
@@ -1618,13 +805,10 @@
         });
       }
 
-      // Close chat by clicking/tapping anywhere outside, swallowing the click
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-
         const target = e.target;
         if (chatPanel.contains(target) || chatFab.contains(target)) return;
-
         e.preventDefault();
         e.stopPropagation();
         closeChat();

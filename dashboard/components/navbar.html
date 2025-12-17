@@ -1,0 +1,127 @@
+<!-- components/navbar.html -->
+<header class="site-header" id="siteHeader">
+  <div class="left">
+    <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="false">
+      <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
+    </button>
+
+    <a href="accounts.html" class="brand" data-link="accounts">
+      <div class="logo">
+        <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
+      </div>
+      <span class="brand-name">Market Llama</span>
+    </a>
+  </div>
+
+  <nav class="site-actions">
+    <button class="icon-btn" id="qrBtn" aria-label="Scan QR">
+      <iconify-icon class="ic" icon="mdi:qrcode-scan"></iconify-icon>
+    </button>
+
+    <div class="balance-wrap">
+      <span class="balance-amount" id="topBalance">$ 15 400.00</span>
+      <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
+        <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
+      </button>
+    </div>
+
+    <button class="icon-btn" id="languageBtn" aria-label="Language">
+      <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
+    </button>
+
+    <div class="language-dropdown" id="languageDropdown" hidden>
+      <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
+      <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
+      <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+      <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
+      <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
+    </div>
+
+    <button class="icon-btn" aria-label="Notifications">
+      <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
+    </button>
+
+    <button class="icon-btn" aria-label="Support">
+      <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
+    </button>
+
+    <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
+      <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
+    </a>
+  </nav>
+</header>
+
+<div class="backdrop" id="backdrop" hidden></div>
+
+<aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
+  <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
+    <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
+  </div>
+
+  <ul class="side-menu">
+    <li>
+      <a href="accounts.html" data-link="accounts">
+        <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
+        <span class="label" data-i18n="accounts">Accounts</span>
+      </a>
+    </li>
+
+    <li class="has-submenu">
+      <button class="accordion" aria-expanded="false">
+        <iconify-icon class="ic" icon="mdi:wallet-outline"></iconify-icon>
+        <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
+        <iconify-icon class="ic chevron" icon="mdi:chevron-down"></iconify-icon>
+      </button>
+
+      <ul class="submenu" hidden>
+        <li>
+          <a href="subscriptionplan.html" data-link="subscriptionplan">
+            <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
+            <span data-i18n="subscription">Subscription Plan</span>
+          </a>
+        </li>
+        <li>
+          <a href="transactions.html" data-link="transactions">
+            <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
+            <span data-i18n="transactionHistory">Transaction History</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="insight.html" data-link="insight">
+        <iconify-icon class="ic" icon="mdi:map-marker-outline"></iconify-icon>
+        <span class="label" data-i18n="insight">Insight</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="performance.html" data-link="performance">
+        <iconify-icon class="ic" icon="mdi:cpu-64-bit"></iconify-icon>
+        <span class="label" data-i18n="performance">Performance</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="chart.html" data-link="chart">
+        <iconify-icon class="ic" icon="mdi:chart-bar"></iconify-icon>
+        <span class="label" data-i18n="chart">Chart</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="instructions.html" data-link="instructions">
+        <iconify-icon class="ic" icon="mdi:book-open-outline"></iconify-icon>
+        <span class="label" data-i18n="instructions">Instructions</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="profile.html" data-link="profile">
+        <iconify-icon class="ic" icon="mdi:cog-outline"></iconify-icon>
+        <span class="label" data-i18n="settings">Settings</span>
+      </a>
+    </li>
+  </ul>
+</aside>

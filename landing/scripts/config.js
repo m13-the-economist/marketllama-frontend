@@ -5,7 +5,7 @@
 
   const ML_CONFIG = {
     // Backend API
-    API_BASE_URL: "http://72.61.201.223:8000",
+    API_BASE_URL: "https://marketllama.com",
 
     // Where to send users AFTER successful login
     DASHBOARD_URL: `${ORIGIN}/dashboard/accounts.html`,

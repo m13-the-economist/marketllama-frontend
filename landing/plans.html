@@ -5,8 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Accounts — Market Llama</title>
-    <meta name="description"
-        content="Manage your Market Llama account, brokers, and preferences." />
+    <meta name="description" content="Manage your Market Llama account, brokers, and preferences." />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml"
@@ -23,6 +22,161 @@
         .accounts-shell {
             position: relative;
             z-index: 1;
+        }
+
+        /* ===== EARLY ADOPTER HERO (NEW) ===== */
+        .early-hero {
+            margin: 18px 4rem 10px;
+            background: linear-gradient(180deg, rgba(26, 109, 114, .96), rgba(26, 109, 114, .84));
+            border-radius: 28px;
+            padding: 28px 28px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            box-shadow: 0 22px 60px rgba(0, 0, 0, .55);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .early-hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .early-hero-heading {
+            font-size: clamp(28px, 3.5vw, 56px);
+            font-weight: 900;
+            letter-spacing: .01em;
+        }
+
+        .early-pill {
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, .18);
+            border: 1px solid rgba(255, 255, 255, .16);
+            font-size: 13px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .early-hero-sub {
+            margin-top: 14px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            max-width: 980px;
+            opacity: .98;
+        }
+
+        .early-hero-meta-title {
+            margin-top: 18px;
+            font-weight: 900;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            opacity: .95;
+        }
+
+        .early-hero-scroll {
+            margin-top: 12px;
+            padding: 18px 18px;
+            border-radius: 18px;
+            background: rgba(0, 0, 0, .18);
+            border: 1px solid rgba(255, 255, 255, .14);
+            max-height: 255px;
+            overflow: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .early-hero-scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .early-hero-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, .10);
+            border-radius: 999px;
+        }
+
+        .early-hero-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .30);
+            border-radius: 999px;
+        }
+
+        .early-hero-list {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 1.02rem;
+            line-height: 1.65;
+        }
+
+        .early-hero-list li {
+            white-space: pre-line;
+        }
+
+        /* right card */
+        .early-hero-actions {
+            background: rgba(0, 0, 0, .18);
+            border: 1px solid rgba(255, 255, 255, .14);
+            border-radius: 22px;
+            padding: 18px 18px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .35);
+            position: sticky;
+            top: calc(var(--header-h, 60px) + 14px);
+        }
+
+        .early-hero-price {
+            font-weight: 900;
+            font-size: 1.55rem;
+            letter-spacing: .01em;
+        }
+
+        .early-hero-note {
+            margin-top: 10px;
+            font-size: 1rem;
+            opacity: .95;
+            line-height: 1.45;
+        }
+
+        .early-hero-btn {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 16px;
+            border-radius: 999px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+            white-space: nowrap;
+        }
+
+        .early-hero-btn.primary {
+            margin-top: 18px;
+            background: #fff;
+            color: #0b1b1e;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, .32);
+        }
+
+        .early-hero-btn.primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .early-hero-btn.secondary {
+            margin-top: 12px;
+            background: rgba(0, 0, 0, .55);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .12);
+        }
+
+        .early-hero-btn.secondary:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
         }
 
         /* -- Plans (Pricing) -- */
@@ -105,6 +259,21 @@
             background: radial-gradient(closest-side, rgba(65, 105, 225, .28), rgba(65, 105, 225, 0) 70%);
             pointer-events: none;
             filter: blur(18px);
+        }
+
+        /* NEW: early adopter badge on Basic plan */
+        .plan-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .34);
+            font-size: 11px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            background: rgba(0, 0, 0, .18);
+            width: fit-content;
         }
 
         .plan .name {
@@ -574,9 +743,29 @@
             .plan {
                 grid-column: span 6;
             }
+
+            .early-hero-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .early-hero-actions {
+                position: static;
+            }
         }
 
         @media (max-width:700px) {
+
+            .early-hero {
+                margin: 14px 1.25rem 6px;
+                padding: 18px 18px;
+                border-radius: 22px;
+            }
+
+            .early-hero-scroll {
+                max-height: 220px;
+                padding: 14px 14px;
+            }
+
             .pricing {
                 padding: 1.25rem 1.25rem .75rem;
             }
@@ -909,6 +1098,68 @@
         <!-- Backdrop for mobile nav -->
         <div id="navBackdrop" class="nav-backdrop" aria-hidden="true"></div>
 
+        <!-- ===== Early Adopter Test Mode (NEW) ===== -->
+        <section class="early-hero" id="early-adopter">
+            <div class="early-hero-grid">
+                <div>
+                    <div class="early-hero-heading">Early Adopter Test Mode</div>
+                    <div class="early-pill">LIMITED ACCESS • LIVE VALIDATION</div>
+
+                    <p class="early-hero-sub">
+                        Controlled live-market validation for a limited group of early adopters. Backtests show a 71% win
+                        rate across 8 months — this phase verifies execution, risk-handling and real-world performance.
+                    </p>
+
+                    <div class="early-hero-meta-title">DETAILS</div>
+
+                    <div class="early-hero-scroll" aria-label="Early Adopter details (scrollable)">
+                        <ul class="early-hero-list">
+                            <li>
+Early Adopter Test Mode — $14.99/month
+
+This trading system has been extensively backtested over the past 8 months, achieving a 71% win rate. We are now moving into controlled live-market validation and opening access to a limited group of early adopters.
+
+What You Need to Know
+Trading involves risk, and losses are possible. Backtested results do not guarantee identical performance in live markets. This phase is designed to validate execution, risk handling, and performance under real conditions.
+
+Early adopters participate with full awareness that the system is in its first live deployment stage.
+
+Your $14.99/month subscription directly supports:
+  • Infrastructure costs
+  • Ongoing development
+  • Live performance monitoring and improvement
+
+Two Ways to Support the Project
+1. Subscribe & Participate in Early Testing ($14.99/month)
+For users who understand the risks and want early access to the system as it transitions into live operation.
+
+2. Support Development (Optional Contribution)
+If you’re not ready to participate in live testing but want to support development, you can contribute any amount toward production and platform completion.
+
+We appreciate every form of support.
+
+Questions? Contact us at [your email].
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="early-hero-actions">
+                    <div class="early-hero-price">$14.99 / month</div>
+                    <div class="early-hero-note">Early access. Controlled testing. Transparent expectations.</div>
+
+                    <!-- Keep these as buttons for now; wire to your payment later -->
+                    <button class="early-hero-btn primary" type="button" data-select-plan="Basic">
+                        Subscribe &amp; Test — $14.99/mo
+                    </button>
+
+                    <a class="early-hero-btn secondary" href="signup.html"">
+                        Donate to Support
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <!-- ===== Plans for non-users ===== -->
         <section class="pricing" id="plans">
             <h2>Plans</h2>
@@ -922,11 +1173,11 @@
                 <!-- Basic -->
                 <article class="plan" data-plan="Basic">
                     <div>
+                        <div class="plan-badge">EARLY ADOPTERS</div>
                         <div class="name">Basic</div>
                         <div class="price">
                             <span class="amount" data-price data-monthly="14.99" data-annually="144.99">$ 19.99</span>
-                            <span class="old-price" data-old-monthly="19.99"
-                                data-old-annually="199.99">$ 19.99</span>
+                            <span class="old-price" data-old-monthly="19.99" data-old-annually="199.99">$ 19.99</span>
                             <span class="per" data-per>/ month</span>
                         </div>
                         <ul class="features">
@@ -947,8 +1198,7 @@
                         <div class="name">Pro</div>
                         <div class="price">
                             <span class="amount" data-price data-monthly="19.99" data-annually="199.99">$ 19.99</span>
-                            <span class="old-price" data-old-monthly="49.99"
-                                data-old-annually="499.99">$ 49.99</span>
+                            <span class="old-price" data-old-monthly="49.99" data-old-annually="499.99">$ 49.99</span>
                             <span class="per" data-per>/ month</span>
                         </div>
                         <ul class="features">
@@ -968,10 +1218,8 @@
                     <div>
                         <div class="name">Premium</div>
                         <div class="price">
-                            <span class="amount" data-price data-monthly="99.99"
-                                data-annually="999.99">$ 99.99</span>
-                            <span class="old-price" data-old-monthly="149.99"
-                                data-old-annually="1499.99">$ 149.99</span>
+                            <span class="amount" data-price data-monthly="99.99" data-annually="999.99">$ 99.99</span>
+                            <span class="old-price" data-old-monthly="149.99" data-old-annually="1499.99">$ 149.99</span>
                             <span class="per" data-per>/ month</span>
                         </div>
                         <ul class="features">
@@ -990,10 +1238,8 @@
                     <div>
                         <div class="name">Elite</div>
                         <div class="price">
-                            <span class="amount" data-price data-monthly="499.99"
-                                data-annually="4999.99">$ 499.99</span>
-                            <span class="old-price" data-old-monthly="699.99"
-                                data-old-annually="6999.99">$ 699.99</span>
+                            <span class="amount" data-price data-monthly="499.99" data-annually="4999.99">$ 499.99</span>
+                            <span class="old-price" data-old-monthly="699.99" data-old-annually="6999.99">$ 699.99</span>
                             <span class="per" data-per>/ month</span>
                         </div>
                         <ul class="features">
@@ -1075,8 +1321,7 @@
                     <tfoot>
                         <tr>
                             <td class="strong">Choose your plan</td>
-                            <td><button type="button" class="cta-btn" data-select-plan="Basic">Select plan</button>
-                            </td>
+                            <td><button type="button" class="cta-btn" data-select-plan="Basic">Select plan</button></td>
                             <td><button type="button" class="cta-btn">coming soon</button></td>
                             <td><button type="button" class="cta-btn">Coming Soon</button></td>
                             <td><button type="button" class="cta-btn">Coming Soon</button></td>
@@ -1188,14 +1433,14 @@
                 <!-- SIGN-UP ONLY FIELDS (hidden in login mode) -->
                 <div class="form-group signup-field" id="firstNameGroup">
                     <label for="authFirstName">First Name</label>
-                    <input id="authFirstName" name="firstName" type="text"
-                        placeholder="Enter your first name" required autocomplete="given-name">
+                    <input id="authFirstName" name="firstName" type="text" placeholder="Enter your first name" required
+                        autocomplete="given-name">
                 </div>
 
                 <div class="form-group signup-field" id="lastNameGroup">
                     <label for="authLastName">Last Name</label>
-                    <input id="authLastName" name="lastName" type="text"
-                        placeholder="Enter your last name" required autocomplete="family-name">
+                    <input id="authLastName" name="lastName" type="text" placeholder="Enter your last name" required
+                        autocomplete="family-name">
                 </div>
 
                 <div class="form-group signup-field" id="dobGroup">
@@ -1205,8 +1450,8 @@
 
                 <div class="form-group signup-field" id="usernameGroup">
                     <label for="authUsername">Username</label>
-                    <input id="authUsername" name="username" type="text"
-                        placeholder="Choose a username" required autocomplete="username">
+                    <input id="authUsername" name="username" type="text" placeholder="Choose a username" required
+                        autocomplete="username">
                 </div>
 
                 <div class="form-group signup-field" id="countryGroup">
@@ -1224,29 +1469,19 @@
                 <!-- SHARED FIELDS (SIGN IN + SIGN UP) -->
                 <div class="form-group" id="emailGroup">
                     <label for="authEmail">Email</label>
-                    <input id="authEmail" name="email" type="email"
-                        placeholder="Enter your email" required autocomplete="email" inputmode="email">
+                    <input id="authEmail" name="email" type="email" placeholder="Enter your email" required
+                        autocomplete="email" inputmode="email">
                 </div>
 
                 <!-- PASSWORD WITH BROKER-STYLE EYE ICON -->
                 <div class="form-group" id="passwordGroup">
                     <label for="authPassword">Password</label>
                     <div class="pw-field">
-                        <input
-                            id="authPassword"
-                            name="password"
-                            type="password"
-                            placeholder="Enter your password"
-                            required
-                            autocomplete="new-password"
-                            minlength="8"
-                        />
+                        <input id="authPassword" name="password" type="password" placeholder="Enter your password"
+                            required autocomplete="new-password" minlength="8" />
                         <!-- Eye icon -->
-                        <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            role="button"
-                            aria-label="Toggle password visibility"
-                            tabindex="0">
+                        <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="button"
+                            aria-label="Toggle password visibility" tabindex="0">
                             <path
                                 d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
                         </svg>
@@ -1262,13 +1497,7 @@
                     <div class="hint" id="passwordHint" aria-live="polite"></div>
                 </div>
 
-                <button
-                    type="submit"
-                    class="submit-btn"
-                    id="submitBtn"
-                    data-mode="signup"
-                    disabled
-                >
+                <button type="submit" class="submit-btn" id="submitBtn" data-mode="signup" disabled>
                     Continue
                 </button>
 
@@ -1277,11 +1506,7 @@
                 <!-- MODE SWITCH (sign in <-> sign up) -->
                 <p class="auth-switch-row">
                     <span id="authSwitchLabel">Already have an account?</span>
-                    <button
-                        type="button"
-                        class="auth-switch-link"
-                        id="authSwitchAction"
-                    >
+                    <button type="button" class="auth-switch-link" id="authSwitchAction">
                         Sign in
                     </button>
                 </p>
@@ -1368,17 +1593,12 @@
                     e.stopPropagation();
 
                     const plan = this.getAttribute('data-select-plan');
-                    if (!plan) {
-                        // "Coming Soon" buttons without data-select-plan do nothing for now
-                        return;
-                    }
+                    if (!plan) return;
 
                     try {
-                        // Remember selected plan so signup.html can read it and pre-select
                         sessionStorage.setItem('ml_selected_plan', plan);
                     } catch (_) { }
 
-                    // Go to the new signup page
                     window.location.href = 'signup.html';
                 });
             });
@@ -1412,7 +1632,6 @@
                     const target = e.target;
                     const clickedInsideNav = nav.contains(target);
 
-                    // If menu is open and click is OUTSIDE nav (background area), close it
                     if (!clickedInsideNav && navMenu.classList.contains('open')) {
                         closeMenu();
                     }
@@ -1536,7 +1755,6 @@
                 setOverlayVisibility(false);
             }
 
-            // Expose to other scripts (plans etc.)
             window.mlOpenAuth = openAuth;
             window.mlSetAuthMode = setMode;
 
@@ -1605,14 +1823,12 @@
             });
 
             if (togglePassword && authPassword) {
-                // Click to toggle
                 togglePassword.addEventListener('click', function () {
                     var isHidden = authPassword.type === 'password';
                     authPassword.type = isHidden ? 'text' : 'password';
                     togglePassword.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
                 });
 
-                // Keyboard support (Enter / Space) on the SVG
                 togglePassword.addEventListener('keydown', function (e) {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -1707,18 +1923,16 @@
                 });
             }
 
-            // Close chat by clicking/tapping anywhere outside (without triggering page nav)
             document.addEventListener('click', function (e) {
                 if (!chatPanel.classList.contains('open')) return;
 
                 const target = e.target;
                 if (chatPanel.contains(target) || chatFab.contains(target)) return;
 
-                // Chat is open and click is outside -> close and swallow the click
                 e.preventDefault();
                 e.stopPropagation();
                 closeChat();
-            }, true); // capture so we intercept before links fire
+            }, true);
 
             if (chatForm) {
                 chatForm.addEventListener('submit', function (e) {

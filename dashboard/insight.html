@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Insight — Market Llama</title>
   <meta name="description" content="Insight module — coming soon." />
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
     href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
   <style>
     :root {
       --header-h: 60px;
@@ -18,7 +20,7 @@
       --glass: rgba(255,255,255,.04);
       --muted: #8f8f92;
 
-      /* Chat / teal accent (same family as reset page) */
+      /* Chat / teal accent */
       --nav-teal: #1a6d72;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,144 +32,43 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
     }
 
-    /* Header (same as plans.html, no menu bar) */
-    .site-header {
-      height: var(--header-h);
-      padding: 8px 14px;
-      border-bottom: 1px solid var(--ring);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #0097b2;
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-    .left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-    }
-    .logo {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-      display: block;
-    }
-    .brand-name {
-      font-size: 1rem;
-      letter-spacing: .2px;
-    }
-    .site-actions {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .icon-btn {
-      background: transparent;
-      border: 1px solid var(--ring);
-      color: var(--text);
-      padding: 6px 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .icon-btn:hover {
-      background: rgba(255,255,255,0.1);
-      transform: translateY(-1px);
-    }
-    .ic {
-      font-size: 18px;
-      line-height: 1;
-      vertical-align: middle;
-      opacity: 0.9;
-      transition: opacity 0.2s ease;
-    }
-    .icon-btn:hover .ic { opacity: 1; }
-
-    .balance-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 8px;
-      border: 1px solid var(--ring);
-      border-radius: 10px;
-      background: var(--glass);
-    }
-    .balance-amount {
-      letter-spacing: .2px;
-      font-size: .95rem;
+    /* ===== PROFILE BACKGROUND (soft) ===== */
+    .profile-background{
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 150vw;
+      height: 120vh;
+      top: -10%;
+      left: 15%;
+      background:
+        radial-gradient(200px 260px at 20% 30%, transparent 30%, rgba(255,255,255,.05) 32%, transparent 34%),
+        radial-gradient(180px 240px at 40% 20%, transparent 30%, rgba(255,255,255,.05) 32%, transparent 34%),
+        radial-gradient(140px 200px at 25% 70%, transparent 30%, rgba(255,255,255,.05) 32%, transparent 34%),
+        radial-gradient(100px 140px at 75% 25%, transparent 30%, rgba(255,255,255,.05) 32%, transparent 34%),
+        radial-gradient(160px 220px at 80% 60%, transparent 30%, rgba(255,255,255,.05) 32%, transparent 34%),
+        radial-gradient(120px 180px at 60% 80%, transparent 30%, rgba(255,255,255,.05) 32%, transparent 34%);
+      filter: blur(60px);
+      opacity: .6;
+      pointer-events: none;
     }
 
-    /* Language dropdown */
-    .language-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 120px;
-      background: rgba(20,20,20,0.95);
-      border: 1px solid var(--ring);
-      border-radius: 12px;
-      padding: 8px;
-      min-width: 160px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 24px rgba(0,0,0,.45);
-      z-index: 1000;
-    }
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 10px 12px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      font-size: 14px;
-      text-align: left;
-    }
-    .lang-option:hover {
-      background: rgba(255,255,255,0.1);
-    }
-    .flag { font-size: 16px; }
-
+    /* ===== CONTENT AREA (works with injected sidebar collapse) ===== */
     main {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 32px 16px;
+      padding-top: calc(var(--header-h) + 24px);
+      transition: margin-left .25s ease;
+      margin-left: 240px;
     }
+    body:has(#sidebar[data-state="collapsed"]) main { margin-left: 68px; }
+
     .coming-card {
       background: var(--glass);
       border: 1px solid var(--ring);
@@ -210,8 +111,7 @@
     }
 
     /* ===========================
-       CHAT WIDGET – dark turquoise
-       (same logic + color as reset page)
+       CHAT WIDGET – teal themed
        =========================== */
     .chat-fab {
       position: fixed;
@@ -232,18 +132,12 @@
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
-
     .chat-fab:hover {
       transform: translateY(-1px);
       box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
       background: #20848a;
     }
-
-    .chat-fab svg {
-      width: 24px;
-      height: 24px;
-      stroke: currentColor;
-    }
+    .chat-fab svg { width: 24px; height: 24px; stroke: currentColor; }
 
     .chat-panel {
       position: fixed;
@@ -265,7 +159,6 @@
       color: #fff;
       overflow: hidden;
     }
-
     .chat-panel.open {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -280,11 +173,7 @@
       border-bottom: 1px solid rgba(255, 255, 255, .06);
       background: var(--nav-teal);
     }
-
-    .chat-title {
-      font-weight: 600;
-    }
-
+    .chat-title { font-weight: 600; }
     .chat-close {
       background: none;
       border: none;
@@ -301,7 +190,6 @@
       gap: 8px;
       overflow: auto;
     }
-
     .chat-msg {
       font-size: .92rem;
       line-height: 1.4;
@@ -311,16 +199,8 @@
       border-radius: 12px;
       max-width: 85%;
     }
-
-    .chat-msg.bot {
-      align-self: flex-start;
-    }
-
-    .chat-msg.user {
-      align-self: flex-end;
-      background: var(--nav-teal);
-      color: #fff;
-    }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; background: var(--nav-teal); color: #fff; }
 
     .chat-input-row {
       display: flex;
@@ -329,7 +209,6 @@
       border-top: 1px solid rgba(255, 255, 255, .06);
       background: rgba(6, 14, 16, 0.96);
     }
-
     .chat-input-row input {
       flex: 1;
       background: rgba(255, 255, 255, .06);
@@ -337,8 +216,8 @@
       color: #fff;
       border-radius: 12px;
       padding: 10px 12px;
+      font-family: inherit;
     }
-
     .chat-send {
       background: var(--nav-teal);
       color: #fff;
@@ -346,77 +225,38 @@
       border-radius: 12px;
       padding: 10px 14px;
       cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
     }
 
     /* Mobile */
+    @media (max-width: 1024px) {
+      main { margin-left: 200px; }
+      body:has(#sidebar[data-state="collapsed"]) main { margin-left: 68px; }
+    }
+    @media (max-width: 768px) {
+      main { margin-left: 0 !important; padding-top: calc(var(--header-h) + 18px); }
+    }
     @media (max-width: 640px) {
-      .site-header {
-        padding: 8px 10px;
-      }
-
-      main {
-        padding: 24px 12px;
-      }
-
-      .coming-card {
-        padding: 26px 20px;
-        border-radius: 18px;
-      }
-
-      .chat-fab {
-        right: 14px;
-      }
-
-      .chat-panel {
-        right: 14px;
-      }
+      main { padding: 24px 12px; padding-top: calc(var(--header-h) + 18px); }
+      .coming-card { padding: 26px 20px; border-radius: 18px; }
+      .chat-fab { right: 14px; }
+      .chat-panel { right: 14px; }
     }
   </style>
-  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+
+  <!-- Keep iconify; navbar.js won’t double-load -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js" defer></script>
+
+  <!-- Inject shared navbar/sidebar -->
+  <script src="components/navbar.js" defer></script>
 </head>
+
 <body class="app dark">
-  <header class="site-header" id="siteHeader">
-    <div class="left">
-      <a href="accounts.html" class="brand">
-        <div class="logo">
-          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
-        </div>
-        <span class="brand-name">Market Llama</span>
-      </a>
-    </div>
-    <nav class="site-actions">
-      <button class="icon-btn" id="qrBtn" aria-label="QR">
-        <iconify-icon class="ic" icon="mdi:qrcode"></iconify-icon>
-      </button>
-      <div class="balance-wrap">
-        <span class="balance-amount" id="topBalance">$ 15 400.00</span>
-        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
-          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
-        </button>
-      </div>
+  <div class="profile-background"></div>
 
-      <button class="icon-btn" id="languageBtn" aria-label="Language">
-        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
-      </button>
-      <div class="language-dropdown" id="languageDropdown" hidden>
-        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
-        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
-        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
-        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
-        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
-      </div>
-
-      <button class="icon-btn" aria-label="Notifications">
-        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
-      </button>
-      <button class="icon-btn" aria-label="Support">
-        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
-      </button>
-      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
-        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
-      </a>
-    </nav>
-  </header>
+  <!-- Shared navbar mount -->
+  <div id="ml-navbar"></div>
 
   <main>
     <div class="coming-card">
@@ -433,7 +273,7 @@
     </div>
   </main>
 
-  <!-- CHAT (same structure as reset page, teal themed) -->
+  <!-- CHAT -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -443,6 +283,7 @@
       <circle cx="15" cy="10" r="1.25" />
     </svg>
   </button>
+
   <div id="chatPanel" class="chat-panel" role="dialog" aria-label="Assistant chat" aria-modal="true"
     aria-hidden="true">
     <div class="chat-header">
@@ -458,10 +299,11 @@
     </form>
   </div>
 
+  <!-- PAGE ONLY: Insight translations (navbar handles nav translations) -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener("ml:navbar-ready", function () {
       const params = new URLSearchParams(window.location.search);
-      let currentLang = params.get('lang') || 'en';
+      let currentLang = params.get("lang") || "en";
 
       const translations = {
         en: {
@@ -496,111 +338,26 @@
         }
       };
 
-      if (!translations[currentLang]) currentLang = 'en';
-
-      function updateNavLinks() {
-        // profile
-        const profileLinks = document.querySelectorAll('[data-link="profile"]');
-        profileLinks.forEach(a => {
-          const href = a.getAttribute('href') || 'profile.html';
-          const url = new URL(href, window.location.origin + window.location.pathname);
-          url.searchParams.set('lang', currentLang);
-          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-        });
-
-        // accounts (back link)
-        const accountLinks = document.querySelectorAll('[data-link="accounts"]');
-        accountLinks.forEach(a => {
-          const href = 'accounts.html';
-          const url = new URL(href, window.location.origin + window.location.pathname);
-          url.searchParams.set('lang', currentLang);
-          a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-        });
-      }
+      if (!translations[currentLang]) currentLang = "en";
 
       function applyLanguage(lang) {
         const t = translations[lang] || translations.en;
-
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.getAttribute('data-i18n');
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const key = el.getAttribute("data-i18n");
           if (t[key]) el.textContent = t[key];
         });
 
-        if (lang === 'ar') {
-          document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-          document.documentElement.setAttribute('dir', 'ltr');
-        }
-
-        updateNavLinks();
-      }
-
-      // Balance toggle
-      const toggleBalance = document.getElementById('toggleBalance');
-      const topBalance = document.getElementById('topBalance');
-      const topEye = document.getElementById('topEye');
-      let balanceHidden = false;
-
-      if (toggleBalance && topBalance && topEye) {
-        toggleBalance.addEventListener('click', (e) => {
-          e.stopPropagation();
-          balanceHidden = !balanceHidden;
-          if (balanceHidden) {
-            topBalance.textContent = '•••••';
-            topEye.setAttribute('icon', 'mdi:eye-off-outline');
-          } else {
-            topBalance.textContent = '$ 15 400.00';
-            topEye.setAttribute('icon', 'mdi:eye-outline');
-          }
-        });
-      }
-
-      // Language dropdown
-      const languageBtn = document.getElementById('languageBtn');
-      const languageDropdown = document.getElementById('languageDropdown');
-
-      function toggleLanguageDropdown() {
-        if (!languageDropdown) return;
-        languageDropdown.hidden = !languageDropdown.hidden;
-      }
-
-      if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleLanguageDropdown();
-        });
-
-        languageDropdown.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
-
-        const langOptions = languageDropdown.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
-          option.addEventListener('click', () => {
-            const lang = option.getAttribute('data-lang');
-            if (!translations[lang]) return;
-            currentLang = lang;
-
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', currentLang);
-            window.history.replaceState({}, '', url.pathname + '?' + url.searchParams.toString());
-
-            applyLanguage(currentLang);
-            languageDropdown.hidden = true;
-          });
-        });
-
-        document.addEventListener('click', () => {
-          languageDropdown.hidden = true;
+        // Keep back-link lang param consistent
+        document.querySelectorAll('[data-link="accounts"]').forEach(a => {
+          a.href = "accounts.html?lang=" + lang;
         });
       }
 
       applyLanguage(currentLang);
-      console.log('Insight language set to', currentLang);
     });
   </script>
 
-  <!-- Chat wiring with smooth outside-click close (copied from reset page) -->
+  <!-- Chat wiring -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -612,16 +369,18 @@
 
       function openChat() {
         chatPanel.classList.add('open');
+        chatPanel.setAttribute('aria-hidden', 'false');
+        if (chatInput) setTimeout(() => chatInput.focus(), 80);
       }
-
       function closeChat() {
         chatPanel.classList.remove('open');
+        chatPanel.setAttribute('aria-hidden', 'true');
       }
 
       if (chatFab) {
         chatFab.addEventListener('click', function (e) {
           e.stopPropagation();
-          openChat();
+          chatPanel.classList.contains('open') ? closeChat() : openChat();
         });
       }
 
@@ -632,20 +391,16 @@
         });
       }
 
-      // Close chat by clicking/tapping anywhere outside (without jumping to top)
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-
         const target = e.target;
         if (chatPanel.contains(target) || chatFab.contains(target)) return;
-
-        // Chat is open and click is outside -> close and swallow the click
         e.preventDefault();
         e.stopPropagation();
         closeChat();
-      }, true); // capture so we intercept before links/anchors fire
+      }, true);
 
-      if (chatForm) {
+      if (chatForm && chatInput && chatBody) {
         chatForm.addEventListener('submit', function (e) {
           e.preventDefault();
           const text = chatInput.value.trim();

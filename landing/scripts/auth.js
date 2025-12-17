@@ -1,7 +1,7 @@
 // landing/scripts/auth.js
 (function (window, document) {
   const cfg = window.ML_CONFIG || {};
-  const API_BASE_URL = cfg.API_BASE_URL || "http://72.61.201.223:8000";
+  const API_BASE_URL = cfg.API_BASE_URL || "https://marketllama.com";
 
   const DASHBOARD_URL =
     cfg.DASHBOARD_URL || `${window.location.origin}/dashboard/accounts.html`;

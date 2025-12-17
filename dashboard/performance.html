@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml"
         href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
   <style>
     :root {
       --header-h: 60px;
@@ -29,15 +30,8 @@
       --nav-teal: #1a6d72;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: 14px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
 
     body.app.dark {
       background: var(--bg);
@@ -63,11 +57,7 @@
       backdrop-filter: blur(8px);
     }
 
-    .site-header .left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .site-header .left { display: flex; align-items: center; gap: 8px; }
 
     .brand {
       display: flex;
@@ -88,25 +78,10 @@
       overflow: hidden;
     }
 
-    .logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-      display: block;
-    }
+    .logo-img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
+    .brand-name { letter-spacing: .2px; font-size: 1rem; }
 
-    .brand-name {
-      letter-spacing: .2px;
-      font-size: 1rem;
-    }
-
-    .site-actions {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .site-actions { position: relative; display: flex; align-items: center; gap: 8px; }
 
     .icon-btn {
       background: transparent;
@@ -123,15 +98,8 @@
       text-decoration: none;
     }
 
-    .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .icon-btn.sm {
-      padding: 5px;
-      border-radius: 9px;
-    }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
+    .icon-btn.sm { padding: 5px; border-radius: 9px; }
 
     .balance-wrap {
       display: flex;
@@ -143,30 +111,13 @@
       background: var(--glass);
     }
 
-    .balance-amount {
-      letter-spacing: .2px;
-      font-size: .95rem;
-    }
+    .balance-amount { letter-spacing: .2px; font-size: .95rem; }
 
-    .mobile-only {
-      display: none;
-    }
+    .mobile-only { display: none; }
+    .desktop-only { display: inline-flex; }
 
-    .desktop-only {
-      display: inline-flex;
-    }
-
-    .ic {
-      font-size: 18px;
-      line-height: 1;
-      vertical-align: middle;
-      opacity: 0.9;
-      transition: opacity 0.2s ease;
-    }
-
-    .icon-btn:hover .ic {
-      opacity: 1;
-    }
+    .ic { font-size: 18px; line-height: 1; vertical-align: middle; opacity: 0.9; transition: opacity 0.2s ease; }
+    .icon-btn:hover .ic { opacity: 1; }
 
     /* Language Dropdown */
     .language-dropdown {
@@ -182,10 +133,7 @@
       box-shadow: var(--shadow);
       z-index: 1000;
     }
-
-    .language-dropdown[hidden] {
-      display: none;
-    }
+    .language-dropdown[hidden] { display: none; }
 
     .lang-option {
       display: flex;
@@ -202,20 +150,11 @@
       font-family: inherit;
       font-size: 14px;
     }
-
-    .lang-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .flag {
-      font-size: 16px;
-    }
+    .lang-option:hover { background: rgba(255, 255, 255, 0.1); }
+    .flag { font-size: 16px; }
 
     /* Layout */
-    .dashboard {
-      min-height: 100vh;
-      padding-top: var(--header-h);
-    }
+    .dashboard { min-height: 100vh; padding-top: var(--header-h); }
 
     .side {
       position: fixed;
@@ -230,18 +169,9 @@
       transition: left .3s ease, width .25s ease;
     }
 
-    .side[data-state="collapsed"] {
-      width: 68px;
-    }
-
-    .side .label {
-      transition: opacity .2s ease;
-    }
-
-    .side[data-state="collapsed"] .label {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .side[data-state="collapsed"] { width: 68px; }
+    .side .label { transition: opacity .2s ease; }
+    .side[data-state="collapsed"] .label { opacity: 0; pointer-events: none; }
 
     .side-toggle {
       position: sticky;
@@ -282,41 +212,14 @@
       cursor: pointer;
     }
 
-    .side-menu li.active > a {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
+    .side-menu li.active > a { background: var(--glass); border-color: var(--ring); color: var(--text); }
 
-    .has-submenu {
-      position: relative;
-    }
-
-    .accordion {
-      background: none;
-      border: none;
-      transition: all 0.3s ease;
-    }
-
-    .accordion:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--ring);
-    }
-
-    .accordion .chevron {
-      margin-left: auto;
-      transition: transform 0.3s ease;
-    }
-
-    .accordion[aria-expanded="true"] .chevron {
-      transform: rotate(180deg);
-    }
-
-    .accordion[aria-expanded="true"] {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
+    .has-submenu { position: relative; }
+    .accordion { background: none; border: none; transition: all 0.3s ease; }
+    .accordion:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--ring); }
+    .accordion .chevron { margin-left: auto; transition: transform 0.3s ease; }
+    .accordion[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+    .accordion[aria-expanded="true"] { background: var(--glass); border-color: var(--ring); color: var(--text); }
 
     .submenu {
       list-style: none;
@@ -328,22 +231,11 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
+    .submenu[hidden] { display: none; }
+    .side[data-state="collapsed"] .submenu { display: none !important; }
 
-    .submenu[hidden] {
-      display: none;
-    }
-
-    .side[data-state="collapsed"] .submenu {
-      display: none !important;
-    }
-
-    .submenu li {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .submenu li:last-child {
-      border-bottom: none;
-    }
+    .submenu li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .submenu li:last-child { border-bottom: none; }
 
     .submenu a {
       display: flex;
@@ -359,21 +251,14 @@
       margin: 2px 4px;
       width: calc(100% - 8px);
     }
-
-    .submenu a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-    }
+    .submenu a:hover { background: rgba(255, 255, 255, 0.1); color: white; }
 
     .content {
       margin-left: 260px;
       padding: 24px clamp(16px, 3vw, 32px);
       transition: margin-left 0.25s ease;
     }
-
-    .side[data-state="collapsed"] ~ .content {
-      margin-left: 84px;
-    }
+    .side[data-state="collapsed"] ~ .content { margin-left: 84px; }
 
     .backdrop {
       position: fixed;
@@ -382,30 +267,11 @@
       z-index: 35;
       backdrop-filter: blur(2px);
     }
-
-    .backdrop[hidden] {
-      display: none;
-    }
+    .backdrop[hidden] { display: none; }
 
     /* Video background */
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
-
-    .video-background video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+    .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; }
+    .video-background video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
 
     /* PERFORMANCE SHELL */
     .perf-shell {
@@ -418,193 +284,41 @@
       box-shadow: var(--shadow);
     }
 
-    .perf-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 28px;
-    }
+    .perf-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
+    .perf-title { font-size: clamp(24px, 3vw, 34px); font-weight: 800; letter-spacing: .3px; margin-bottom: 6px; }
+    .perf-sub { max-width: 520px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .perf-chip { align-self: flex-start; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--ring); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: var(--accent-plain); background: rgba(0, 0, 0, 0.4); }
 
-    .perf-title {
-      font-size: clamp(24px, 3vw, 34px);
-      font-weight: 800;
-      letter-spacing: .3px;
-      margin-bottom: 6px;
-    }
-
-    .perf-sub {
-      max-width: 520px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .perf-chip {
-      align-self: flex-start;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--ring);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      color: var(--accent-plain);
-      background: rgba(0, 0, 0, 0.4);
-    }
-
-    .section-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .18em;
-      color: var(--accent-plain);
-      margin-bottom: 12px;
-    }
+    .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .18em; color: var(--accent-plain); margin-bottom: 12px; }
 
     /* KPI ROW */
-    .kpi-row {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 18px;
-      margin-bottom: 32px;
-    }
-
-    .kpi-card {
-      position: relative;
-      background: radial-gradient(circle at top left, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      border-radius: 22px;
-      border: 1px solid var(--ring);
-      padding: 22px 22px 26px;
-      min-height: 150px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.75);
-    }
-
-    .kpi-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      color: var(--accent-plain);
-      margin-bottom: 10px;
-    }
-
-    .kpi-value {
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-
-    .kpi-sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
+    .kpi-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; margin-bottom: 32px; }
+    .kpi-card { position: relative; background: radial-gradient(circle at top left, rgba(255,255,255,.06), rgba(255,255,255,.02)); border-radius: 22px; border: 1px solid var(--ring); padding: 22px 22px 26px; min-height: 150px; box-shadow: 0 16px 40px rgba(0,0,0,.75); }
+    .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: var(--accent-plain); margin-bottom: 10px; }
+    .kpi-value { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+    .kpi-sub { font-size: 11px; color: var(--muted); }
 
     /* WEEKLY + CALENDAR */
-    .mid-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.9fr);
-      gap: 28px;
-      margin-bottom: 32px;
-      margin-top: 8px;
-    }
+    .mid-row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.9fr); gap: 28px; margin-bottom: 32px; margin-top: 8px; }
+    .panel { background: rgba(0, 0, 0, 0.55); border-radius: 22px; border: 1px solid var(--ring); padding: 20px 20px 18px; box-shadow: 0 14px 30px rgba(0,0,0,.7); min-height: 260px; }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .panel-title { font-size: 13px; text-transform: uppercase; letter-spacing: .16em; color: var(--accent-plain); }
+    .panel-meta { font-size: 11px; color: var(--muted); }
 
-    .panel {
-      background: rgba(0, 0, 0, 0.55);
-      border-radius: 22px;
-      border: 1px solid var(--ring);
-      padding: 20px 20px 18px;
-      box-shadow: 0 14px 30px rgba(0,0,0,.7);
-      min-height: 260px;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .panel-title {
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      color: var(--accent-plain);
-    }
-
-    .panel-meta {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .week-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .week-card {
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
-      padding: 16px 16px 14px;
-      min-height: 96px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .week-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      font-size: 12px;
-    }
-
-    .week-name {
-      font-weight: 600;
-    }
-
-    .week-range {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .week-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-    }
-
-    .week-pnl {
-      font-weight: 600;
-    }
-
-    .week-pnl.green {
-      color: var(--green);
-    }
-
-    .week-pnl.red {
-      color: var(--red);
-    }
-
-    .week-days {
-      color: var(--muted);
-    }
+    .week-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .week-card { border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.01)); padding: 16px 16px 14px; min-height: 96px; display: flex; flex-direction: column; justify-content: center; }
+    .week-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
+    .week-name { font-weight: 600; }
+    .week-range { color: var(--muted); font-size: 11px; }
+    .week-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+    .week-pnl { font-weight: 600; }
+    .week-pnl.green { color: var(--green); }
+    .week-pnl.red { color: var(--red); }
+    .week-days { color: var(--muted); }
 
     /* Calendar */
-    .calendar-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .calendar-main-label {
-      font-size: 12px;
-      font-weight: 600;
-    }
+    .calendar-controls { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+    .calendar-main-label { font-size: 12px; font-weight: 600; }
 
     .calendar-btn {
       background: rgba(0,0,0,.6);
@@ -629,50 +343,17 @@
       outline: none;
     }
 
-    .calendar-legend {
-      margin-left: auto;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .calendar-legend span {
-      margin-left: 10px;
-    }
-
-    .legend-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      margin-right: 4px;
-    }
-
+    .calendar-legend { margin-left: auto; font-size: 11px; color: var(--muted); }
+    .calendar-legend span { margin-left: 10px; }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; }
     .dot-green { background: rgba(48, 201, 119, 0.85); }
     .dot-red { background: rgba(255, 77, 106, 0.9); }
     .dot-gray { background: rgba(120, 120, 120, 0.7); }
 
-    .calendar-grid {
-      margin-top: 10px;
-    }
-
-    .calendar-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      font-size: 11px;
-      color: var(--muted);
-      text-align: center;
-      margin-bottom: 4px;
-    }
-
-    .calendar-weekdays div {
-      padding: 4px 0;
-    }
-
-    .calendar-days {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 6px;
-    }
+    .calendar-grid { margin-top: 10px; }
+    .calendar-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 4px; }
+    .calendar-weekdays div { padding: 4px 0; }
+    .calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
 
     .day-cell {
       border-radius: 14px;
@@ -685,226 +366,55 @@
       justify-content: space-between;
       font-size: 11px;
     }
+    .day-empty { opacity: .35; background: transparent; border-style: dashed; }
+    .day-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .day-num { font-weight: 600; font-size: 11px; }
+    .day-trades { color: var(--muted); font-size: 10px; }
+    .day-pnl { font-size: 10px; margin-top: 4px; }
 
-    .day-empty {
-      opacity: .35;
-      background: transparent;
-      border-style: dashed;
-    }
+    .day-positive { background: rgba(48, 201, 119, 0.18); border-color: rgba(48, 201, 119, 0.4); }
+    .day-positive .day-pnl { color: var(--green); }
 
-    .day-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2px;
-    }
+    .day-negative { background: rgba(255, 77, 106, 0.16); border-color: rgba(255, 77, 106, 0.45); }
+    .day-negative .day-pnl { color: var(--red); }
 
-    .day-num {
-      font-weight: 600;
-      font-size: 11px;
-    }
+    .day-neutral { background: rgba(120, 120, 120, 0.16); border-color: rgba(140, 140, 140, 0.35); }
 
-    .day-trades {
-      color: var(--muted);
-      font-size: 10px;
-    }
+    /* CHART CLUSTER */
+    .chart-cluster { margin-bottom: 32px; background: rgba(0, 0, 0, 0.6); border-radius: 22px; border: 1px solid var(--ring); padding: 20px 20px 18px; box-shadow: 0 14px 32px rgba(0,0,0,.7); }
+    .chart-cluster-header { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+    .chart-cluster-title { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; color: var(--accent-plain); }
+    .chart-cluster-sub { font-size: 11px; color: var(--muted); }
+    .chart-cluster-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 
-    .day-pnl {
-      font-size: 10px;
-      margin-top: 4px;
-    }
-
-    .day-positive {
-      background: rgba(48, 201, 119, 0.18);
-      border-color: rgba(48, 201, 119, 0.4);
-    }
-
-    .day-positive .day-pnl {
-      color: var(--green);
-    }
-
-    .day-negative {
-      background: rgba(255, 77, 106, 0.16);
-      border-color: rgba(255, 77, 106, 0.45);
-    }
-
-    .day-negative .day-pnl {
-      color: var(--red);
-    }
-
-    .day-neutral {
-      background: rgba(120, 120, 120, 0.16);
-      border-color: rgba(140, 140, 140, 0.35);
-    }
-
-    /* CHART CLUSTER (three charts in one box) */
-    .chart-cluster {
-      margin-bottom: 32px;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 22px;
-      border: 1px solid var(--ring);
-      padding: 20px 20px 18px;
-      box-shadow: 0 14px 32px rgba(0,0,0,.7);
-    }
-
-    .chart-cluster-header {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 14px;
-    }
-
-    .chart-cluster-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      color: var(--accent-plain);
-    }
-
-    .chart-cluster-sub {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .chart-cluster-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      align-items: stretch;
-    }
-
-    .chart-card {
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.08);
-      padding: 14px 14px 12px;
-      min-height: 190px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .chart-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      color: var(--accent-plain);
-      margin-bottom: 4px;
-    }
-
-    .chart-sub {
-      font-size: 10px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .chart-wrapper {
-      flex: 1;
-      position: relative;
-      height: 130px;
-    }
+    .chart-card { background: rgba(0, 0, 0, 0.4); border-radius: 18px; border: 1px solid rgba(255,255,255,.08); padding: 14px 14px 12px; min-height: 190px; display: flex; flex-direction: column; }
+    .chart-title { font-size: 11px; text-transform: uppercase; letter-spacing: .16em; color: var(--accent-plain); margin-bottom: 4px; }
+    .chart-sub { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+    .chart-wrapper { flex: 1; position: relative; height: 130px; }
 
     /* History table */
-    .history-shell {
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 22px;
-      border: 1px solid var(--ring);
-      padding: 20px 20px 16px;
-      box-shadow: 0 16px 36px rgba(0,0,0,.75);
-    }
+    .history-shell { background: rgba(0, 0, 0, 0.6); border-radius: 22px; border: 1px solid var(--ring); padding: 20px 20px 16px; box-shadow: 0 16px 36px rgba(0,0,0,.75); }
+    .history-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .history-title { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; color: var(--accent-plain); }
+    .history-meta { font-size: 11px; color: var(--muted); }
 
-    .history-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
+    .table-scroll { max-height: 360px; overflow: auto; border-radius: 14px; border: 1px solid rgba(255,255,255,.05); }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    thead { position: sticky; top: 0; background: #101014; z-index: 1; }
+    th, td { padding: 8px 10px; white-space: nowrap; text-align: left; }
+    th { font-weight: 500; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,.08); background: #101014; }
+    tbody tr:nth-child(even) { background: rgba(255,255,255,.02); }
+    tbody tr:hover { background: rgba(255,255,255,.06); }
 
-    .history-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      color: var(--accent-plain);
-    }
-
-    .history-meta {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .table-scroll {
-      max-height: 360px;
-      overflow: auto;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.05);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 11px;
-    }
-
-    thead {
-      position: sticky;
-      top: 0;
-      background: #101014;
-      z-index: 1;
-    }
-
-    th, td {
-      padding: 8px 10px;
-      white-space: nowrap;
-      text-align: left;
-    }
-
-    th {
-      font-weight: 500;
-      color: var(--muted);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: #101014;
-    }
-
-    tbody tr:nth-child(even) {
-      background: rgba(255,255,255,.02);
-    }
-
-    tbody tr:hover {
-      background: rgba(255,255,255,.06);
-    }
-
-    .badge-type {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 500;
-    }
-
-    .badge-buy {
-      background: rgba(48, 201, 119, 0.16);
-      color: var(--green);
-    }
-
-    .badge-sell {
-      background: rgba(255, 77, 106, 0.16);
-      color: var(--red);
-    }
-
+    .badge-type { display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 500; }
+    .badge-buy { background: rgba(48, 201, 119, 0.16); color: var(--green); }
+    .badge-sell { background: rgba(255, 77, 106, 0.16); color: var(--red); }
     .pnl-pos { color: var(--green); }
     .pnl-neg { color: var(--red); }
+    .share-icon { cursor: pointer; opacity: .8; }
+    .share-icon:hover { opacity: 1; }
 
-    .share-icon {
-      cursor: pointer;
-      opacity: .8;
-    }
-
-    .share-icon:hover {
-      opacity: 1;
-    }
-
-    /* ===== Legal footer (aligned with sidebar/content) ===== */
+    /* Legal footer */
     .legal-footer {
       margin-left: 260px;
       margin-top: 24px;
@@ -913,50 +423,16 @@
       color: var(--muted);
       font-size: 13px;
     }
+    .side[data-state="collapsed"] ~ .legal-footer { margin-left: 84px; }
 
-    .side[data-state="collapsed"] ~ .legal-footer {
-      margin-left: 84px;
-    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+    .footer-risk { line-height: 1.7; max-width: 720px; }
+    .footer-links { text-align: right; font-size: 13px; }
+    .footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .footer-links a { color: var(--accent-plain); text-decoration: none; opacity: 0.9; transition: opacity 0.2s ease, text-decoration-color 0.2s ease; }
+    .footer-links a:hover { opacity: 1; text-decoration: underline; }
 
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 24px;
-    }
-
-    .footer-risk {
-      line-height: 1.7;
-      max-width: 720px;
-    }
-
-    .footer-links {
-      text-align: right;
-      font-size: 13px;
-    }
-
-    .footer-links-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .footer-links a {
-      color: var(--accent-plain);
-      text-decoration: none;
-      opacity: 0.9;
-      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    /* ===== CHAT WIDGET – teal variant (same as reset/insight/profile) ===== */
+    /* Chat */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -976,18 +452,8 @@
       transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
       backdrop-filter: blur(8px);
     }
-
-    .chat-fab:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, .5);
-      background: #20848a;
-    }
-
-    .chat-fab svg {
-      width: 24px;
-      height: 24px;
-      stroke: currentColor;
-    }
+    .chat-fab:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(0, 0, 0, .5); background: #20848a; }
+    .chat-fab svg { width: 24px; height: 24px; stroke: currentColor; }
 
     .chat-panel {
       position: fixed;
@@ -1009,260 +475,91 @@
       color: #fff;
       overflow: hidden;
     }
+    .chat-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 
-    .chat-panel.open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid rgba(255, 255, 255, .06); background: var(--nav-teal); }
+    .chat-title { font-weight: 600; }
+    .chat-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; line-height: 1; }
+    .chat-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: auto; }
+    .chat-msg { font-size: .92rem; line-height: 1.4; background: rgba(255, 255, 255, .06); color: #eaeaea; padding: 8px 10px; border-radius: 12px; max-width: 85%; }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; background: var(--nav-teal); color: #fff; }
 
-    .chat-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, .06);
-      background: var(--nav-teal);
-    }
-
-    .chat-title {
-      font-weight: 600;
-    }
-
-    .chat-close {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .chat-body {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow: auto;
-    }
-
-    .chat-msg {
-      font-size: .92rem;
-      line-height: 1.4;
-      background: rgba(255, 255, 255, .06);
-      color: #eaeaea;
-      padding: 8px 10px;
-      border-radius: 12px;
-      max-width: 85%;
-    }
-
-    .chat-msg.bot {
-      align-self: flex-start;
-    }
-
-    .chat-msg.user {
-      align-self: flex-end;
-      background: var(--nav-teal);
-      color: #fff;
-    }
-
-    .chat-input-row {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 1px solid rgba(255, 255, 255, .06);
-      background: rgba(6, 14, 16, 0.96);
-    }
-
-    .chat-input-row input {
-      flex: 1;
-      background: rgba(255, 255, 255, .06);
-      border: 1px solid rgba(255, 255, 255, .12);
-      color: #fff;
-      border-radius: 12px;
-      padding: 10px 12px;
-    }
-
-    .chat-send {
-      background: var(--nav-teal);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
+    .chat-input-row { display: flex; gap: 8px; padding: 12px; border-top: 1px solid rgba(255, 255, 255, .06); background: rgba(6, 14, 16, 0.96); }
+    .chat-input-row input { flex: 1; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #fff; border-radius: 12px; padding: 10px 12px; }
+    .chat-send { background: var(--nav-teal); color: #fff; border: none; border-radius: 12px; padding: 10px 14px; cursor: pointer; }
 
     /* Responsive */
     @media (max-width: 1100px) {
       .desktop-only { display: none; }
       .mobile-only { display: inline-flex; }
-
-      .kpi-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .chart-cluster-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .chart-cluster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 1024px) {
-      .side[data-state="expanded"] {
-        width: 200px;
-      }
-      .content {
-        margin-left: 200px;
-      }
-      .legal-footer {
-        margin-left: 200px;
-      }
+      .side[data-state="expanded"] { width: 200px; }
+      .content { margin-left: 200px; }
+      .legal-footer { margin-left: 200px; }
     }
 
     @media (max-width: 900px) {
-      .mid-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .chart-cluster-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .mid-row { grid-template-columns: minmax(0, 1fr); }
+      .chart-cluster-grid { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 768px) {
-      :root {
-        --header-h: 56px;
-      }
+      :root { --header-h: 56px; }
 
-      .side {
-        left: -240px;
-        width: 240px;
-      }
-      .side.open {
-        left: 0;
-      }
-      .content {
-        margin-left: 0;
-        padding-inline: 12px;
-      }
-      .language-dropdown {
-        right: 10px;
-        min-width: 140px;
-      }
+      .side { left: -240px; width: 240px; }
+      .side.open { left: 0; }
+      .content { margin-left: 0; padding-inline: 12px; }
 
-      .perf-shell {
-        padding: 20px 14px 26px;
-      }
+      .language-dropdown { right: 10px; min-width: 140px; }
 
-      .kpi-row {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-      }
+      .perf-shell { padding: 20px 14px 26px; }
 
-      .kpi-card {
-        padding: 14px 14px 16px;
-        min-height: 110px;
-        border-radius: 18px;
-      }
+      .kpi-row { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+      .kpi-card { padding: 14px 14px 16px; min-height: 110px; border-radius: 18px; }
+      .kpi-label { font-size: 10px; letter-spacing: .12em; margin-bottom: 6px; }
+      .kpi-value { font-size: 20px; margin-bottom: 2px; }
+      .kpi-sub { font-size: 10px; }
 
-      .kpi-label {
-        font-size: 10px;
-        letter-spacing: .12em;
-        margin-bottom: 6px;
-      }
+      .perf-head { flex-direction: column; align-items: flex-start; gap: 10px; }
 
-      .kpi-value {
-        font-size: 20px;
-        margin-bottom: 2px;
-      }
+      .legal-footer { margin-left: 0; padding-inline: 12px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { text-align: left; }
 
-      .kpi-sub {
-        font-size: 10px;
-      }
-
-      .perf-head {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .legal-footer {
-        margin-left: 0;
-        padding-inline: 12px;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-      }
-
-      .footer-links {
-        text-align: left;
-      }
-
-      /* MOBILE NAV CLEANUP */
-      .site-header {
-        padding: 6px 10px;
-        gap: 6px;
-      }
-
-      .site-actions {
-        gap: 6px;
-      }
-
-      .icon-btn {
-        padding: 4px 6px;
-        border-radius: 8px;
-        border: none;
-        background: transparent;
-      }
+      .site-header { padding: 6px 10px; gap: 6px; }
+      .site-actions { gap: 6px; }
+      .icon-btn { padding: 4px 6px; border-radius: 8px; border: none; background: transparent; }
 
       /* HIDE QR, BALANCE + EYE ONLY ON MOBILE */
-      #qrBtn {
-        display: none;
-      }
+      #qrBtn { display: none; }
+      .balance-wrap { display: none !important; }
 
-      .balance-wrap {
-        display: none !important;
-      }
+      .ic { font-size: 16px; }
 
-      .ic {
-        font-size: 16px;
-      }
-
-      .footer-risk strong {
-        display: block;
-        text-align: center;
-        margin-bottom: 8px;
-      }
+      .footer-risk strong { display: block; text-align: center; margin-bottom: 8px; }
     }
 
     @media (min-width: 769px) {
-      .content {
-        margin-left: 260px;
-      }
+      .content { margin-left: 260px; }
     }
 
     @media (max-width:540px) {
-      .chat-fab {
-        right: 14px;
-        bottom: 88px;
-      }
-
-      .chat-panel {
-        right: 14px;
-        bottom: 148px;
-      }
+      .chat-fab { right: 14px; bottom: 88px; }
+      .chat-panel { right: 14px; bottom: 148px; }
     }
   </style>
 
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="app dark">
-  <div class="video-background">
-    <!-- optional background video -->
-  </div>
+  <div class="video-background"></div>
 
   <header class="site-header" id="siteHeader">
     <div class="left">
@@ -1276,6 +573,7 @@
         <span class="brand-name">Market Llama</span>
       </a>
     </div>
+
     <nav class="site-actions">
       <button class="icon-btn" id="qrBtn" aria-label="QR">
         <iconify-icon class="ic" icon="mdi:qrcode"></iconify-icon>
@@ -1318,6 +616,7 @@
       <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
         <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
       </div>
+
       <ul class="side-menu">
         <li>
           <a href="accounts.html" data-link="accounts">
@@ -1332,15 +631,16 @@
             <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
             <iconify-icon class="ic chevron" icon="mdi:chevron-down"></iconify-icon>
           </button>
+
           <ul class="submenu" hidden>
             <li>
-              <a href="subscriptionplan.html">
+              <a href="subscriptionplan.html" data-link="subscriptionplan">
                 <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
                 <span data-i18n="subscription">Subscription Plan</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" data-link="transactionHistory">
                 <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
                 <span data-i18n="transactionHistory">Transaction History</span>
               </a>
@@ -1398,7 +698,6 @@
           <div class="perf-chip" data-i18n="last30Days">Last 30 Days</div>
         </div>
 
-        <!-- KPI CARDS -->
         <div class="section-label" data-i18n="kpiSection">Key Performance Indicators</div>
         <div class="kpi-row">
           <div class="kpi-card">
@@ -1428,9 +727,7 @@
           </div>
         </div>
 
-        <!-- WEEKLY + CALENDAR -->
         <div class="mid-row">
-          <!-- Weekly summary -->
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title" data-i18n="weeklySummary">Weekly Summary</div>
@@ -1438,7 +735,6 @@
             <div class="week-list" id="weekList"></div>
           </div>
 
-          <!-- Calendar -->
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title" data-i18n="dailyPnlCalendar">Daily PnL Calendar</div>
@@ -1478,7 +774,6 @@
           </div>
         </div>
 
-        <!-- CHARTS CLUSTER: all three charts inside one box -->
         <div class="chart-cluster">
           <div class="chart-cluster-header">
             <div class="chart-cluster-title">Strategy Breakdown</div>
@@ -1513,7 +808,6 @@
           </div>
         </div>
 
-        <!-- HISTORY TABLE -->
         <div class="history-shell">
           <div class="history-head">
             <div class="history-title" data-i18n="tradeHistory">Trade History</div>
@@ -1542,7 +836,6 @@
       </div>
     </section>
 
-    <!-- LEGAL FOOTER -->
     <footer class="legal-footer">
       <div class="footer-inner">
         <p class="footer-risk">
@@ -1558,7 +851,7 @@
           market fluctuations more effectively, but they are still subject to market risk and temporary
           performance deviations.
           <br><br>
-          Market Llama operates as a technology-enabled, professional account management platform  similar
+          Market Llama operates as a technology-enabled, professional account management platform similar
           to institutional asset managers providing users with sophisticated trading systems, automated
           execution, and real-time risk controls. Our purpose is to optimize performance, protect user
           capital, and deliver institutional-grade trading outcomes.
@@ -1583,7 +876,7 @@
     </footer>
   </main>
 
-  <!-- CHAT WIDGET (teal variant from chart.html) -->
+  <!-- Chat widget -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1611,8 +904,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      console.log('Performance page loaded');
-
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get('lang') || 'en';
 
@@ -1627,7 +918,6 @@
           chart: "Chart",
           settings: "Settings",
           instructions: "Instructions",
-
           last30Days: "Last 30 Days",
           kpiSection: "Key Performance Indicators",
           kpiTradingDays: "Trading Days",
@@ -1640,40 +930,22 @@
           kpiCombinedExposure: "Combined exposure across trades.",
           kpiBestTrade: "Single best trade in the period.",
           kpiLargestDrawdown: "Largest drawdown on a trade.",
-
           weeklySummary: "Weekly Summary",
           dailyPnlCalendar: "Daily PnL Calendar",
           legendGreen: "Green = profit",
           legendRed: "Red = loss",
           legendNone: "No trades",
-
-          mon: "Mon",
-          tue: "Tue",
-          wed: "Wed",
-          thu: "Thu",
-          fri: "Fri",
-          sat: "Sat",
-          sun: "Sun",
-
+          mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun",
           chartProfitabilityTitle: "Profitability",
           chartProfitabilitySub: "Win rate vs loss rate.",
           chartShortTitle: "Short Analysis",
           chartShortSub: "Profits, wins, and losses on short positions.",
           chartLongTitle: "Long Analysis",
           chartLongSub: "Profits, wins, and losses on long positions.",
-
           tradeHistory: "Trade History",
           historyMeta: "Scrollable table — dummy rows for now.",
-          thShare: "Share",
-          thSymbol: "Symbol",
-          thType: "Type",
-          thOpenDate: "Open Date",
-          thOpen: "Open",
-          thCloseDate: "Closed Date",
-          thClose: "Close",
-          thTp: "TP",
-          thSl: "SL",
-          thPnl: "PnL"
+          thShare: "Share", thSymbol: "Symbol", thType: "Type", thOpenDate: "Open Date", thOpen: "Open",
+          thCloseDate: "Closed Date", thClose: "Close", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
         de: {
           accounts: "Konten",
@@ -1685,7 +957,6 @@
           chart: "Diagramm",
           settings: "Einstellungen",
           instructions: "Anleitung",
-
           last30Days: "Letzte 30 Tage",
           kpiSection: "Wichtige Leistungskennzahlen",
           kpiTradingDays: "Handelstage",
@@ -1698,40 +969,22 @@
           kpiCombinedExposure: "Gesamtexponierung über alle Trades.",
           kpiBestTrade: "Bester Einzeltrade im Zeitraum.",
           kpiLargestDrawdown: "Größter Verlust eines Trades.",
-
           weeklySummary: "Wöchentliche Übersicht",
           dailyPnlCalendar: "Täglicher PnL-Kalender",
           legendGreen: "Grün = Gewinn",
           legendRed: "Rot = Verlust",
           legendNone: "Keine Trades",
-
-          mon: "Mo",
-          tue: "Di",
-          wed: "Mi",
-          thu: "Do",
-          fri: "Fr",
-          sat: "Sa",
-          sun: "So",
-
+          mon: "Mo", tue: "Di", wed: "Mi", thu: "Do", fri: "Fr", sat: "Sa", sun: "So",
           chartProfitabilityTitle: "Profitabilität",
           chartProfitabilitySub: "Trefferquote vs. Verlustquote.",
           chartShortTitle: "Short-Analyse",
           chartShortSub: "Gewinne, Treffer und Verluste bei Short-Positionen.",
           chartLongTitle: "Long-Analyse",
           chartLongSub: "Gewinne, Treffer und Verluste bei Long-Positionen.",
-
           tradeHistory: "Trade-Historie",
           historyMeta: "Scrollbare Tabelle – aktuell Platzhalterdaten.",
-          thShare: "Teilen",
-          thSymbol: "Symbol",
-          thType: "Art",
-          thOpenDate: "Eröffnungsdatum",
-          thOpen: "Eröffnung",
-          thCloseDate: "Schlussdatum",
-          thClose: "Schluss",
-          thTp: "TP",
-          thSl: "SL",
-          thPnl: "PnL"
+          thShare: "Teilen", thSymbol: "Symbol", thType: "Art", thOpenDate: "Eröffnungsdatum", thOpen: "Eröffnung",
+          thCloseDate: "Schlussdatum", thClose: "Schluss", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
         es: {
           accounts: "Cuentas",
@@ -1743,7 +996,6 @@
           chart: "Gráfico",
           settings: "Configuración",
           instructions: "Instrucciones",
-
           last30Days: "Últimos 30 días",
           kpiSection: "Indicadores clave de rendimiento",
           kpiTradingDays: "Días operados",
@@ -1756,40 +1008,22 @@
           kpiCombinedExposure: "Exposición combinada de todas las operaciones.",
           kpiBestTrade: "Mejor operación del período.",
           kpiLargestDrawdown: "Mayor pérdida en una operación.",
-
           weeklySummary: "Resumen semanal",
           dailyPnlCalendar: "Calendario diario de PnL",
           legendGreen: "Verde = beneficio",
           legendRed: "Rojo = pérdida",
           legendNone: "Sin operaciones",
-
-          mon: "Lun",
-          tue: "Mar",
-          wed: "Mié",
-          thu: "Jue",
-          fri: "Vie",
-          sat: "Sáb",
-          sun: "Dom",
-
+          mon: "Lun", tue: "Mar", wed: "Mié", thu: "Jue", fri: "Vie", sat: "Sáb", sun: "Dom",
           chartProfitabilityTitle: "Rentabilidad",
           chartProfitabilitySub: "Tasa de aciertos vs pérdidas.",
           chartShortTitle: "Análisis de cortos",
           chartShortSub: "Beneficios, aciertos y pérdidas en posiciones cortas.",
           chartLongTitle: "Análisis de largos",
           chartLongSub: "Beneficios, aciertos y pérdidas en posiciones largas.",
-
           tradeHistory: "Historial de operaciones",
           historyMeta: "Tabla desplazable — por ahora con filas de ejemplo.",
-          thShare: "Compartir",
-          thSymbol: "Símbolo",
-          thType: "Tipo",
-          thOpenDate: "Fecha de apertura",
-          thOpen: "Apertura",
-          thCloseDate: "Fecha de cierre",
-          thClose: "Cierre",
-          thTp: "TP",
-          thSl: "SL",
-          thPnl: "PnL"
+          thShare: "Compartir", thSymbol: "Símbolo", thType: "Tipo", thOpenDate: "Fecha de apertura", thOpen: "Apertura",
+          thCloseDate: "Fecha de cierre", thClose: "Cierre", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
         fr: {
           accounts: "Comptes",
@@ -1801,7 +1035,6 @@
           chart: "Graphique",
           settings: "Paramètres",
           instructions: "Instructions",
-
           last30Days: "30 derniers jours",
           kpiSection: "Indicateurs clés de performance",
           kpiTradingDays: "Jours de trading",
@@ -1814,40 +1047,22 @@
           kpiCombinedExposure: "Exposition totale sur l'ensemble des trades.",
           kpiBestTrade: "Meilleur trade de la période.",
           kpiLargestDrawdown: "Plus forte perte sur un trade.",
-
           weeklySummary: "Résumé hebdomadaire",
           dailyPnlCalendar: "Calendrier quotidien du PnL",
           legendGreen: "Vert = profit",
           legendRed: "Rouge = perte",
           legendNone: "Aucun trade",
-
-          mon: "Lun",
-          tue: "Mar",
-          wed: "Mer",
-          thu: "Jeu",
-          fri: "Ven",
-          sat: "Sam",
-          sun: "Dim",
-
+          mon: "Lun", tue: "Mar", wed: "Mer", thu: "Jeu", fri: "Ven", sat: "Sam", sun: "Dim",
           chartProfitabilityTitle: "Rentabilité",
           chartProfitabilitySub: "Taux de gains vs pertes.",
           chartShortTitle: "Analyse des ventes",
           chartShortSub: "Profits, gains et pertes sur les positions vendeuses.",
           chartLongTitle: "Analyse des achats",
           chartLongSub: "Profits, gains et pertes sur les positions acheteuses.",
-
           tradeHistory: "Historique des trades",
           historyMeta: "Tableau défilant — données fictives pour l’instant.",
-          thShare: "Partager",
-          thSymbol: "Symbole",
-          thType: "Type",
-          thOpenDate: "Date d'ouverture",
-          thOpen: "Ouverture",
-          thCloseDate: "Date de clôture",
-          thClose: "Clôture",
-          thTp: "TP",
-          thSl: "SL",
-          thPnl: "PnL"
+          thShare: "Partager", thSymbol: "Symbole", thType: "Type", thOpenDate: "Date d'ouverture", thOpen: "Ouverture",
+          thCloseDate: "Date de clôture", thClose: "Clôture", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
         ar: {
           accounts: "الحسابات",
@@ -1859,7 +1074,6 @@
           chart: "الرسم البياني",
           settings: "الإعدادات",
           instructions: "التعليمات",
-
           last30Days: "آخر 30 يومًا",
           kpiSection: "مؤشرات الأداء الرئيسية",
           kpiTradingDays: "أيام التداول",
@@ -1872,63 +1086,37 @@
           kpiCombinedExposure: "إجمالي التعرّض عبر جميع الصفقات.",
           kpiBestTrade: "أفضل صفقة خلال الفترة.",
           kpiLargestDrawdown: "أكبر تراجع في صفقة واحدة.",
-
           weeklySummary: "الملخص الأسبوعي",
           dailyPnlCalendar: "تقويم الأرباح والخسائر اليومي",
           legendGreen: "الأخضر = ربح",
           legendRed: "الأحمر = خسارة",
           legendNone: "لا توجد صفقات",
-
-          mon: "الاثنين",
-          tue: "الثلاثاء",
-          wed: "الأربعاء",
-          thu: "الخميس",
-          fri: "الجمعة",
-          sat: "السبت",
-          sun: "الأحد",
-
+          mon: "الاثنين", tue: "الثلاثاء", wed: "الأربعاء", thu: "الخميس", fri: "الجمعة", sat: "السبت", sun: "الأحد",
           chartProfitabilityTitle: "الربحية",
           chartProfitabilitySub: "نسبة الصفقات الرابحة مقابل الخاسرة.",
           chartShortTitle: "تحليل صفقات البيع",
           chartShortSub: "الأرباح، والصفقات الرابحة، والخاسرة في صفقات البيع.",
           chartLongTitle: "تحليل صفقات الشراء",
           chartLongSub: "الأرباح، والصفقات الرابحة، والخاسرة في صفقات الشراء.",
-
           tradeHistory: "سجل الصفقات",
           historyMeta: "جدول قابل للتمرير — بيانات تجريبية حاليًا.",
-          thShare: "مشاركة",
-          thSymbol: "الرمز",
-          thType: "النوع",
-          thOpenDate: "تاريخ الفتح",
-          thOpen: "سعر الفتح",
-          thCloseDate: "تاريخ الإغلاق",
-          thClose: "سعر الإغلاق",
-          thTp: "جني الربح",
-          thSl: "إيقاف الخسارة",
-          thPnl: "الربح/الخسارة"
+          thShare: "مشاركة", thSymbol: "الرمز", thType: "النوع", thOpenDate: "تاريخ الفتح", thOpen: "سعر الفتح",
+          thCloseDate: "تاريخ الإغلاق", thClose: "سعر الإغلاق", thTp: "جني الربح", thSl: "إيقاف الخسارة", thPnl: "الربح/الخسارة"
         }
       };
 
       if (!translations[currentLang]) currentLang = 'en';
 
-      function updateNavLinks() {
-        const map = {
-          accounts: 'plans.html',
-          insight: 'insight.html',
-          performance: 'performance.html',
-          chart: 'chart.html',
-          instructions: 'instructions.html',
-          profile: 'profile.html'
-        };
-
-        Object.keys(map).forEach(key => {
-          const links = document.querySelectorAll(`[data-link="${key}"]`);
-          links.forEach(a => {
-            const href = a.getAttribute('href') || map[key];
-            const url = new URL(href, window.location.origin + window.location.pathname);
+      function updateLinksWithLang() {
+        const links = document.querySelectorAll('a[href]');
+        links.forEach(a => {
+          const href = a.getAttribute('href');
+          if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+          try {
+            const url = new URL(href, window.location.href);   // ✅ fixed base
             url.searchParams.set('lang', currentLang);
             a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
-          });
+          } catch (_) {}
         });
       }
 
@@ -1937,28 +1125,24 @@
 
         document.querySelectorAll('[data-i18n]').forEach(el => {
           const key = el.getAttribute('data-i18n');
-          if (t[key]) {
-            if (el.querySelector('.legend-dot')) {
-              const dot = el.querySelector('.legend-dot');
-              const text = t[key].replace(/^[^=]*=\s*/, '');
-              el.innerHTML = '';
-              el.appendChild(dot);
-              el.appendChild(document.createTextNode(text));
-            } else {
-              el.textContent = t[key];
-            }
+          if (!t[key]) return;
+
+          if (el.querySelector('.legend-dot')) {
+            const dot = el.querySelector('.legend-dot');
+            const text = t[key].replace(/^[^=]*=\s*/, '');
+            el.innerHTML = '';
+            el.appendChild(dot);
+            el.appendChild(document.createTextNode(text));
+          } else {
+            el.textContent = t[key];
           }
         });
 
-        if (lang === 'ar') {
-          document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-          document.documentElement.setAttribute('dir', 'ltr');
-        }
-
-        updateNavLinks();
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        updateLinksWithLang();
       }
 
+      // Submenu accordion
       const accordion = document.querySelector('.accordion');
       const submenu = document.querySelector('.submenu');
       const chevron = document.querySelector('.chevron');
@@ -1982,28 +1166,33 @@
         });
       }
 
+      // Mobile sidebar
       const mobileSideTrigger = document.getElementById('mobileSideTrigger');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('backdrop');
 
+      function closeMobileSidebar() {
+        if (!sidebar || !backdrop || !mobileSideTrigger) return;
+        sidebar.classList.remove('open');
+        backdrop.hidden = true;
+        mobileSideTrigger.setAttribute('aria-expanded', 'false');
+        closeDropdown();
+      }
+
       if (mobileSideTrigger && sidebar && backdrop) {
         mobileSideTrigger.addEventListener('click', (e) => {
           e.stopPropagation();
-          const isExpanded = mobileSideTrigger.getAttribute('aria-expanded') === 'true';
-          mobileSideTrigger.setAttribute('aria-expanded', String(!isExpanded));
+          const willOpen = !sidebar.classList.contains('open');
           sidebar.classList.toggle('open');
-          backdrop.hidden = isExpanded;
-          if (!sidebar.classList.contains('open')) closeDropdown();
+          backdrop.hidden = !willOpen; // ✅ correct
+          mobileSideTrigger.setAttribute('aria-expanded', String(willOpen));
+          if (!willOpen) closeDropdown();
         });
 
-        backdrop.addEventListener('click', () => {
-          mobileSideTrigger.setAttribute('aria-expanded', 'false');
-          sidebar.classList.remove('open');
-          backdrop.hidden = true;
-          closeDropdown();
-        });
+        backdrop.addEventListener('click', closeMobileSidebar);
       }
 
+      // Desktop collapse
       const sideToggle = document.getElementById('sideToggle');
       if (sideToggle && sidebar) {
         sideToggle.addEventListener('click', (e) => {
@@ -2012,13 +1201,12 @@
           sideToggle.setAttribute('aria-expanded', String(!isExpanded));
           sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
           const chevronIcon = sideToggle.querySelector('iconify-icon');
-          if (chevronIcon) {
-            chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
-          }
+          if (chevronIcon) chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
           if (isExpanded) closeDropdown();
         });
       }
 
+      // Balance toggle
       const toggleBalance = document.getElementById('toggleBalance');
       const topBalance = document.getElementById('topBalance');
       const topEye = document.getElementById('topEye');
@@ -2038,26 +1226,19 @@
         });
       }
 
+      // Language dropdown
       const languageBtn = document.getElementById('languageBtn');
       const languageDropdown = document.getElementById('languageDropdown');
-
-      function toggleLanguageDropdown() {
-        if (!languageDropdown) return;
-        languageDropdown.hidden = !languageDropdown.hidden;
-      }
 
       if (languageBtn && languageDropdown) {
         languageBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          toggleLanguageDropdown();
+          languageDropdown.hidden = !languageDropdown.hidden;
         });
 
-        languageDropdown.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
+        languageDropdown.addEventListener('click', (e) => e.stopPropagation());
 
-        const langOptions = languageDropdown.querySelectorAll('.lang-option');
-        langOptions.forEach(option => {
+        languageDropdown.querySelectorAll('.lang-option').forEach(option => {
           option.addEventListener('click', () => {
             const lang = option.getAttribute('data-lang');
             if (!translations[lang]) return;
@@ -2074,26 +1255,21 @@
 
         document.addEventListener('click', () => {
           languageDropdown.hidden = true;
+          closeDropdown();
         });
+      } else {
+        document.addEventListener('click', closeDropdown);
       }
 
-      document.addEventListener('click', () => {
-        closeDropdown();
-      });
-
-      const kpiData = {
-        days: 8,
-        total_trades: 48,
-        lots_used: 11.0,
-        biggest_win: 280.0,
-        biggest_loss: -150.30
-      };
+      // Dummy KPI data (will be overwritten by backend if token exists)
+      const kpiData = { days: 8, total_trades: 48, lots_used: 11.0, biggest_win: 280.0, biggest_loss: -150.30 };
       document.getElementById('kpiDays').textContent = kpiData.days;
       document.getElementById('kpiTrades').textContent = kpiData.total_trades;
       document.getElementById('kpiLots').textContent = kpiData.lots_used.toFixed(2);
       document.getElementById('kpiWin').textContent = '$' + kpiData.biggest_win.toFixed(2);
       document.getElementById('kpiLoss').textContent = (kpiData.biggest_loss < 0 ? '-$' : '$') + Math.abs(kpiData.biggest_loss).toFixed(2);
 
+      // Weekly dummy
       const weeklyData = [
         { "week": "Week One", "pnl": 0, "days": 0, "range": "Jan 1 – Jan 7" },
         { "week": "Week Two", "pnl": -140.61, "days": 2, "range": "Jan 8 – Jan 14" },
@@ -2101,6 +1277,7 @@
         { "week": "Week Four", "pnl": 238.10, "days": 1, "range": "Jan 22 – Jan 31" }
       ];
       const weekListEl = document.getElementById('weekList');
+      weekListEl.innerHTML = '';
       weeklyData.forEach(w => {
         const card = document.createElement('div');
         card.className = 'week-card';
@@ -2120,6 +1297,7 @@
         weekListEl.appendChild(card);
       });
 
+      // Calendar dummy
       const calendarData = {
         "2024-01-22": { "pnl": 350.20, "trades": 6 },
         "2024-01-23": { "pnl": 271.40, "trades": 8 },
@@ -2134,13 +1312,10 @@
       const prevMonthBtn = document.getElementById('prevMonthBtn');
       const nextMonthBtn = document.getElementById('nextMonthBtn');
 
-      const monthNames = [
-        'January','February','March','April','May','June',
-        'July','August','September','October','November','December'
-      ];
-
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
       let current = new Date(2024, 0, 1);
 
+      monthSelect.innerHTML = '';
       monthNames.forEach((m, idx) => {
         const opt = document.createElement('option');
         opt.value = idx;
@@ -2148,9 +1323,8 @@
         monthSelect.appendChild(opt);
       });
 
-      const startYear = 2020;
-      const endYear = 2030;
-      for (let y = startYear; y <= endYear; y++) {
+      yearSelect.innerHTML = '';
+      for (let y = 2020; y <= 2030; y++) {
         const opt = document.createElement('option');
         opt.value = y;
         opt.textContent = y;
@@ -2181,6 +1355,7 @@
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
           const data = calendarData[dateStr];
           const cell = document.createElement('div');
+
           let cls = 'day-cell';
           if (data) {
             if (data.pnl > 0) cls += ' day-positive';
@@ -2190,17 +1365,17 @@
             cls += ' day-neutral';
           }
           cell.className = cls;
+
           const trades = data ? data.trades : 0;
           const pnl = data ? data.pnl : 0;
+
           cell.innerHTML = `
             <div class="day-header">
               <span class="day-num">${d}</span>
               <span class="day-trades">${trades > 0 ? trades + ' trades' : 'No trades'}</span>
             </div>
             <div class="day-pnl">
-              ${trades === 0 ? '' :
-                (pnl > 0 ? '+$' + pnl.toFixed(2) :
-                  (pnl < 0 ? '-$' + Math.abs(pnl).toFixed(2) : '$0.00'))}
+              ${trades === 0 ? '' : (pnl > 0 ? '+$' + pnl.toFixed(2) : (pnl < 0 ? '-$' + Math.abs(pnl).toFixed(2) : '$0.00'))}
             </div>
           `;
           calendarDays.appendChild(cell);
@@ -2209,28 +1384,12 @@
 
       renderCalendar();
 
-      monthSelect.addEventListener('change', () => {
-        const m = parseInt(monthSelect.value, 10);
-        current.setMonth(m);
-        renderCalendar();
-      });
+      monthSelect.addEventListener('change', () => { current.setMonth(parseInt(monthSelect.value, 10)); renderCalendar(); });
+      yearSelect.addEventListener('change', () => { current.setFullYear(parseInt(yearSelect.value, 10)); renderCalendar(); });
+      prevMonthBtn.addEventListener('click', () => { current.setMonth(current.getMonth() - 1); renderCalendar(); });
+      nextMonthBtn.addEventListener('click', () => { current.setMonth(current.getMonth() + 1); renderCalendar(); });
 
-      yearSelect.addEventListener('change', () => {
-        const y = parseInt(yearSelect.value, 10);
-        current.setFullYear(y);
-        renderCalendar();
-      });
-
-      prevMonthBtn.addEventListener('click', () => {
-        current.setMonth(current.getMonth() - 1);
-        renderCalendar();
-      });
-
-      nextMonthBtn.addEventListener('click', () => {
-        current.setMonth(current.getMonth() + 1);
-        renderCalendar();
-      });
-
+      // Charts dummy
       const chartPayload = {
         win_rate: 45.83,
         loss_rate: 54.17,
@@ -2242,103 +1401,38 @@
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              color: '#dadada',
-              boxWidth: 10
-            }
-          }
+          legend: { position: 'bottom', labels: { color: '#dadada', boxWidth: 10 } }
         }
       };
 
-      const profitabilityCtx = document.getElementById('profitabilityChart').getContext('2d');
-      new Chart(profitabilityCtx, {
+      new Chart(document.getElementById('profitabilityChart').getContext('2d'), {
         type: 'doughnut',
-        data: {
-          labels: ['Wins', 'Losses'],
-          datasets: [{
-            data: [chartPayload.win_rate, chartPayload.loss_rate],
-            borderWidth: 0
-          }]
-        },
+        data: { labels: ['Wins', 'Losses'], datasets: [{ data: [chartPayload.win_rate, chartPayload.loss_rate], borderWidth: 0 }] },
         options: commonOptions
       });
 
-      const shortCtx = document.getElementById('shortChart').getContext('2d');
-      new Chart(shortCtx, {
+      new Chart(document.getElementById('shortChart').getContext('2d'), {
         type: 'doughnut',
-        data: {
-          labels: ['Profit', 'Wins', 'Losses'],
-          datasets: [{
-            data: [chartPayload.short.profit, chartPayload.short.wins, chartPayload.short.losses],
-            borderWidth: 0
-          }]
-        },
+        data: { labels: ['Profit', 'Wins', 'Losses'], datasets: [{ data: [chartPayload.short.profit, chartPayload.short.wins, chartPayload.short.losses], borderWidth: 0 }] },
         options: commonOptions
       });
 
-      const longCtx = document.getElementById('longChart').getContext('2d');
-      new Chart(longCtx, {
+      new Chart(document.getElementById('longChart').getContext('2d'), {
         type: 'doughnut',
-        data: {
-          labels: ['Profit', 'Wins', 'Losses'],
-          datasets: [{
-            data: [chartPayload.long.profit, chartPayload.long.wins, chartPayload.long.losses],
-            borderWidth: 0
-          }]
-        },
+        data: { labels: ['Profit', 'Wins', 'Losses'], datasets: [{ data: [chartPayload.long.profit, chartPayload.long.wins, chartPayload.long.losses], borderWidth: 0 }] },
         options: commonOptions
       });
 
+      // History dummy
       const trades = [
-        {
-          "symbol": "XAUUSD",
-          "type": "Sell",
-          "open_date": "1/29/2024, 15:22",
-          "open": 2033.97,
-          "closed_date": "1/29/2024, 15:36",
-          "closed": 2028.37,
-          "tp": 2028.37,
-          "sl": 2036,
-          "pnl": 205.11
-        },
-        {
-          "symbol": "XAUUSD",
-          "type": "Buy",
-          "open_date": "1/24/2024, 10:14",
-          "open": 2018.40,
-          "closed_date": "1/24/2024, 10:45",
-          "closed": 2022.10,
-          "tp": 2023.00,
-          "sl": 2014.00,
-          "pnl": 180.42
-        },
-        {
-          "symbol": "NAS100",
-          "type": "Sell",
-          "open_date": "1/23/2024, 13:03",
-          "open": 17839.40,
-          "closed_date": "1/23/2024, 13:40",
-          "closed": 17892.10,
-          "tp": 17790.00,
-          "sl": 17920.00,
-          "pnl": -95.30
-        },
-        {
-          "symbol": "EURUSD",
-          "type": "Buy",
-          "open_date": "1/22/2024, 09:12",
-          "open": 1.08340,
-          "closed_date": "1/22/2024, 10:02",
-          "closed": 1.08510,
-          "tp": 1.08600,
-          "sl": 1.08100,
-          "pnl": 64.80
-        }
+        { "symbol":"XAUUSD","type":"Sell","open_date":"1/29/2024, 15:22","open":2033.97,"closed_date":"1/29/2024, 15:36","closed":2028.37,"tp":2028.37,"sl":2036,"pnl":205.11 },
+        { "symbol":"XAUUSD","type":"Buy","open_date":"1/24/2024, 10:14","open":2018.40,"closed_date":"1/24/2024, 10:45","closed":2022.10,"tp":2023.00,"sl":2014.00,"pnl":180.42 },
+        { "symbol":"NAS100","type":"Sell","open_date":"1/23/2024, 13:03","open":17839.40,"closed_date":"1/23/2024, 13:40","closed":17892.10,"tp":17790.00,"sl":17920.00,"pnl":-95.30 },
+        { "symbol":"EURUSD","type":"Buy","open_date":"1/22/2024, 09:12","open":1.08340,"closed_date":"1/22/2024, 10:02","closed":1.08510,"tp":1.08600,"sl":1.08100,"pnl":64.80 }
       ];
 
       const tradeBody = document.getElementById('tradeBody');
+      tradeBody.innerHTML = '';
       trades.forEach(t => {
         const tr = document.createElement('tr');
         const isBuy = t.type.toLowerCase() === 'buy';
@@ -2363,7 +1457,7 @@
     });
   </script>
 
-  <!-- CHAT WIDGET LOGIC (copied from chart.html) -->
+  <!-- Chat logic -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -2376,11 +1470,8 @@
       function openChat() {
         chatPanel.classList.add('open');
         chatPanel.setAttribute('aria-hidden', 'false');
-        if (chatInput) {
-          setTimeout(() => chatInput.focus(), 80);
-        }
+        if (chatInput) setTimeout(() => chatInput.focus(), 80);
       }
-
       function closeChat() {
         chatPanel.classList.remove('open');
         chatPanel.setAttribute('aria-hidden', 'true');
@@ -2389,11 +1480,7 @@
       if (chatFab) {
         chatFab.addEventListener('click', function (e) {
           e.stopPropagation();
-          if (chatPanel.classList.contains('open')) {
-            closeChat();
-          } else {
-            openChat();
-          }
+          chatPanel.classList.contains('open') ? closeChat() : openChat();
         });
       }
 
@@ -2404,13 +1491,10 @@
         });
       }
 
-      // Close chat by clicking/tapping anywhere outside, swallowing the click
       document.addEventListener('click', function (e) {
         if (!chatPanel.classList.contains('open')) return;
-
         const target = e.target;
         if (chatPanel.contains(target) || chatFab.contains(target)) return;
-
         e.preventDefault();
         e.stopPropagation();
         closeChat();
@@ -2432,86 +1516,64 @@
     });
   </script>
 
-  <!-- BACKEND PERFORMANCE HOOK – ONLY WIRES DATA, DOESN'T TOUCH LAYOUT -->
+  <!-- BACKEND PERFORMANCE HOOK – runs reliably even if DOMContentLoaded already passed -->
   <script>
     (function () {
-      const API_BASE_URL = "http://72.61.201.223:8000";
-
+      const API_BASE_URL = "https://marketllama.com";
       const token = localStorage.getItem("ml_access_token");
+
       if (!token) {
         console.warn("[ML] No token – performance will stay on dummy data.");
         return;
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        initPerformance().catch(err => {
-          console.error("[ML] Failed to initialise performance:", err);
-        });
-      });
+      const run = () => initPerformance().catch(err => console.error("[ML] Failed to initialise performance:", err));
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run);
+      } else {
+        run(); // ✅ critical fix
+      }
 
       async function initPerformance() {
-        try {
-          const res = await fetch(API_BASE_URL + "/api/accounts", {
-            headers: {
-              "Accept": "application/json",
-              "Authorization": "Bearer " + token
-            }
-          });
+        const res = await fetch(API_BASE_URL + "/api/accounts", {
+          headers: { "Accept": "application/json", "Authorization": "Bearer " + token }
+        });
+        if (!res.ok) throw new Error("GET /api/accounts failed: " + res.status);
 
-          if (!res.ok) {
-            throw new Error("GET /api/accounts failed: " + res.status);
-          }
-
-          const accounts = await res.json();
-          if (!Array.isArray(accounts) || !accounts.length) {
-            console.log("[ML] No accounts returned – leaving dummy UI.");
-            return;
-          }
-
-          const defaultAccount =
-            accounts.find(a => a.is_primary) ||
-            accounts.find(a => !a.is_demo) ||
-            accounts[0];
-
-          await loadPerformance(defaultAccount.id);
-        } catch (err) {
-          console.error("[ML] Error loading accounts for performance:", err);
+        const accounts = await res.json();
+        if (!Array.isArray(accounts) || !accounts.length) {
+          console.log("[ML] No accounts returned – leaving dummy UI.");
+          return;
         }
+
+        const defaultAccount =
+          accounts.find(a => a.is_primary) ||
+          accounts.find(a => !a.is_demo) ||
+          accounts[0];
+
+        await loadPerformance(defaultAccount.id);
       }
 
       async function loadPerformance(accountId) {
-        try {
-          console.log("[ML] Loading performance for account", accountId);
-          const res = await fetch(
-            API_BASE_URL + "/api/performance/summary?account_id=" + encodeURIComponent(accountId),
-            {
-              headers: {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + token
-              }
-            }
-          );
-          if (!res.ok) throw new Error("GET /api/performance/summary failed: " + res.status);
-          const data = await res.json();
-          renderPerformance(data);
-        } catch (err) {
-          console.error("[ML] Performance load error:", err);
-        }
+        const res = await fetch(
+          API_BASE_URL + "/api/performance/summary?account_id=" + encodeURIComponent(accountId),
+          { headers: { "Accept": "application/json", "Authorization": "Bearer " + token } }
+        );
+        if (!res.ok) throw new Error("GET /api/performance/summary failed: " + res.status);
+        const data = await res.json();
+        renderPerformance(data);
       }
 
       function renderPerformance(data) {
         if (!data || !data.kpis) return;
 
-        // ===== KPIs → existing IDs =====
         setText("kpiDays", data.kpis.trading_days);
         setText("kpiTrades", data.kpis.total_trades);
-        if (typeof data.kpis.total_lots === "number") {
-          setText("kpiLots", data.kpis.total_lots.toFixed(2));
-        }
+        if (typeof data.kpis.total_lots === "number") setText("kpiLots", data.kpis.total_lots.toFixed(2));
         setMoney("kpiWin", data.kpis.biggest_win);
         setMoney("kpiLoss", data.kpis.biggest_loss);
 
-        // ===== Weekly summary → rebuild #weekList =====
         if (Array.isArray(data.weekly_summary)) {
           const weekList = document.getElementById("weekList");
           if (weekList) {
@@ -2519,17 +1581,8 @@
             data.weekly_summary.forEach(week => {
               const card = document.createElement("div");
               card.className = "week-card";
-              const pnlClass =
-                week.pnl > 0 ? "green" :
-                week.pnl < 0 ? "red" : "";
-
-              const pnlText =
-                week.pnl === 0
-                  ? "$ 0.00"
-                  : (week.pnl > 0
-                      ? "$ " + week.pnl.toFixed(2)
-                      : "-$ " + Math.abs(week.pnl).toFixed(2));
-
+              const pnlClass = week.pnl > 0 ? "green" : week.pnl < 0 ? "red" : "";
+              const pnlText = week.pnl === 0 ? "$ 0.00" : (week.pnl > 0 ? "$ " + week.pnl.toFixed(2) : "-$ " + Math.abs(week.pnl).toFixed(2));
               card.innerHTML = `
                 <div class="week-top">
                   <div class="week-name">${week.week_label || ""}</div>
@@ -2545,7 +1598,6 @@
           }
         }
 
-        // ===== Trade history → reuse #tradeBody =====
         const tbody = document.getElementById("tradeBody");
         if (tbody && Array.isArray(data.trade_history)) {
           tbody.innerHTML = "";
@@ -2554,15 +1606,12 @@
             const isBuy = (trade.side || "").toLowerCase() === "buy";
             const pnl = Number(trade.pnl || 0);
             const pnlClass = pnl >= 0 ? "pnl-pos" : "pnl-neg";
-            const pnlText =
-              (pnl >= 0 ? "$ " : "-$ ") + Math.abs(pnl).toFixed(2);
+            const pnlText = (pnl >= 0 ? "$ " : "-$ ") + Math.abs(pnl).toFixed(2);
 
             tr.innerHTML = `
               <td><iconify-icon class="ic share-icon" icon="mdi:share-variant-outline"></iconify-icon></td>
               <td>${trade.symbol || "-"}</td>
-              <td><span class="badge-type ${isBuy ? "badge-buy" : "badge-sell"}">
-                ${isBuy ? "Buy" : "Sell"}
-              </span></td>
+              <td><span class="badge-type ${isBuy ? "badge-buy" : "badge-sell"}">${isBuy ? "Buy" : "Sell"}</span></td>
               <td>${formatDateTime(trade.open_time)}</td>
               <td>${trade.open_price ?? "-"}</td>
               <td>${formatDateTime(trade.close_time)}</td>
@@ -2574,21 +1623,17 @@
             tbody.appendChild(tr);
           });
         }
-
-        // Calendar + charts can be wired later with data.calendar / data.breakdown if you want.
       }
 
       function setText(id, value) {
         const el = document.getElementById(id);
-        if (!el) return;
-        if (value === undefined || value === null) return;
+        if (!el || value === undefined || value === null) return;
         el.textContent = value;
       }
 
       function setMoney(id, value) {
         const el = document.getElementById(id);
-        if (!el) return;
-        if (value === undefined || value === null || isNaN(value)) return;
+        if (!el || value === undefined || value === null || isNaN(value)) return;
         const num = Number(value);
         const sign = num >= 0 ? "" : "-";
         el.textContent = `${sign}$${Math.abs(num).toFixed(2)}`;
@@ -2598,11 +1643,7 @@
         if (!isoString) return "-";
         const d = new Date(isoString);
         if (isNaN(d.getTime())) return "-";
-        return (
-          d.toLocaleDateString() +
-          " " +
-          d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-        );
+        return d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       }
     })();
   </script>
