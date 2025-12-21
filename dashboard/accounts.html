@@ -639,7 +639,7 @@
       </button>
 
       <div class="balance-wrap">
-        <span class="balance-amount" id="topBalance">$ 15 400.00</span>
+        <span class="balance-amount" id="topBalance">—</span>
         <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
           <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
         </button>
@@ -753,7 +753,9 @@
       <div class="content-top">
         <div>
           <h1 class="page-title" data-i18n="accounts">Accounts</h1>
-          <div class="greeting" data-i18n="greeting">Hi, Trader.</div>
+          <div class="greeting">
+            Hi, <span class="user-name">Loading…</span>
+          </div>
         </div>
 
         <button class="btn" id="addAccountBtn">
@@ -769,16 +771,15 @@
 
       <!-- LIVE (old box) -->
       <div id="panelLive" role="tabpanel" aria-labelledby="tabLive">
-        <div class="account-card" data-account-type="live" data-balance="15400" data-currency="USD">
+        <div class="account-card" data-account-type="live">
           <div class="card-head">
             <span class="chip chip-live" data-i18n="live">Live</span>
             <span class="chip chip-broker">Deriv</span>
           </div>
 
           <div class="card-body">
-            <div class="big-amount" id="liveAmount">
-              <span style="font-size:21px">15,400</span>.00 <span>USD</span>
-            </div>
+            <div class="big-amount" id="liveAmount"></div>
+            
             <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
               <iconify-icon class="ic" id="cardEye" icon="mdi:eye-outline"></iconify-icon>
             </button>
@@ -790,16 +791,14 @@
 
       <!-- DEMO (old box) -->
       <div id="panelDemo" role="tabpanel" aria-labelledby="tabDemo" hidden>
-        <div class="account-card" data-account-type="demo" data-balance="5000" data-currency="USD">
+        <div class="account-card" data-account-type="demo">
           <div class="card-head">
             <span class="chip chip-demo" data-i18n="demo">Demo</span>
             <span class="chip chip-broker">Deriv</span>
           </div>
 
           <div class="card-body">
-            <div class="big-amount" id="demoAmount">
-              <span style="font-size:21px">5,000</span>.00 <span>USD</span>
-            </div>
+            <div class="big-amount" id="demoAmount">—</div>
 
             <div class="card-actions">
               <button class="icon-btn sm" id="cardBalanceToggleDemo" aria-label="Hide balance">
@@ -1072,65 +1071,6 @@
         tabDemo.addEventListener('click', () => setTab('demo'));
       }
 
-      // Hide/show balance (header + both cards)
-      const toggleBalance = document.getElementById('toggleBalance');
-      const topBalance = document.getElementById('topBalance');
-      const topEye = document.getElementById('topEye');
-
-      const liveCard = document.querySelector('.account-card[data-account-type="live"]');
-      const demoCard = document.querySelector('.account-card[data-account-type="demo"]');
-      const liveAmount = document.getElementById('liveAmount');
-      const demoAmount = document.getElementById('demoAmount');
-
-      const cardBalanceToggle = document.getElementById('cardBalanceToggle');
-      const cardBalanceToggleDemo = document.getElementById('cardBalanceToggleDemo');
-      const cardEye = document.getElementById('cardEye');
-      const cardEyeDemo = document.getElementById('cardEyeDemo');
-
-      let balanceHidden = false;
-
-      function formatCardAmount(amount, currency) {
-        const num = Number(amount || 0);
-        const formatted = num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const parts = formatted.split(".");
-        const main = parts[0] || formatted;
-        const frac = parts[1] || "00";
-        return `<span style="font-size:21px">${main}</span>.${frac} <span>${currency || "USD"}</span>`;
-      }
-
-      function setBalanceVisibility(hidden) {
-        balanceHidden = hidden;
-
-        if (hidden) {
-          if (topBalance) topBalance.textContent = "•••••";
-          if (liveAmount) liveAmount.innerHTML = `<span style="font-size:21px">•••••</span>.•• <span>USD</span>`;
-          if (demoAmount) demoAmount.innerHTML = `<span style="font-size:21px">•••••</span>.•• <span>USD</span>`;
-        } else {
-          const liveBal = liveCard ? liveCard.getAttribute("data-balance") : "0";
-          const liveCur = liveCard ? liveCard.getAttribute("data-currency") : "USD";
-          const demoBal = demoCard ? demoCard.getAttribute("data-balance") : "0";
-          const demoCur = demoCard ? demoCard.getAttribute("data-currency") : "USD";
-
-          if (topBalance) {
-            const headerNum = Number(liveBal || 0);
-            topBalance.textContent =
-              headerNum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) +
-              " " + (liveCur || "USD");
-          }
-
-          if (liveAmount) liveAmount.innerHTML = formatCardAmount(liveBal, liveCur);
-          if (demoAmount) demoAmount.innerHTML = formatCardAmount(demoBal, demoCur);
-        }
-
-        if (topEye) topEye.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
-        if (cardEye) cardEye.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
-        if (cardEyeDemo) cardEyeDemo.setAttribute('icon', hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
-      }
-
-      if (toggleBalance) toggleBalance.addEventListener('click', (e) => { e.stopPropagation(); setBalanceVisibility(!balanceHidden); });
-      if (cardBalanceToggle) cardBalanceToggle.addEventListener('click', (e) => { e.stopPropagation(); setBalanceVisibility(!balanceHidden); });
-      if (cardBalanceToggleDemo) cardBalanceToggleDemo.addEventListener('click', (e) => { e.stopPropagation(); setBalanceVisibility(!balanceHidden); });
-
       // Language dropdown
       const languageBtn = document.getElementById('languageBtn');
       const languageDropdown = document.getElementById('languageDropdown');
@@ -1158,7 +1098,6 @@
 
       // initial
       applyLanguage(currentLang);
-      setBalanceVisibility(false);
     });
   </script>
 
@@ -1219,5 +1158,6 @@
       }
     });
   </script>
+  <script src="/dashboard/scripts/accounts.js"></script>
 </body>
 </html>
