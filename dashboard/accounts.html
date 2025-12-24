@@ -583,6 +583,30 @@
       font-weight: 600;
     }
 
+    /* ===== ADD ACCOUNT MODAL ===== */
+    #addAccountModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    #addAccountModal:not([hidden]) {
+      display: flex;
+    }
+
+    #addAccountModal .account-card {
+      position: relative;
+      z-index: 2001;
+      background: var(--card-bg, #0f172a);
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 420px;
+    }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1100px) {
       .desktop-only { display: none; }
@@ -610,34 +634,6 @@
       .chat-fab { right: 14px; bottom: 88px; }
       .chat-panel { right: 14px; bottom: 148px; }
     }
-   /* ===============================
-   ADD ACCOUNT MODAL – HARD FIX
-   =============================== */
-/* Modal backdrop - hidden by default */
-#addAccountModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-/* Show modal when NOT hidden */
-#addAccountModal:not([hidden]) {
-  display: flex;
-}
-
-#addAccountModal .account-card {
-  position: relative;
-  z-index: 2001;
-  background: var(--card-bg, #0f172a);
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-  width: 100%;
-  max-width: 420px;
-}
   </style>
 
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
@@ -807,13 +803,14 @@
 
           <div class="card-body">
             <div class="big-amount" id="liveAmount">—</div>
-               
-             <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
+          
+            <div class="card-actions">
+              <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
                 <iconify-icon class="ic" id="cardEye" icon="mdi:eye-outline"></iconify-icon>
               </button>
             </div>
           </div>
-
+          
           <div class="line-art" aria-hidden="true"></div>
         </div>
       </div>
@@ -908,6 +905,33 @@
       <button class="chat-send" type="submit">Send</button>
     </form>
   </div>
+
+  <!-- ===== ADD ACCOUNT MODAL (SINGLE INSTANCE) ===== -->
+  <div id="addAccountModal" hidden>
+    <div class="account-card" style="max-width:420px;margin:auto;">
+      <div class="card-head">
+        <strong>Add Broker</strong>
+        <button class="icon-btn sm" id="closeAddAccount">×</button>
+      </div>
+
+      <div class="card-body" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="chip chip-broker">Deriv</span>
+          <button class="btn" id="connectDerivModalBtn">
+            <iconify-icon class="ic" icon="mdi:link-variant"></iconify-icon>
+            Connect
+          </button>
+        </div>
+
+        <p class="muted" style="margin-top:14px;">
+          More brokers coming soon
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts/auth.js?v=1.0.1"></script>
+  <script src="scripts/accounts.js?v=1.0.1"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -1188,56 +1212,29 @@
     });
   </script>
 
-<!-- ===== ADD ACCOUNT MODAL ===== -->
-<div id="addAccountModal" class="modal-backdrop" hidden>
-  <div class="account-card" style="max-width:420px;margin:auto;">
-    <div class="card-head">
-      <strong>Add Broker</strong>
-      <button class="icon-btn sm" id="closeAddAccount">×</button>
-    </div>
-
-    <div class="card-body" style="flex-direction:column;align-items:stretch;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span class="chip chip-broker">Deriv</span>
-        <button class="btn" id="connectDerivModalBtn">
-          <iconify-icon class="ic" icon="mdi:link-variant"></iconify-icon>
-          Connect
-        </button>
-      </div>
-
-      <p class="muted" style="margin-top:14px;">
-        More brokers coming soon
-      </p>
-    </div>
-  </div>
-</div>
-
-<script src="scripts/auth.js?v=1.0.1"></script>
-  <script src="scripts/accounts.js?v=1.0.1"></script>
-
   <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const addBtn = document.getElementById('addAccountBtn');
-  const modal = document.getElementById('addAccountModal');
-  const closeBtn = document.getElementById('closeAddAccount');
+    document.addEventListener('DOMContentLoaded', () => {
+      const addBtn = document.getElementById('addAccountBtn');
+      const modal = document.getElementById('addAccountModal');
+      const closeBtn = document.getElementById('closeAddAccount');
 
-  if (!addBtn || !modal) return;
+      if (!addBtn || !modal) return;
 
-  // Open modal
-  addBtn.addEventListener('click', () => {
-    modal.hidden = false;
-  });
+      // Open modal
+      addBtn.addEventListener('click', () => {
+        modal.hidden = false;
+      });
 
-  // Close via X button
-  closeBtn?.addEventListener('click', () => {
-    modal.hidden = true;
-  });
+      // Close via X button
+      closeBtn?.addEventListener('click', () => {
+        modal.hidden = true;
+      });
 
-  // Close when clicking backdrop
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.hidden = true;
-  });
-});
-</script>
+      // Close when clicking backdrop
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.hidden = true;
+      });
+    });
+  </script>
 </body>
 </html>
