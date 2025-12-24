@@ -610,6 +610,44 @@
       .chat-fab { right: 14px; bottom: 88px; }
       .chat-panel { right: 14px; bottom: 148px; }
     }
+   /* ===============================
+   ADD ACCOUNT MODAL – HARD FIX
+   =============================== */
+
+#addAccountModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000; /* above navbar, sidebar, chat */
+}
+
+#addAccountModal[hidden] {
+  display: none;
+}
+
+#addAccountModal .account-card {
+  position: relative;
+  z-index: 2001;
+  background: var(--card-bg, #0f172a);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 420px;
+}
+
+/* optional polish */
+#addAccountModal .card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#addAccountModal .icon-btn {
+  cursor: pointer;
+}
   </style>
 
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
@@ -1186,5 +1224,30 @@
 
   <script src="scripts/auth.js"></script>
   <script src="scripts/accounts.js"></script>
+
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const addBtn = document.getElementById('addAccountBtn');
+  const modal = document.getElementById('addAccountModal');
+  const closeBtn = document.getElementById('closeAddAccount');
+
+  if (!addBtn || !modal) return;
+
+  // Open modal
+  addBtn.addEventListener('click', () => {
+    modal.hidden = false;
+  });
+
+  // Close via X button
+  closeBtn?.addEventListener('click', () => {
+    modal.hidden = true;
+  });
+
+  // Close when clicking backdrop
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.hidden = true;
+  });
+});
+</script>
 </body>
 </html>
