@@ -614,7 +614,7 @@
    ADD ACCOUNT MODAL – HARD FIX
    =============================== */
 
-#addAccountModal {
+   #addAccountModal.modal-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -624,11 +624,11 @@
   z-index: 2000; /* above navbar, sidebar, chat */
 }
 
-#addAccountModal[hidden] {
+#addAccountModal.modal-backdrop[hidden] {
   display: none;
 }
 
-#addAccountModal .account-card {
+#addAccountModal.modal-backdrop .account-card {
   position: relative;
   z-index: 2001;
   background: var(--card-bg, #0f172a);
@@ -636,17 +636,6 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   width: 100%;
   max-width: 420px;
-}
-
-/* optional polish */
-#addAccountModal .card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#addAccountModal .icon-btn {
-  cursor: pointer;
 }
   </style>
 
@@ -1199,7 +1188,7 @@
   </script>
 
 <!-- ===== ADD ACCOUNT MODAL ===== -->
-<div id="addAccountModal" class="backdrop" hidden>
+<div id="addAccountModal" class="modal-backdrop" hidden>
   <div class="account-card" style="max-width:420px;margin:auto;">
     <div class="card-head">
       <strong>Add Broker</strong>
