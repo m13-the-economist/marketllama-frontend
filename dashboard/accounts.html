@@ -613,22 +613,23 @@
    /* ===============================
    ADD ACCOUNT MODAL – HARD FIX
    =============================== */
-
-   #addAccountModal.modal-backdrop {
+/* Modal backdrop - hidden by default */
+#addAccountModal {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
-  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000; /* above navbar, sidebar, chat */
+  z-index: 2000;
 }
 
-#addAccountModal.modal-backdrop[hidden] {
-  display: none;
+/* Show modal when NOT hidden */
+#addAccountModal:not([hidden]) {
+  display: flex;
 }
 
-#addAccountModal.modal-backdrop .account-card {
+#addAccountModal .account-card {
   position: relative;
   z-index: 2001;
   background: var(--card-bg, #0f172a);
