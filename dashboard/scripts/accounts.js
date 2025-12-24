@@ -18,22 +18,32 @@
   const liveAmountEl = document.getElementById('liveAmount');
   const demoAmountEl = document.getElementById('demoAmount');
 
+  const liveCard = document.querySelector(
+    '.account-card[data-account-type="live"]'
+  );
+
   const toggleEls = [
     document.getElementById('toggleBalance'),
     document.getElementById('cardBalanceToggle'),
     document.getElementById('cardBalanceToggleDemo')
   ];
 
-  // Optional Deriv connect button
-  const connectDerivBtn = document.getElementById('connectDerivBtn');
+  // Add Account modal
+  const addAccountBtn = document.getElementById('addAccountBtn');
+  const addAccountModal = document.getElementById('addAccountModal');
+  const closeAddAccount = document.getElementById('closeAddAccount');
+  const connectDerivModalBtn = document.getElementById(
+    'connectDerivModalBtn'
+  );
 
   /* =======================
      STATE
   ======================= */
   let balanceHidden = false;
   let currentTab = 'live';
+
   let accounts = {
-    live: { balance: 0, currency: 'USD' },
+    live: null,
     demo: { balance: 0, currency: 'USD' }
   };
 
@@ -51,7 +61,6 @@
 
       if (userNameEl) userNameEl.textContent = name;
 
-      // Ensure user_id is available for Deriv callback
       if (user.id) {
         localStorage.setItem('ml_user_id', String(user.id));
       }
@@ -67,8 +76,17 @@
     try {
       const data = await MLAuth.apiFetch('/api/accounts');
 
-      accounts.live = data.find(a => a.type === 'live') || accounts.live;
-      accounts.demo = data.find(a => a.type === 'demo') || accounts.demo;
+      const live = data.find(a => a.type === 'live');
+      const demo = data.find(a => a.type === 'demo');
+
+      if (live) {
+        accounts.live = live;
+        revealLiveAccount();
+      }
+
+      if (demo) {
+        accounts.demo = demo;
+      }
 
       renderBalances();
     } catch (err) {
@@ -77,29 +95,30 @@
     }
   }
 
+  function revealLiveAccount() {
+    if (liveCard) {
+      liveCard.hidden = false;
+    }
+  }
+
   /* =======================
-     DERIV CONNECT
+     DERIV CONNECT (MODAL ONLY)
   ======================= */
   async function connectDeriv() {
     try {
-      const res = await fetch('https://marketllama.com/api/deriv/oauth/url', {
+      const res = await fetch('/api/deriv/oauth/url', {
         credentials: 'include'
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to get Deriv OAuth URL');
-      }
+      if (!res.ok) throw new Error('OAuth URL fetch failed');
 
-      const data = await res.json();
-      if (!data.url) {
-        throw new Error('Invalid OAuth response');
-      }
+      const { url } = await res.json();
+      if (!url) throw new Error('Invalid OAuth response');
 
-      // Redirect user to Deriv OAuth
-      window.location.href = data.url;
+      window.location.href = url;
     } catch (err) {
       console.error('Deriv connect failed:', err);
-      alert('Unable to start Deriv connection. Please try again.');
+      alert('Unable to connect Deriv. Please try again.');
     }
   }
 
@@ -127,16 +146,21 @@
       return;
     }
 
-    const active = currentTab === 'live' ? accounts.live : accounts.demo;
+    const active =
+      currentTab === 'live' && accounts.live
+        ? accounts.live
+        : accounts.demo;
 
     topBalanceEl &&
       (topBalanceEl.textContent = format(active.balance, active.currency));
 
-    liveAmountEl &&
-      (liveAmountEl.textContent = format(
-        accounts.live.balance,
-        accounts.live.currency
-      ));
+    if (accounts.live) {
+      liveAmountEl &&
+        (liveAmountEl.textContent = format(
+          accounts.live.balance,
+          accounts.live.currency
+        ));
+    }
 
     demoAmountEl &&
       (demoAmountEl.textContent = format(
@@ -165,8 +189,16 @@
     renderBalances();
   });
 
-  // Deriv connect button (if present)
-  connectDerivBtn?.addEventListener('click', connectDeriv);
+  // Add Account modal controls
+  addAccountBtn?.addEventListener('click', () => {
+    addAccountModal.hidden = false;
+  });
+
+  closeAddAccount?.addEventListener('click', () => {
+    addAccountModal.hidden = true;
+  });
+
+  connectDerivModalBtn?.addEventListener('click', connectDeriv);
 
   /* =======================
      INIT

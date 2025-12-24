@@ -771,7 +771,7 @@
 
       <!-- LIVE (old box) -->
       <div id="panelLive" role="tabpanel" aria-labelledby="tabLive">
-        <div class="account-card" data-account-type="live">
+        <div class="account-card" data-account-type="live" hidden>
           <div class="card-head">
             <span class="chip chip-live" data-i18n="live">Live</span>
             <span class="chip chip-broker">Deriv</span>
@@ -779,14 +779,8 @@
 
           <div class="card-body">
             <div class="big-amount" id="liveAmount">—</div>
-          
-            <div class="card-actions">
-              <button class="btn" id="connectDerivBtn">
-                <iconify-icon class="ic" icon="mdi:link-variant"></iconify-icon>
-                Connect Deriv
-              </button>
-          
-              <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
+               
+             <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
                 <iconify-icon class="ic" id="cardEye" icon="mdi:eye-outline"></iconify-icon>
               </button>
             </div>
@@ -1165,6 +1159,31 @@
       }
     });
   </script>
+
+<!-- ===== ADD ACCOUNT MODAL ===== -->
+<div id="addAccountModal" class="backdrop" hidden>
+  <div class="account-card" style="max-width:420px;margin:auto;">
+    <div class="card-head">
+      <strong>Add Broker</strong>
+      <button class="icon-btn sm" id="closeAddAccount">×</button>
+    </div>
+
+    <div class="card-body" style="flex-direction:column;align-items:stretch;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="chip chip-broker">Deriv</span>
+        <button class="btn" id="connectDerivModalBtn">
+          <iconify-icon class="ic" icon="mdi:link-variant"></iconify-icon>
+          Connect
+        </button>
+      </div>
+
+      <p class="muted" style="margin-top:14px;">
+        More brokers coming soon
+      </p>
+    </div>
+  </div>
+</div>
+
   <script src="scripts/auth.js"></script>
   <script src="scripts/accounts.js"></script>
 </body>

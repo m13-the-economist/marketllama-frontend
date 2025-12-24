@@ -702,7 +702,7 @@
         <div class="kpi-row">
           <div class="kpi-card">
             <div class="kpi-label" data-i18n="kpiTradingDays">Trading Days</div>
-            <div class="kpi-value" id="kpiDays">8</div>
+            <div class="kpi-value" id="kpiDays">—</div>
             <div class="kpi-sub" data-i18n="kpiUpdatedDaily">Updated daily.</div>
           </div>
           <div class="kpi-card">
@@ -1647,5 +1647,35 @@
       }
     })();
   </script>
+ <script src="scripts/auth.js"></script>
+ <script src="scripts/accounts.js"></script>
+ 
+ <script>
+   async function loadPerformance() {
+     try {
+       const res = await fetch('/api/performance', {
+         headers: MLAuth.authHeader()
+       });
+ 
+       if (res.status === 401) {
+         MLAuth.logout();
+         return;
+       }
+ 
+       if (!res.ok) throw new Error('Performance API unavailable');
+ 
+       const data = await res.json();
+ 
+       // TODO: hydrate KPIs, charts, calendar, table
+     } catch (err) {
+       console.warn('Performance unavailable:', err.message);
+       // Fail closed — UI remains empty
+     }
+   }
+ 
+   document.addEventListener('DOMContentLoaded', loadPerformance);
+ </script>
+ <script src="scripts/auth.js"></script>
+ <script src="scripts/performance.js"></script>
 </body>
 </html>
