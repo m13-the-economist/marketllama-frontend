@@ -2,235 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>Connecting Account...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Deriv Connection — Market Llama</title>
-
-  <style>
-    :root {
-      --bg:#000;
-      --card: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.12);
-      --text:#fff;
-      --muted: rgba(255,255,255,.7);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin:0;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:var(--bg);
-      color:var(--text);
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      padding:24px;
-    }
-
-    .card {
-      width:min(680px,100%);
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:22px;
-    }
-
-    h1 { font-size:18px; margin:0 0 10px; }
-
-    p {
-      margin:0 0 14px;
-      color:var(--muted);
-      line-height:1.45;
-    }
-
-    .log {
-      white-space:pre-wrap;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size:12px;
-      padding:12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.35);
-      max-height:260px;
-      overflow:auto;
-    }
-
-    .row {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    button, a.btn {
-      appearance:none;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.08);
-      color:var(--text);
-      padding:10px 14px;
-      border-radius:12px;
-      cursor:pointer;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    button:hover, a.btn:hover {
-      background: rgba(255,255,255,.12);
-    }
-
-    button:disabled {
-      opacity:0.6;
-      cursor:not-allowed;
-    }
-
-    .ok { color:#7CFFB2; }
-    .bad { color:#FF7C7C; }
-  </style>
 </head>
-
 <body>
-  <div class="card">
-    <h1>Connecting your Deriv account…</h1>
-    <p id="status">Please wait. Do not close this tab.</p>
+  <script>
+    (async () => {
+      try {
+        // 1. Extract access_token from URL hash
+        const hash = new URLSearchParams(window.location.hash.substring(1));
+        const token = hash.get('access_token');
 
-    <div id="log" class="log">Starting…</div>
+        if (!token) {
+          throw new Error('No access token returned from Deriv');
+        }
 
-    <div class="row">
-      <a class="btn" href="/dashboard/accounts.html">Back to Accounts</a>
-      <button id="retryBtn" type="button">Retry</button>
-    </div>
-  </div>
+        // 2. Store token immediately
+        localStorage.setItem('deriv_token', token);
 
-<script>
-(() => {
-  'use strict';
+        // 3. Open Deriv WebSocket
+        const ws = new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=117813');
 
-  const API_BASE_URL = 'https://marketllama.com';
-  const ACCOUNTS_URL = '/dashboard/accounts.html';
+        ws.onopen = () => {
+          // 4. Authorize
+          ws.send(JSON.stringify({
+            authorize: token
+          }));
+        };
 
-  const statusEl = document.getElementById('status');
-  const logEl = document.getElementById('log');
-  const retryBtn = document.getElementById('retryBtn');
+        ws.onmessage = (msg) => {
+          const data = JSON.parse(msg.data);
 
-  let running = false;
+          // 5. Authorization success → fetch accounts
+          if (data.msg_type === 'authorize') {
+            ws.send(JSON.stringify({
+              account_list: 1
+            }));
+          }
 
-  function log(line) {
-    logEl.textContent += '\n' + line;
-    logEl.scrollTop = logEl.scrollHeight;
-  }
+          // 6. Receive account list
+          if (data.msg_type === 'account_list') {
+            localStorage.setItem(
+              'deriv_accounts',
+              JSON.stringify(data.account_list)
+            );
 
-  function parseFragment() {
-    const hash = window.location.hash || '';
-    const frag = hash.startsWith('#') ? hash.slice(1) : hash;
-    const params = new URLSearchParams(frag);
+            ws.close();
 
-    return {
-      token: params.get('token1'),
-      account: params.get('acct1'),
-      currency: params.get('cur1'),
-      error: params.get('error'),
-      errorDesc: params.get('error_description'),
-      raw: frag
-    };
-  }
+            // 7. Redirect to Accounts page
+            window.location.href = '/dashboard/accounts.html?connected=true';
+          }
 
-  function getUserId() {
-    const v =
-      localStorage.getItem('ml_user_id') ||
-      localStorage.getItem('user_id') ||
-      '';
-    const n = parseInt(v, 10);
-    return Number.isFinite(n) ? n : null;
-  }
+          // Handle errors explicitly
+          if (data.error) {
+            console.error('Deriv error:', data.error);
+            alert(data.error.message || 'Deriv connection failed');
+          }
+        };
 
-  async function connect() {
-    if (running) return;
-    running = true;
-    retryBtn.disabled = true;
+        ws.onerror = () => {
+          throw new Error('WebSocket connection failed');
+        };
 
-    logEl.textContent = 'Starting…';
-    statusEl.textContent = 'Parsing Deriv response…';
-
-    const frag = parseFragment();
-    log('Fragment received');
-
-    if (frag.error) {
-      statusEl.innerHTML = '<span class="bad">Deriv returned an error.</span>';
-      log('Error: ' + frag.error);
-      if (frag.errorDesc) log(frag.errorDesc);
-      running = false;
-      retryBtn.disabled = false;
-      return;
-    }
-
-    if (!frag.token || !frag.account) {
-      statusEl.innerHTML = '<span class="bad">Missing Deriv token or account.</span>';
-      log('token present: ' + !!frag.token);
-      log('account present: ' + !!frag.account);
-      running = false;
-      retryBtn.disabled = false;
-      return;
-    }
-
-    const userId = getUserId();
-    if (!userId) {
-      statusEl.innerHTML = '<span class="bad">User not logged in.</span>';
-      log('ml_user_id missing in localStorage');
-      running = false;
-      retryBtn.disabled = false;
-      return;
-    }
-
-    statusEl.textContent = 'Saving Deriv account…';
-
-    const body = {
-      user_id: userId,
-      deriv_account_id: frag.account,
-      session_token: frag.token,
-      currency: frag.currency || null
-    };
-
-    const headers = { 'Content-Type': 'application/json' };
-    const jwt = localStorage.getItem('ml_access_token');
-    if (jwt) headers.Authorization = 'Bearer ' + jwt;
-
-    try {
-      const res = await fetch(API_BASE_URL + '/api/deriv/accounts/connect', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body)
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(JSON.stringify(data));
+      } catch (err) {
+        console.error(err);
+        alert('Connection failed. Please try again.');
       }
-
-      statusEl.innerHTML = '<span class="ok">Deriv account connected.</span>';
-      log('Saved successfully');
-
-      // Remove token from URL
-      history.replaceState({}, '', window.location.pathname);
-
-      setTimeout(() => {
-        window.location.href = ACCOUNTS_URL;
-      }, 800);
-
-    } catch (err) {
-      statusEl.innerHTML = '<span class="bad">Connection failed.</span>';
-      log(String(err));
-      running = false;
-      retryBtn.disabled = false;
-    }
-  }
-
-  retryBtn.addEventListener('click', connect);
-  connect();
-})();
-</script>
+    })();
+  </script>
 </body>
 </html>
