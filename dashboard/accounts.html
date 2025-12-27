@@ -793,47 +793,15 @@
         <button class="tab" id="tabDemo" role="tab" aria-selected="false" aria-controls="panelDemo" data-i18n="demo">Demo</button>
       </div>
 
-      <!-- LIVE (old box) -->
+      <!-- LIVE -->
       <div id="panelLive" role="tabpanel" aria-labelledby="tabLive">
-        <div class="account-card" data-account-type="live" hidden>
-          <div class="card-head">
-            <span class="chip chip-live" data-i18n="live">Live</span>
-            <span class="chip chip-broker">Deriv</span>
-          </div>
-
-          <div class="card-body">
-            <div class="big-amount" id="liveAmount">—</div>
-          
-            <div class="card-actions">
-              <button class="icon-btn sm" id="cardBalanceToggle" aria-label="Hide balance">
-                <iconify-icon class="ic" id="cardEye" icon="mdi:eye-outline"></iconify-icon>
-              </button>
-            </div>
-          </div>
-          
-          <div class="line-art" aria-hidden="true"></div>
+        <div class="accounts-list" id="liveAccounts" data-type="live">
         </div>
       </div>
 
-      <!-- DEMO (old box) -->
+      <!-- DEMO -->
       <div id="panelDemo" role="tabpanel" aria-labelledby="tabDemo" hidden>
-        <div class="account-card" data-account-type="demo">
-          <div class="card-head">
-            <span class="chip chip-demo" data-i18n="demo">Demo</span>
-            <span class="chip chip-broker">Deriv</span>
-          </div>
-
-          <div class="card-body">
-            <div class="big-amount" id="demoAmount">—</div>
-
-            <div class="card-actions">
-              <button class="icon-btn sm" id="cardBalanceToggleDemo" aria-label="Hide balance">
-                <iconify-icon class="ic" id="cardEyeDemo" icon="mdi:eye-outline"></iconify-icon>
-              </button>
-            </div>
-          </div>
-
-          <div class="line-art" aria-hidden="true"></div>
+        <div class="accounts-list" id="demoAccounts" data-type="demo">
         </div>
       </div>
     </section>
