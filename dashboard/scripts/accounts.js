@@ -1,13 +1,31 @@
-// accounts.js — summary-safe + multi-account ready
+// accounts.js — FINAL, HTML-matched, production-safe
 (() => {
   'use strict';
 
   /* =======================
      AUTH GATE
   ======================= */
-  if (!window.MLAuth || !MLAuth.getToken()) {
+  const token = localStorage.getItem('ml_access_token');
+  if (!token) {
     window.location.href = '../landing/signin.html';
     return;
+  }
+
+  const API_BASE =
+    location.hostname.includes('marketllama.com')
+      ? 'https://marketllama.com'
+      : 'http://127.0.0.1:8000';
+
+  async function apiFetch(path) {
+    const res = await fetch(`${API_BASE}${path}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    });
+
+    if (!res.ok) throw new Error(res.status);
+    return res.json();
   }
 
   /* =======================
@@ -15,9 +33,12 @@
   ======================= */
   const userNameEl = document.querySelector('.user-name');
   const topBalanceEl = document.getElementById('topBalance');
+
   const liveContainer = document.getElementById('liveAccounts');
   const demoContainer = document.getElementById('demoAccounts');
 
+  const tabLive = document.getElementById('tabLive');
+  const tabDemo = document.getElementById('tabDemo');
   const toggleBalanceBtn = document.getElementById('toggleBalance');
 
   /* =======================
@@ -36,14 +57,15 @@
   ======================= */
   async function fetchUserProfile() {
     try {
-      const user = await MLAuth.apiFetch('/api/auth/me');
-      const name =
+      const user = await apiFetch('/api/auth/me');
+      userNameEl.textContent =
         user.username ||
         user.full_name ||
-        (user.email ? user.email.split('@')[0] : 'Trader');
-      userNameEl.textContent = name;
+        user.email?.split('@')[0] ||
+        'Trader';
     } catch {
-      MLAuth.logout();
+      localStorage.removeItem('ml_access_token');
+      window.location.href = '../landing/signin.html';
     }
   }
 
@@ -52,41 +74,27 @@
   ======================= */
   async function fetchAccounts() {
     try {
-      const data = await MLAuth.apiFetch('/api/accounts/summary');
-
-      balances.live.balance = Number(data.live_balance || 0);
-      balances.demo.balance = Number(data.demo_balance || 0);
-      balances.live.currency = data.currency || 'USD';
-      balances.demo.currency = data.currency || 'USD';
+      const data = await apiFetch('/api/accounts');
 
       liveContainer.innerHTML = '';
       demoContainer.innerHTML = '';
 
-      if (Array.isArray(data.accounts) && data.accounts.length) {
-        // ✅ REAL MULTI-ACCOUNT MODE
-        data.accounts.forEach(renderAccountCard);
-      } else {
-        // ✅ FALLBACK: SUMMARY MODE (ONE CARD PER TYPE)
-        renderAccountCard({
-          id: 'live-summary',
-          type: 'live',
-          broker: 'Deriv',
-          balance: balances.live.balance,
-          currency: balances.live.currency
-        });
+      balances.live.balance = 0;
+      balances.demo.balance = 0;
 
-        renderAccountCard({
-          id: 'demo-summary',
-          type: 'demo',
-          broker: 'Deriv',
-          balance: balances.demo.balance,
-          currency: balances.demo.currency
-        });
-      }
+      data.forEach(acc => {
+        if (acc.type === 'live') {
+          balances.live.balance += Number(acc.balance || 0);
+        }
+        if (acc.type === 'demo') {
+          balances.demo.balance += Number(acc.balance || 0);
+        }
+        renderAccountCard(acc);
+      });
 
       renderTopBalance();
     } catch (err) {
-      console.error('Account fetch failed', err);
+      console.error('Accounts fetch failed', err);
       renderTopBalance();
     }
   }
@@ -105,14 +113,16 @@
     const chipClass =
       account.type === 'live' ? 'chip-live' : 'chip-demo';
 
-    const formatted = format(account.balance, account.currency);
+    const formatted = format(account.balance, account.currency || 'USD');
 
     card.innerHTML = `
       <div class="card-head">
         <span class="chip ${chipClass}">
           ${account.type === 'live' ? 'Live' : 'Demo'}
         </span>
-        <span class="chip chip-broker">${account.broker || 'Broker'}</span>
+        <span class="chip chip-broker">
+          ${account.broker || 'Broker'}
+        </span>
       </div>
 
       <div class="card-body">
@@ -125,10 +135,10 @@
       <div class="line-art"></div>
     `;
 
+    let hidden = false;
     const valueEl = card.querySelector('.balance-value');
     const eyeIcon = card.querySelector('.eye-icon');
 
-    let hidden = false;
     card.querySelector('.balance-toggle').addEventListener('click', e => {
       e.stopPropagation();
       hidden = !hidden;
@@ -143,10 +153,12 @@
   }
 
   /* =======================
-     RENDER TOP BALANCE
+     TOP BALANCE
   ======================= */
   function renderTopBalance() {
     const active = currentTab === 'live' ? balances.live : balances.demo;
+    if (!topBalanceEl) return;
+
     topBalanceEl.textContent = balanceHidden
       ? '••••••'
       : format(active.balance, active.currency);
@@ -171,12 +183,12 @@
     renderTopBalance();
   });
 
-  document.getElementById('tabLive')?.addEventListener('click', () => {
+  tabLive?.addEventListener('click', () => {
     currentTab = 'live';
     renderTopBalance();
   });
 
-  document.getElementById('tabDemo')?.addEventListener('click', () => {
+  tabDemo?.addEventListener('click', () => {
     currentTab = 'demo';
     renderTopBalance();
   });
