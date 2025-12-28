@@ -1,9 +1,9 @@
-// accounts.js — FINAL, SAFE, HTML-MATCHED
+// accounts.js — FINAL, CONTRACT-SAFE
 (() => {
   'use strict';
 
   /* =======================
-     AUTH GATE
+     AUTH
   ======================= */
   if (!window.MLAuth || !MLAuth.getToken()) {
     window.location.href = '../landing/signin.html';
@@ -17,15 +17,12 @@
   const topBalanceEl = document.getElementById('topBalance');
   const liveContainer = document.getElementById('liveAccounts');
   const demoContainer = document.getElementById('demoAccounts');
-  const toggleBalanceBtn = document.getElementById('toggleBalance');
 
   /* =======================
      STATE
   ======================= */
   let currentTab = 'live';
-  let balanceHidden = false;
-
-  const balances = {
+  let balances = {
     live: { balance: 0, currency: 'USD' },
     demo: { balance: 0, currency: 'USD' }
   };
@@ -36,11 +33,11 @@
   async function fetchUserProfile() {
     try {
       const user = await MLAuth.apiFetch('/api/auth/me');
-      const name =
+      userNameEl.textContent =
         user.username ||
         user.full_name ||
-        (user.email ? user.email.split('@')[0] : 'Trader');
-      userNameEl.textContent = name;
+        user.email?.split('@')[0] ||
+        'Trader';
     } catch {
       MLAuth.logout();
     }
@@ -53,122 +50,90 @@
     try {
       const data = await MLAuth.apiFetch('/api/accounts/summary');
 
-      // Reset UI + state
       liveContainer.innerHTML = '';
       demoContainer.innerHTML = '';
+
       balances.live.balance = Number(data.live_balance || 0);
       balances.demo.balance = Number(data.demo_balance || 0);
-      balances.live.currency = data.currency || 'USD';
-      balances.demo.currency = data.currency || 'USD';
+      balances.live.currency = 'USD';
+      balances.demo.currency = 'USD';
 
-      /* =======================
-         MULTI-ACCOUNT MODE
-      ======================= */
-      if (Array.isArray(data.accounts) && data.accounts.length) {
-        data.accounts.forEach(acc => {
-          if (!acc || !acc.type) return;
-          renderAccountCard(acc);
-        });
-      } else {
-        /* =======================
-           SAFE FALLBACK (ALWAYS SHOW BOTH)
-        ======================= */
-        renderAccountCard({
-          id: 'live-summary',
-          type: 'live',
-          broker: 'Not Connected',
-          balance: balances.live.balance,
-          currency: balances.live.currency
-        });
+      const accounts = Array.isArray(data.accounts) ? data.accounts : [];
+
+      accounts.forEach(acc => {
+        const isDemo =
+          acc.is_demo === true ||
+          acc.mode === 'demo' ||
+          acc.account_type === 'demo';
 
         renderAccountCard({
-          id: 'demo-summary',
+          id: acc.id,
+          type: isDemo ? 'demo' : 'live',
+          broker: acc.broker || 'Deriv',
+          balance: Number(acc.balance || 0),
+          currency: acc.currency || 'USD'
+        });
+      });
+
+      // ALWAYS show placeholder if empty
+      if (!demoContainer.children.length) {
+        renderAccountCard({
+          id: 'demo-empty',
           type: 'demo',
-          broker: 'Not Connected',
+          broker: 'Deriv',
           balance: balances.demo.balance,
-          currency: balances.demo.currency
+          currency: 'USD'
+        });
+      }
+
+      if (!liveContainer.children.length) {
+        renderAccountCard({
+          id: 'live-empty',
+          type: 'live',
+          broker: 'Deriv',
+          balance: balances.live.balance,
+          currency: 'USD'
         });
       }
 
       renderTopBalance();
     } catch (err) {
-      console.error('Accounts fetch failed:', err);
-
-      // Absolute last-resort UI (never blank)
-      liveContainer.innerHTML = '';
-      demoContainer.innerHTML = '';
-
-      renderAccountCard({
-        id: 'live-fallback',
-        type: 'live',
-        broker: 'Unavailable',
-        balance: 0,
-        currency: 'USD'
-      });
-
-      renderAccountCard({
-        id: 'demo-fallback',
-        type: 'demo',
-        broker: 'Unavailable',
-        balance: 0,
-        currency: 'USD'
-      });
-
+      console.error('Accounts fetch failed', err);
       renderTopBalance();
     }
   }
 
   /* =======================
-     CARD RENDERER
+     CARD
   ======================= */
   function renderAccountCard(account) {
     const container =
-      account.type === 'live' ? liveContainer : demoContainer;
-    if (!container) return;
+      account.type === 'demo' ? demoContainer : liveContainer;
 
     const card = document.createElement('div');
     card.className = 'account-card';
 
-    const chipClass =
-      account.type === 'live' ? 'chip-live' : 'chip-demo';
-
-    const formatted = format(account.balance, account.currency);
-
     card.innerHTML = `
       <div class="card-head">
-        <span class="chip ${chipClass}">
-          ${account.type === 'live' ? 'Live' : 'Demo'}
+        <span class="chip ${
+          account.type === 'demo' ? 'chip-demo' : 'chip-live'
+        }">
+          ${account.type === 'demo' ? 'Demo' : 'Live'}
         </span>
-        <span class="chip chip-broker">
-          ${account.broker || 'Broker'}
-        </span>
+        <span class="chip chip-broker">${account.broker}</span>
       </div>
 
       <div class="card-body">
-        <div class="big-amount balance-value">${formatted}</div>
-        <button class="icon-btn sm balance-toggle" aria-label="Toggle balance">
+        <div class="big-amount balance-value">
+          ${format(account.balance, account.currency)}
+        </div>
+        <button class="icon-btn sm balance-toggle">
           <iconify-icon class="ic eye-icon" icon="mdi:eye-outline"></iconify-icon>
         </button>
       </div>
 
       <div class="line-art"></div>
     `;
-
-    const valueEl = card.querySelector('.balance-value');
-    const eyeIcon = card.querySelector('.eye-icon');
-    let hidden = false;
-
-    card
-      .querySelector('.balance-toggle')
-      .addEventListener('click', e => {
-        e.stopPropagation();
-        hidden = !hidden;
-        valueEl.textContent = hidden ? '••••••' : formatted;
-        eyeIcon.setAttribute(
-          'icon',
-          hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline'
-        );
-      });
 
     container.appendChild(card);
   }
@@ -177,13 +142,13 @@
      TOP BALANCE
   ======================= */
   function renderTopBalance() {
-    const active = currentTab === 'live'
-      ? balances.live
-      : balances.demo;
+    const active =
+      currentTab === 'demo' ? balances.demo : balances.live;
 
-    topBalanceEl.textContent = balanceHidden
-      ? '••••••'
-      : format(active.balance, active.currency);
+    topBalanceEl.textContent = format(
+      active.balance,
+      active.currency
+    );
   }
 
   function format(amount, currency) {
@@ -198,13 +163,8 @@
   }
 
   /* =======================
-     EVENTS
+     TABS
   ======================= */
-  toggleBalanceBtn?.addEventListener('click', () => {
-    balanceHidden = !balanceHidden;
-    renderTopBalance();
-  });
-
   document.getElementById('tabLive')?.addEventListener('click', () => {
     currentTab = 'live';
     renderTopBalance();
