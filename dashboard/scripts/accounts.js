@@ -1,201 +1,159 @@
-// accounts.js — FINAL, HTML-matched, production-safe
-(() => {
-  'use strict';
+/* =========================
+   ACCOUNTS PAGE LOGIC
+   ========================= */
 
-  /* =======================
-     AUTH GATE
-  ======================= */
-  const token = localStorage.getItem('ml_access_token');
-  if (!token) {
-    window.location.href = '../landing/signin.html';
-    return;
-  }
-
-  const API_BASE =
-    location.hostname.includes('marketllama.com')
-      ? 'https://marketllama.com'
-      : 'http://127.0.0.1:8000';
-
-  async function apiFetch(path) {
-    const res = await fetch(`${API_BASE}${path}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    });
-
-    if (!res.ok) throw new Error(res.status);
-    return res.json();
-  }
-
-  /* =======================
-     DOM
-  ======================= */
-  const userNameEl = document.querySelector('.user-name');
-  const topBalanceEl = document.getElementById('topBalance');
-
-  const liveContainer = document.getElementById('liveAccounts');
-  const demoContainer = document.getElementById('demoAccounts');
-
-  const tabLive = document.getElementById('tabLive');
-  const tabDemo = document.getElementById('tabDemo');
-  const toggleBalanceBtn = document.getElementById('toggleBalance');
-
-  /* =======================
-     STATE
-  ======================= */
-  let balanceHidden = false;
-  let currentTab = 'live';
-
-  let balances = {
-    live: { balance: 0, currency: 'USD' },
-    demo: { balance: 0, currency: 'USD' }
-  };
-
-  /* =======================
-     USER
-  ======================= */
-  async function fetchUserProfile() {
-    try {
-      const user = await apiFetch('/api/auth/me');
-      userNameEl.textContent =
-        user.username ||
-        user.full_name ||
-        user.email?.split('@')[0] ||
-        'Trader';
-    } catch {
-      localStorage.removeItem('ml_access_token');
-      window.location.href = '../landing/signin.html';
-    }
-  }
-
-  /* =======================
-     ACCOUNTS
-  ======================= */
-  async function fetchAccounts() {
-    try {
-      const data = await apiFetch('/api/accounts');
-
-      liveContainer.innerHTML = '';
-      demoContainer.innerHTML = '';
-
-      balances.live.balance = 0;
-      balances.demo.balance = 0;
-
-      data.forEach(acc => {
-        if (acc.type === 'live') {
-          balances.live.balance += Number(acc.balance || 0);
-        }
-        if (acc.type === 'demo') {
-          balances.demo.balance += Number(acc.balance || 0);
-        }
-        renderAccountCard(acc);
-      });
-
-      renderTopBalance();
-    } catch (err) {
-      console.error('Accounts fetch failed', err);
-      renderTopBalance();
-    }
-  }
-
-  /* =======================
-     CARD RENDERER
-  ======================= */
-  function renderAccountCard(account) {
-    const container =
-      account.type === 'live' ? liveContainer : demoContainer;
-    if (!container) return;
-
-    const card = document.createElement('div');
-    card.className = 'account-card';
-
-    const chipClass =
-      account.type === 'live' ? 'chip-live' : 'chip-demo';
-
-    const formatted = format(account.balance, account.currency || 'USD');
-
-    card.innerHTML = `
-      <div class="card-head">
-        <span class="chip ${chipClass}">
-          ${account.type === 'live' ? 'Live' : 'Demo'}
-        </span>
-        <span class="chip chip-broker">
-          ${account.broker || 'Broker'}
-        </span>
-      </div>
-
-      <div class="card-body">
-        <div class="big-amount balance-value">${formatted}</div>
-        <button class="icon-btn sm balance-toggle">
-          <iconify-icon class="ic eye-icon" icon="mdi:eye-outline"></iconify-icon>
-        </button>
-      </div>
-
-      <div class="line-art"></div>
-    `;
-
-    let hidden = false;
-    const valueEl = card.querySelector('.balance-value');
-    const eyeIcon = card.querySelector('.eye-icon');
-
-    card.querySelector('.balance-toggle').addEventListener('click', e => {
-      e.stopPropagation();
-      hidden = !hidden;
-      valueEl.textContent = hidden ? '••••••' : formatted;
-      eyeIcon.setAttribute(
-        'icon',
-        hidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline'
-      );
-    });
-
-    container.appendChild(card);
-  }
-
-  /* =======================
-     TOP BALANCE
-  ======================= */
-  function renderTopBalance() {
-    const active = currentTab === 'live' ? balances.live : balances.demo;
-    if (!topBalanceEl) return;
-
-    topBalanceEl.textContent = balanceHidden
-      ? '••••••'
-      : format(active.balance, active.currency);
-  }
-
-  function format(amount, currency) {
-    return (
-      Number(amount).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }) +
-      ' ' +
-      currency
-    );
-  }
-
-  /* =======================
-     EVENTS
-  ======================= */
-  toggleBalanceBtn?.addEventListener('click', () => {
-    balanceHidden = !balanceHidden;
-    renderTopBalance();
-  });
-
-  tabLive?.addEventListener('click', () => {
-    currentTab = 'live';
-    renderTopBalance();
-  });
-
-  tabDemo?.addEventListener('click', () => {
-    currentTab = 'demo';
-    renderTopBalance();
-  });
-
-  /* =======================
-     INIT
-  ======================= */
-  fetchUserProfile();
-  fetchAccounts();
-})();
+   const liveContainer = document.getElementById('liveAccounts');
+   const demoContainer = document.getElementById('demoAccounts');
+   
+   const balances = {
+     live: { balance: 0, currency: 'USD' },
+     demo: { balance: 0, currency: 'USD' }
+   };
+   
+   /* -------------------------
+      RENDER ACCOUNT CARD
+   -------------------------- */
+   function renderAccountCard({ id, type, broker, balance, currency }) {
+     const card = document.createElement('div');
+     card.className = 'account-card';
+     card.dataset.id = id;
+   
+     card.innerHTML = `
+       <div class="card-head">
+         <span class="chip chip-${type}">${type.toUpperCase()}</span>
+         <span class="chip chip-broker">${broker}</span>
+       </div>
+   
+       <div class="card-body">
+         <div class="big-amount balance-value">
+           ${Number(balance).toFixed(2)} ${currency}
+         </div>
+         <button class="icon-btn sm balance-toggle">
+           <iconify-icon class="ic eye-icon" icon="mdi:eye-outline"></iconify-icon>
+         </button>
+       </div>
+   
+       <div class="line-art"></div>
+     `;
+   
+     if (type === 'live') {
+       liveContainer.appendChild(card);
+     } else {
+       demoContainer.appendChild(card);
+     }
+   }
+   
+   /* -------------------------
+      TOP BALANCE
+   -------------------------- */
+   function renderTopBalance() {
+     const el = document.querySelector('.total-balance');
+     if (!el) return;
+   
+     const total =
+       balances.live.balance + balances.demo.balance;
+   
+     el.textContent = `${total.toFixed(2)} USD`;
+   }
+   
+   /* -------------------------
+      FETCH + RENDER ACCOUNTS
+   -------------------------- */
+   async function fetchAccounts() {
+     try {
+       const res = await fetch('/api/accounts');
+       const data = await res.json();
+   
+       // Reset containers
+       liveContainer.innerHTML = '';
+       demoContainer.innerHTML = '';
+   
+       // Reset balances
+       balances.live.balance = 0;
+       balances.demo.balance = 0;
+   
+       const liveAccounts = data.filter(a => a.type === 'live');
+       const demoAccounts = data.filter(a => a.type === 'demo');
+   
+       /* ---- LIVE ---- */
+       if (liveAccounts.length > 0) {
+         liveAccounts.forEach(acc => {
+           balances.live.balance += Number(acc.balance || 0);
+           balances.live.currency = acc.currency || 'USD';
+   
+           renderAccountCard({
+             id: acc.id,
+             type: 'live',
+             broker: acc.broker || 'Deriv',
+             balance: acc.balance || 0,
+             currency: acc.currency || 'USD'
+           });
+         });
+       } else {
+         // 🔒 GUARANTEED LIVE VISIBILITY
+         renderAccountCard({
+           id: 'live-default',
+           type: 'live',
+           broker: 'Deriv',
+           balance: 0,
+           currency: 'USD'
+         });
+       }
+   
+       /* ---- DEMO ---- */
+       if (demoAccounts.length > 0) {
+         demoAccounts.forEach(acc => {
+           balances.demo.balance += Number(acc.balance || 0);
+           balances.demo.currency = acc.currency || 'USD';
+   
+           renderAccountCard({
+             id: acc.id,
+             type: 'demo',
+             broker: acc.broker || 'Deriv',
+             balance: acc.balance || 0,
+             currency: acc.currency || 'USD'
+           });
+         });
+       } else {
+         renderAccountCard({
+           id: 'demo-default',
+           type: 'demo',
+           broker: 'Deriv',
+           balance: 0,
+           currency: 'USD'
+         });
+       }
+   
+       renderTopBalance();
+   
+     } catch (err) {
+       console.error('Accounts fetch failed', err);
+   
+       // Absolute fallback — UI NEVER EMPTY
+       liveContainer.innerHTML = '';
+       demoContainer.innerHTML = '';
+   
+       renderAccountCard({
+         id: 'live-fallback',
+         type: 'live',
+         broker: 'Deriv',
+         balance: 0,
+         currency: 'USD'
+       });
+   
+       renderAccountCard({
+         id: 'demo-fallback',
+         type: 'demo',
+         broker: 'Deriv',
+         balance: 0,
+         currency: 'USD'
+       });
+   
+       renderTopBalance();
+     }
+   }
+   
+   /* -------------------------
+      INIT
+   -------------------------- */
+   document.addEventListener('DOMContentLoaded', fetchAccounts);
