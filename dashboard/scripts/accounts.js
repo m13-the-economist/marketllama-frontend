@@ -55,43 +55,38 @@
 
       balances.live.balance = Number(data.live_balance || 0);
       balances.demo.balance = Number(data.demo_balance || 0);
-      balances.live.currency = 'USD';
-      balances.demo.currency = 'USD';
 
       const accounts = Array.isArray(data.accounts) ? data.accounts : [];
 
       accounts.forEach(acc => {
-        const isDemo =
-          acc.is_demo === true ||
-          acc.mode === 'demo' ||
-          acc.account_type === 'demo';
+        const isDemo = acc.is_demo === true;
 
         renderAccountCard({
-          id: acc.id,
+          id: acc.account_id, // ✅ CORRECT FIELD
           type: isDemo ? 'demo' : 'live',
-          broker: acc.broker || 'Deriv',
+          broker: 'Deriv',
           balance: Number(acc.balance || 0),
           currency: acc.currency || 'USD'
         });
       });
 
-      // ALWAYS show placeholder if empty
-      if (!demoContainer.children.length) {
+      // Defensive: always render at least one card per tab
+      if (!liveContainer.children.length) {
         renderAccountCard({
-          id: 'demo-empty',
-          type: 'demo',
+          id: 'live-placeholder',
+          type: 'live',
           broker: 'Deriv',
-          balance: balances.demo.balance,
+          balance: balances.live.balance,
           currency: 'USD'
         });
       }
 
-      if (!liveContainer.children.length) {
+      if (!demoContainer.children.length) {
         renderAccountCard({
-          id: 'live-empty',
-          type: 'live',
+          id: 'demo-placeholder',
+          type: 'demo',
           broker: 'Deriv',
-          balance: balances.live.balance,
+          balance: balances.demo.balance,
           currency: 'USD'
         });
       }
@@ -112,6 +107,7 @@
 
     const card = document.createElement('div');
     card.className = 'account-card';
+    card.dataset.accountId = account.id;
 
     card.innerHTML = `
       <div class="card-head">
@@ -127,7 +123,7 @@
         <div class="big-amount balance-value">
           ${format(account.balance, account.currency)}
         </div>
-        <button class="icon-btn sm balance-toggle">
+        <button class="icon-btn sm balance-toggle" aria-label="Toggle balance">
           <iconify-icon class="ic eye-icon" icon="mdi:eye-outline"></iconify-icon>
         </button>
       </div>
