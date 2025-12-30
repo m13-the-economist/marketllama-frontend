@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Performance — Market Llama</title>
-    <meta name="description" content="Performance analytics for your trading accounts." />
-  
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
-  
-    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
-  
-    <link rel="icon" type="image/svg+xml"
-      href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Performance — Market Llama</title>
+  <meta name="description" content="Performance analytics for your trading accounts." />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
   <style>
     :root {
       --header-h: 60px;
@@ -557,8 +558,6 @@
       .chat-panel { right: 14px; bottom: 148px; }
     }
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="app dark">
@@ -694,8 +693,7 @@
           <div>
             <h1 class="perf-title" data-i18n="performance">Performance</h1>
             <p class="perf-sub">
-              High-level performance KPIs for your linked trading accounts. This snapshot view uses
-              placeholder data — your live history, charts, and stats will plug in later.
+              High-level performance KPIs for your linked trading accounts. Data updates in real-time.
             </p>
           </div>
           <div class="perf-chip" data-i18n="last30Days">Last 30 Days</div>
@@ -710,22 +708,22 @@
           </div>
           <div class="kpi-card">
             <div class="kpi-label" data-i18n="kpiTotalTrades">Total Trades Taken</div>
-            <div class="kpi-value" id="kpiTrades">48</div>
+            <div class="kpi-value" id="kpiTrades">—</div>
             <div class="kpi-sub" data-i18n="kpiAllClosed">All closed positions.</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label" data-i18n="kpiTotalLots">Total Lots Used</div>
-            <div class="kpi-value" id="kpiLots">11.00</div>
+            <div class="kpi-value" id="kpiLots">—</div>
             <div class="kpi-sub" data-i18n="kpiCombinedExposure">Combined exposure across trades.</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label" data-i18n="kpiBiggestWin">Biggest Win</div>
-            <div class="kpi-value" id="kpiWin">$280.00</div>
+            <div class="kpi-value" id="kpiWin">—</div>
             <div class="kpi-sub" data-i18n="kpiBestTrade">Single best trade in the period.</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label" data-i18n="kpiBiggestLoss">Biggest Loss</div>
-            <div class="kpi-value" id="kpiLoss">-$150.30</div>
+            <div class="kpi-value" id="kpiLoss">—</div>
             <div class="kpi-sub" data-i18n="kpiLargestDrawdown">Largest drawdown on a trade.</div>
           </div>
         </div>
@@ -814,7 +812,7 @@
         <div class="history-shell">
           <div class="history-head">
             <div class="history-title" data-i18n="tradeHistory">Trade History</div>
-            <div class="history-meta" data-i18n="historyMeta">Scrollable table — dummy rows for now.</div>
+            <div class="history-meta" data-i18n="historyMeta">Scrollable table — real data from your account.</div>
           </div>
           <div class="table-scroll">
             <table>
@@ -879,7 +877,6 @@
     </footer>
   </main>
 
-  <!-- Chat widget -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -906,6 +903,7 @@
   </div>
 
   <script>
+    // Localization and UI management
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get('lang') || 'en';
@@ -946,7 +944,7 @@
           chartLongTitle: "Long Analysis",
           chartLongSub: "Profits, wins, and losses on long positions.",
           tradeHistory: "Trade History",
-          historyMeta: "Scrollable table — dummy rows for now.",
+          historyMeta: "Scrollable table — real data from your account.",
           thShare: "Share", thSymbol: "Symbol", thType: "Type", thOpenDate: "Open Date", thOpen: "Open",
           thCloseDate: "Closed Date", thClose: "Close", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
@@ -985,7 +983,7 @@
           chartLongTitle: "Long-Analyse",
           chartLongSub: "Gewinne, Treffer und Verluste bei Long-Positionen.",
           tradeHistory: "Trade-Historie",
-          historyMeta: "Scrollbare Tabelle – aktuell Platzhalterdaten.",
+          historyMeta: "Scrollbare Tabelle – aktuelle Kontodaten.",
           thShare: "Teilen", thSymbol: "Symbol", thType: "Art", thOpenDate: "Eröffnungsdatum", thOpen: "Eröffnung",
           thCloseDate: "Schlussdatum", thClose: "Schluss", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
@@ -1024,7 +1022,7 @@
           chartLongTitle: "Análisis de largos",
           chartLongSub: "Beneficios, aciertos y pérdidas en posiciones largas.",
           tradeHistory: "Historial de operaciones",
-          historyMeta: "Tabla desplazable — por ahora con filas de ejemplo.",
+          historyMeta: "Tabla desplazable — datos reales de tu cuenta.",
           thShare: "Compartir", thSymbol: "Símbolo", thType: "Tipo", thOpenDate: "Fecha de apertura", thOpen: "Apertura",
           thCloseDate: "Fecha de cierre", thClose: "Cierre", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
@@ -1063,7 +1061,7 @@
           chartLongTitle: "Analyse des achats",
           chartLongSub: "Profits, gains et pertes sur les positions acheteuses.",
           tradeHistory: "Historique des trades",
-          historyMeta: "Tableau défilant — données fictives pour l’instant.",
+          historyMeta: "Tableau défilant — données réelles de votre compte.",
           thShare: "Partager", thSymbol: "Symbole", thType: "Type", thOpenDate: "Date d'ouverture", thOpen: "Ouverture",
           thCloseDate: "Date de clôture", thClose: "Clôture", thTp: "TP", thSl: "SL", thPnl: "PnL"
         },
@@ -1102,7 +1100,7 @@
           chartLongTitle: "تحليل صفقات الشراء",
           chartLongSub: "الأرباح، والصفقات الرابحة، والخاسرة في صفقات الشراء.",
           tradeHistory: "سجل الصفقات",
-          historyMeta: "جدول قابل للتمرير — بيانات تجريبية حاليًا.",
+          historyMeta: "جدول قابل للتمرير — بيانات حقيقية من حسابك.",
           thShare: "مشاركة", thSymbol: "الرمز", thType: "النوع", thOpenDate: "تاريخ الفتح", thOpen: "سعر الفتح",
           thCloseDate: "تاريخ الإغلاق", thClose: "سعر الإغلاق", thTp: "جني الربح", thSl: "إيقاف الخسارة", thPnl: "الربح/الخسارة"
         }
@@ -1116,7 +1114,7 @@
           const href = a.getAttribute('href');
           if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
           try {
-            const url = new URL(href, window.location.href);   // ✅ fixed base
+            const url = new URL(href, window.location.href);
             url.searchParams.set('lang', currentLang);
             a.setAttribute('href', url.pathname + '?' + url.searchParams.toString());
           } catch (_) {}
@@ -1145,7 +1143,6 @@
         updateLinksWithLang();
       }
 
-      // Submenu accordion
       const accordion = document.querySelector('.accordion');
       const submenu = document.querySelector('.submenu');
       const chevron = document.querySelector('.chevron');
@@ -1169,7 +1166,6 @@
         });
       }
 
-      // Mobile sidebar
       const mobileSideTrigger = document.getElementById('mobileSideTrigger');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('backdrop');
@@ -1187,7 +1183,7 @@
           e.stopPropagation();
           const willOpen = !sidebar.classList.contains('open');
           sidebar.classList.toggle('open');
-          backdrop.hidden = !willOpen; // ✅ correct
+          backdrop.hidden = !willOpen;
           mobileSideTrigger.setAttribute('aria-expanded', String(willOpen));
           if (!willOpen) closeDropdown();
         });
@@ -1195,7 +1191,6 @@
         backdrop.addEventListener('click', closeMobileSidebar);
       }
 
-      // Desktop collapse
       const sideToggle = document.getElementById('sideToggle');
       if (sideToggle && sidebar) {
         sideToggle.addEventListener('click', (e) => {
@@ -1209,7 +1204,6 @@
         });
       }
 
-      // Balance toggle
       const toggleBalance = document.getElementById('toggleBalance');
       const topBalance = document.getElementById('topBalance');
       const topEye = document.getElementById('topEye');
@@ -1223,13 +1217,12 @@
             topBalance.textContent = '•••••';
             topEye.setAttribute('icon', 'mdi:eye-off-outline');
           } else {
-            topBalance.textContent = '$ 15 400.00';
+            topBalance.textContent = topBalance.textContent || '—';
             topEye.setAttribute('icon', 'mdi:eye-outline');
           }
         });
       }
 
-      // Language dropdown
       const languageBtn = document.getElementById('languageBtn');
       const languageDropdown = document.getElementById('languageDropdown');
 
@@ -1264,50 +1257,6 @@
         document.addEventListener('click', closeDropdown);
       }
 
-      // Dummy KPI data (will be overwritten by backend if token exists)
-      const kpiData = { days: 8, total_trades: 48, lots_used: 11.0, biggest_win: 280.0, biggest_loss: -150.30 };
-      document.getElementById('kpiDays').textContent = kpiData.days;
-      document.getElementById('kpiTrades').textContent = kpiData.total_trades;
-      document.getElementById('kpiLots').textContent = kpiData.lots_used.toFixed(2);
-      document.getElementById('kpiWin').textContent = '$' + kpiData.biggest_win.toFixed(2);
-      document.getElementById('kpiLoss').textContent = (kpiData.biggest_loss < 0 ? '-$' : '$') + Math.abs(kpiData.biggest_loss).toFixed(2);
-
-      // Weekly dummy
-      const weeklyData = [
-        { "week": "Week One", "pnl": 0, "days": 0, "range": "Jan 1 – Jan 7" },
-        { "week": "Week Two", "pnl": -140.61, "days": 2, "range": "Jan 8 – Jan 14" },
-        { "week": "Week Three", "pnl": 729.00, "days": 5, "range": "Jan 15 – Jan 21" },
-        { "week": "Week Four", "pnl": 238.10, "days": 1, "range": "Jan 22 – Jan 31" }
-      ];
-      const weekListEl = document.getElementById('weekList');
-      weekListEl.innerHTML = '';
-      weeklyData.forEach(w => {
-        const card = document.createElement('div');
-        card.className = 'week-card';
-        const pnlClass = w.pnl > 0 ? 'green' : (w.pnl < 0 ? 'red' : '');
-        card.innerHTML = `
-          <div class="week-top">
-            <div class="week-name">${w.week}</div>
-            <div class="week-range">${w.range}</div>
-          </div>
-          <div class="week-bottom">
-            <div class="week-pnl ${pnlClass}">
-              ${w.pnl === 0 ? '$ 0.00' : (w.pnl > 0 ? '$ ' + w.pnl.toFixed(2) : '-$ ' + Math.abs(w.pnl).toFixed(2))}
-            </div>
-            <div class="week-days">Days: ${w.days}</div>
-          </div>
-        `;
-        weekListEl.appendChild(card);
-      });
-
-      // Calendar dummy
-      const calendarData = {
-        "2024-01-22": { "pnl": 350.20, "trades": 6 },
-        "2024-01-23": { "pnl": 271.40, "trades": 8 },
-        "2024-01-24": { "pnl": -12.00, "trades": 4 },
-        "2024-01-25": { "pnl": 206.40, "trades": 3 }
-      };
-
       const calendarLabel = document.getElementById('calendarLabel');
       const calendarDays = document.getElementById('calendarDays');
       const monthSelect = document.getElementById('monthSelect');
@@ -1316,30 +1265,38 @@
       const nextMonthBtn = document.getElementById('nextMonthBtn');
 
       const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      let current = new Date(2024, 0, 1);
+      let current = new Date();
+      current.setDate(1);
 
-      monthSelect.innerHTML = '';
-      monthNames.forEach((m, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        opt.textContent = m;
-        monthSelect.appendChild(opt);
-      });
+      if (monthSelect) {
+        monthSelect.innerHTML = '';
+        monthNames.forEach((m, idx) => {
+          const opt = document.createElement('option');
+          opt.value = idx;
+          opt.textContent = m;
+          monthSelect.appendChild(opt);
+        });
+      }
 
-      yearSelect.innerHTML = '';
-      for (let y = 2020; y <= 2030; y++) {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y;
-        yearSelect.appendChild(opt);
+      if (yearSelect) {
+        yearSelect.innerHTML = '';
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+          const opt = document.createElement('option');
+          opt.value = y;
+          opt.textContent = y;
+          yearSelect.appendChild(opt);
+        }
       }
 
       function renderCalendar() {
+        if (!calendarLabel || !calendarDays) return;
+        
         const year = current.getFullYear();
         const month = current.getMonth();
         calendarLabel.textContent = `${monthNames[month]} ${year}`;
-        monthSelect.value = month;
-        yearSelect.value = year;
+        if (monthSelect) monthSelect.value = month;
+        if (yearSelect) yearSelect.value = year;
 
         calendarDays.innerHTML = '';
 
@@ -1355,112 +1312,53 @@
         }
 
         for (let d = 1; d <= daysInMonth; d++) {
-          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-          const data = calendarData[dateStr];
           const cell = document.createElement('div');
-
-          let cls = 'day-cell';
-          if (data) {
-            if (data.pnl > 0) cls += ' day-positive';
-            else if (data.pnl < 0) cls += ' day-negative';
-            else cls += ' day-neutral';
-          } else {
-            cls += ' day-neutral';
-          }
-          cell.className = cls;
-
-          const trades = data ? data.trades : 0;
-          const pnl = data ? data.pnl : 0;
-
+          cell.className = 'day-cell day-neutral';
+          
           cell.innerHTML = `
             <div class="day-header">
               <span class="day-num">${d}</span>
-              <span class="day-trades">${trades > 0 ? trades + ' trades' : 'No trades'}</span>
+              <span class="day-trades">No trades</span>
             </div>
-            <div class="day-pnl">
-              ${trades === 0 ? '' : (pnl > 0 ? '+$' + pnl.toFixed(2) : (pnl < 0 ? '-$' + Math.abs(pnl).toFixed(2) : '$0.00'))}
-            </div>
+            <div class="day-pnl"></div>
           `;
           calendarDays.appendChild(cell);
         }
       }
 
+      if (monthSelect) {
+        monthSelect.addEventListener('change', () => { 
+          current.setMonth(parseInt(monthSelect.value, 10)); 
+          renderCalendar(); 
+        });
+      }
+      
+      if (yearSelect) {
+        yearSelect.addEventListener('change', () => { 
+          current.setFullYear(parseInt(yearSelect.value, 10)); 
+          renderCalendar(); 
+        });
+      }
+      
+      if (prevMonthBtn) {
+        prevMonthBtn.addEventListener('click', () => { 
+          current.setMonth(current.getMonth() - 1); 
+          renderCalendar(); 
+        });
+      }
+      
+      if (nextMonthBtn) {
+        nextMonthBtn.addEventListener('click', () => { 
+          current.setMonth(current.getMonth() + 1); 
+          renderCalendar(); 
+        });
+      }
+
       renderCalendar();
-
-      monthSelect.addEventListener('change', () => { current.setMonth(parseInt(monthSelect.value, 10)); renderCalendar(); });
-      yearSelect.addEventListener('change', () => { current.setFullYear(parseInt(yearSelect.value, 10)); renderCalendar(); });
-      prevMonthBtn.addEventListener('click', () => { current.setMonth(current.getMonth() - 1); renderCalendar(); });
-      nextMonthBtn.addEventListener('click', () => { current.setMonth(current.getMonth() + 1); renderCalendar(); });
-
-      // Charts dummy
-      const chartPayload = {
-        win_rate: 45.83,
-        loss_rate: 54.17,
-        short: { profit: 826.49, wins: 17, losses: 23 },
-        long: { profit: 826.49, wins: 5, losses: 3 }
-      };
-
-      const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'bottom', labels: { color: '#dadada', boxWidth: 10 } }
-        }
-      };
-
-      new Chart(document.getElementById('profitabilityChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: ['Wins', 'Losses'], datasets: [{ data: [chartPayload.win_rate, chartPayload.loss_rate], borderWidth: 0 }] },
-        options: commonOptions
-      });
-
-      new Chart(document.getElementById('shortChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: ['Profit', 'Wins', 'Losses'], datasets: [{ data: [chartPayload.short.profit, chartPayload.short.wins, chartPayload.short.losses], borderWidth: 0 }] },
-        options: commonOptions
-      });
-
-      new Chart(document.getElementById('longChart').getContext('2d'), {
-        type: 'doughnut',
-        data: { labels: ['Profit', 'Wins', 'Losses'], datasets: [{ data: [chartPayload.long.profit, chartPayload.long.wins, chartPayload.long.losses], borderWidth: 0 }] },
-        options: commonOptions
-      });
-
-      // History dummy
-      const trades = [
-        { "symbol":"XAUUSD","type":"Sell","open_date":"1/29/2024, 15:22","open":2033.97,"closed_date":"1/29/2024, 15:36","closed":2028.37,"tp":2028.37,"sl":2036,"pnl":205.11 },
-        { "symbol":"XAUUSD","type":"Buy","open_date":"1/24/2024, 10:14","open":2018.40,"closed_date":"1/24/2024, 10:45","closed":2022.10,"tp":2023.00,"sl":2014.00,"pnl":180.42 },
-        { "symbol":"NAS100","type":"Sell","open_date":"1/23/2024, 13:03","open":17839.40,"closed_date":"1/23/2024, 13:40","closed":17892.10,"tp":17790.00,"sl":17920.00,"pnl":-95.30 },
-        { "symbol":"EURUSD","type":"Buy","open_date":"1/22/2024, 09:12","open":1.08340,"closed_date":"1/22/2024, 10:02","closed":1.08510,"tp":1.08600,"sl":1.08100,"pnl":64.80 }
-      ];
-
-      const tradeBody = document.getElementById('tradeBody');
-      tradeBody.innerHTML = '';
-      trades.forEach(t => {
-        const tr = document.createElement('tr');
-        const isBuy = t.type.toLowerCase() === 'buy';
-        const pnlClass = t.pnl >= 0 ? 'pnl-pos' : 'pnl-neg';
-        const pnlText = (t.pnl >= 0 ? '$ ' : '-$ ') + Math.abs(t.pnl).toFixed(2);
-        tr.innerHTML = `
-          <td><iconify-icon class="ic share-icon" icon="mdi:share-variant-outline"></iconify-icon></td>
-          <td>${t.symbol}</td>
-          <td><span class="badge-type ${isBuy ? 'badge-buy' : 'badge-sell'}">${t.type}</span></td>
-          <td>${t.open_date}</td>
-          <td>${t.open}</td>
-          <td>${t.closed_date}</td>
-          <td>${t.closed}</td>
-          <td>${t.tp}</td>
-          <td>${t.sl}</td>
-          <td class="${pnlClass}">${pnlText}</td>
-        `;
-        tradeBody.appendChild(tr);
-      });
-
       applyLanguage(currentLang);
     });
   </script>
 
-  <!-- Chat logic -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -1519,166 +1417,7 @@
     });
   </script>
 
-  <!-- BACKEND PERFORMANCE HOOK – runs reliably even if DOMContentLoaded already passed -->
-  <script>
-    (function () {
-      const API_BASE_URL = "https://marketllama.com";
-      const token = localStorage.getItem("ml_access_token");
-
-      if (!token) {
-        console.warn("[ML] No token – performance will stay on dummy data.");
-        return;
-      }
-
-      const run = () => initPerformance().catch(err => console.error("[ML] Failed to initialise performance:", err));
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", run);
-      } else {
-        run(); // ✅ critical fix
-      }
-
-      async function initPerformance() {
-        const res = await fetch(API_BASE_URL + "/api/accounts", {
-          headers: { "Accept": "application/json", "Authorization": "Bearer " + token }
-        });
-        if (!res.ok) throw new Error("GET /api/accounts failed: " + res.status);
-
-        const accounts = await res.json();
-        if (!Array.isArray(accounts) || !accounts.length) {
-          console.log("[ML] No accounts returned – leaving dummy UI.");
-          return;
-        }
-
-        const defaultAccount =
-          accounts.find(a => a.is_primary) ||
-          accounts.find(a => !a.is_demo) ||
-          accounts[0];
-
-        await loadPerformance(defaultAccount.id);
-      }
-
-      async function loadPerformance(accountId) {
-        const res = await fetch(
-          API_BASE_URL + "/api/performance/summary?account_id=" + encodeURIComponent(accountId),
-          { headers: { "Accept": "application/json", "Authorization": "Bearer " + token } }
-        );
-        if (!res.ok) throw new Error("GET /api/performance/summary failed: " + res.status);
-        const data = await res.json();
-        renderPerformance(data);
-      }
-
-      function renderPerformance(data) {
-        if (!data || !data.kpis) return;
-
-        setText("kpiDays", data.kpis.trading_days);
-        setText("kpiTrades", data.kpis.total_trades);
-        if (typeof data.kpis.total_lots === "number") setText("kpiLots", data.kpis.total_lots.toFixed(2));
-        setMoney("kpiWin", data.kpis.biggest_win);
-        setMoney("kpiLoss", data.kpis.biggest_loss);
-
-        if (Array.isArray(data.weekly_summary)) {
-          const weekList = document.getElementById("weekList");
-          if (weekList) {
-            weekList.innerHTML = "";
-            data.weekly_summary.forEach(week => {
-              const card = document.createElement("div");
-              card.className = "week-card";
-              const pnlClass = week.pnl > 0 ? "green" : week.pnl < 0 ? "red" : "";
-              const pnlText = week.pnl === 0 ? "$ 0.00" : (week.pnl > 0 ? "$ " + week.pnl.toFixed(2) : "-$ " + Math.abs(week.pnl).toFixed(2));
-              card.innerHTML = `
-                <div class="week-top">
-                  <div class="week-name">${week.week_label || ""}</div>
-                  <div class="week-range">${week.range || ""}</div>
-                </div>
-                <div class="week-bottom">
-                  <div class="week-pnl ${pnlClass}">${pnlText}</div>
-                  <div class="week-days">Days: ${week.days ?? 0}</div>
-                </div>
-              `;
-              weekList.appendChild(card);
-            });
-          }
-        }
-
-        const tbody = document.getElementById("tradeBody");
-        if (tbody && Array.isArray(data.trade_history)) {
-          tbody.innerHTML = "";
-          data.trade_history.forEach(trade => {
-            const tr = document.createElement("tr");
-            const isBuy = (trade.side || "").toLowerCase() === "buy";
-            const pnl = Number(trade.pnl || 0);
-            const pnlClass = pnl >= 0 ? "pnl-pos" : "pnl-neg";
-            const pnlText = (pnl >= 0 ? "$ " : "-$ ") + Math.abs(pnl).toFixed(2);
-
-            tr.innerHTML = `
-              <td><iconify-icon class="ic share-icon" icon="mdi:share-variant-outline"></iconify-icon></td>
-              <td>${trade.symbol || "-"}</td>
-              <td><span class="badge-type ${isBuy ? "badge-buy" : "badge-sell"}">${isBuy ? "Buy" : "Sell"}</span></td>
-              <td>${formatDateTime(trade.open_time)}</td>
-              <td>${trade.open_price ?? "-"}</td>
-              <td>${formatDateTime(trade.close_time)}</td>
-              <td>${trade.close_price ?? "-"}</td>
-              <td>${trade.tp ?? "-"}</td>
-              <td>${trade.sl ?? "-"}</td>
-              <td class="${pnlClass}">${pnlText}</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        }
-      }
-
-      function setText(id, value) {
-        const el = document.getElementById(id);
-        if (!el || value === undefined || value === null) return;
-        el.textContent = value;
-      }
-
-      function setMoney(id, value) {
-        const el = document.getElementById(id);
-        if (!el || value === undefined || value === null || isNaN(value)) return;
-        const num = Number(value);
-        const sign = num >= 0 ? "" : "-";
-        el.textContent = `${sign}$${Math.abs(num).toFixed(2)}`;
-      }
-
-      function formatDateTime(isoString) {
-        if (!isoString) return "-";
-        const d = new Date(isoString);
-        if (isNaN(d.getTime())) return "-";
-        return d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      }
-    })();
-  </script>
- <script src="scripts/auth.js"></script>
- <script src="scripts/accounts.js"></script>
- 
- <script>
-   async function loadPerformance() {
-     try {
-       const res = await fetch('/api/performance', {
-         headers: MLAuth.authHeader()
-       });
- 
-       if (res.status === 401) {
-         MLAuth.logout();
-         return;
-       }
- 
-       if (!res.ok) throw new Error('Performance API unavailable');
- 
-       const data = await res.json();
- 
-       // TODO: hydrate KPIs, charts, calendar, table
-     } catch (err) {
-       console.warn('Performance unavailable:', err.message);
-       // Fail closed — UI remains empty
-     }
-   }
- 
-   document.addEventListener('DOMContentLoaded', loadPerformance);
- </script>
- 
-</script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/performance.js"></script>
 </body>
 </html>
