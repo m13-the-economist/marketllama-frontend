@@ -7,8 +7,8 @@
   <title>Accounts — Market Llama</title>
   <meta name="description" content="Manage your live and demo trading accounts." />
 
-  <!-- Iconify (ONCE, in head) -->
-  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <!-- Iconify Standardized (v1.0.8 with iconify-icon elements) -->
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,25 +17,22 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml"
         href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
-    </head>
-    <body class="app dark">
-      <style>
-        :root {
-          --header-h: 60px;
-          --bg: #0b0b0c;
-          --panel: #121214;
-          --muted: #8f8f92;
-          --text: #ffffff;
-
+  
+  <!-- Theme Stabilization CSS (moved to head) -->
+  <style>
+    :root {
+      --header-h: 60px;
+      --bg: #0b0b0c;
+      --panel: #121214;
+      --muted: #8f8f92;
+      --text: #ffffff;
       --accent: #ffffff;
       --accent-plain: #dadada;
-
       --glow: rgba(255, 255, 255, .06);
       --glass: rgba(255, 255, 255, .04);
       --ring: rgba(255, 255, 255, .12);
       --pill: #16171a;
       --shadow: 0 8px 24px rgba(0, 0, 0, .45);
-
       --nav-teal: #1a6d72;
       --header-blue: #0097b2;
     }
@@ -48,7 +45,10 @@
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       overflow-x: hidden;
     }
-
+  </style>
+    </head>
+    <body class="app dark">
+      <style>
     /* ===== PROFILE BACKGROUND ===== */
     .profile-background {
       position: fixed;
@@ -169,7 +169,7 @@
       min-width: 160px;
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
-      z-index: 1000; /* FIXED: removed invalid "z-index hookup" */
+      z-index: 1000;
     }
 
     .lang-option {
@@ -902,9 +902,11 @@
     </div>
   </div>
 
-  <script src="../scripts/auth.js?v=1.0.1"></script>
-  <script src="../scripts/accounts.js?v=1.0.1"></script>
+  <!-- DASHBOARD SCRIPTS ONLY (no landing scripts) -->
+  <script src="../scripts/auth.js?v=1.0.2"></script>
+  <script src="../scripts/accounts.js?v=1.0.2"></script>
 
+  <!-- Translation script MODIFIED to preserve dynamic data -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
@@ -1002,7 +1004,13 @@
       function applyLanguage(lang) {
         const t = translations[lang] || translations.en;
 
-        document.querySelectorAll('[data-i18n]').forEach(el => {
+        // EXCLUDE elements with dynamic data from translation overwrite
+        document.querySelectorAll('[data-i18n]:not([data-dynamic])').forEach(el => {
+          // Skip user name and balance elements - dynamic data wins
+          if (el.closest('.greeting') && el.classList.contains('user-name')) return;
+          if (el.id === 'topBalance' || el.classList.contains('balance-amount')) return;
+          if (el.closest('.account-card') && el.classList.contains('balance-value')) return;
+          
           const key = el.getAttribute('data-i18n');
           if (t[key]) el.textContent = t[key];
         });
