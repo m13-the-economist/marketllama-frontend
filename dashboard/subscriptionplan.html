@@ -10,13 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
 
-  <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
   <link rel="icon" type="image/svg+xml"
     href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
 
   <link rel="stylesheet" href="../landing/styles/style.css" />
-</head>
 
   <style>
     :root {
@@ -33,6 +32,7 @@
       --pill: #16171a;
       --shadow: 0 8px 24px rgba(0, 0, 0, .45);
       --nav-teal: #1a6d72;
+      --header-blue: #0097b2;
     }
 
     * {
@@ -52,17 +52,28 @@
       overflow-x: hidden;
     }
 
+    /* ===== PROFILE BACKGROUND ===== */
     .profile-background {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg);
+      inset: 0;
       z-index: -1;
+      width: 150vw;
+      height: 120vh;
+      top: -10%;
+      left: 15%;
+      background:
+        radial-gradient(200px 260px at 20% 30%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(180px 240px at 40% 20%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(140px 200px at 25% 70%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(100px 140px at 75% 25%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(160px 220px at 80% 60%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%),
+        radial-gradient(120px 180px at 60% 80%, transparent 30%, rgba(255, 255, 255, .05) 32%, transparent 34%);
+      filter: blur(60px);
+      opacity: 0.6;
+      pointer-events: none;
     }
 
-    /* ===== HEADER ===== */
+    /* ===== HEADER (NAVBAR) ===== */
     .site-header {
       position: fixed;
       inset: 0 0 auto 0;
@@ -73,7 +84,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 8px 14px;
-      background: #0097b2;
+      background: var(--header-blue);
       border-bottom: 1px solid var(--ring);
       backdrop-filter: blur(8px);
     }
@@ -82,6 +93,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      min-width: 220px;
     }
 
     .brand {
@@ -91,6 +103,7 @@
       color: var(--text);
       text-decoration: none;
       font-weight: 700;
+      white-space: nowrap;
     }
 
     .logo {
@@ -101,6 +114,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      flex: 0 0 auto;
     }
 
     .logo-img {
@@ -131,7 +145,7 @@
       border-radius: 10px;
       cursor: pointer;
       line-height: 1;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
@@ -141,6 +155,11 @@
     .icon-btn:hover {
       background: rgba(255, 255, 255, 0.1);
       transform: translateY(-1px);
+    }
+
+    .icon-btn.sm {
+      padding: 5px;
+      border-radius: 9px;
     }
 
     .balance-wrap {
@@ -186,6 +205,7 @@
       transition: all 0.2s ease;
       font-family: inherit;
       font-size: 14px;
+      text-align: left;
     }
 
     .lang-option:hover {
@@ -250,10 +270,9 @@
 
     .side-toggle {
       position: sticky;
-      bottom: 0;
+      top: 0;
       width: 100%;
       background: rgb(75, 75, 75);
-      margin-top: 6px;
       border: none;
       color: white;
       padding: 10px;
@@ -261,6 +280,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 2;
     }
 
     .side-menu {
@@ -291,6 +311,10 @@
       background: var(--glass);
       border-color: var(--ring);
       color: var(--text);
+    }
+
+    .has-submenu {
+      position: relative;
     }
 
     .accordion {
@@ -329,6 +353,7 @@
       border-left: 2px solid #4169E1;
       border-radius: 0 0 8px 8px;
       overflow: hidden;
+      transition: all 0.3s ease;
     }
 
     .side[data-state="collapsed"] .submenu {
@@ -363,6 +388,7 @@
       color: white;
     }
 
+    /* ===== CONTENT ===== */
     .content {
       margin-left: 240px;
       padding: 18px clamp(12px, 2vw, 24px);
@@ -403,6 +429,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--muted);
       font-size: 13px;
+      transition: margin-left 0.25s ease;
     }
 
     .side[data-state="collapsed"]~.legal-footer {
@@ -410,8 +437,8 @@
     }
 
     .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: none;
+      margin: 0;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -447,7 +474,7 @@
       text-decoration: underline;
     }
 
-    /* ===== Chat widget — teal variant ===== */
+    /* ===== Chat widget ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -572,6 +599,7 @@
       color: #fff;
       border-radius: 12px;
       padding: 10px 12px;
+      font-family: inherit;
     }
 
     .chat-send {
@@ -581,9 +609,11 @@
       border-radius: 12px;
       padding: 10px 14px;
       cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
     }
 
-    /* ===== EARLY ADOPTER HERO (NEAT) ===== */
+    /* ===== EARLY ADOPTER HERO ===== */
     .early-hero {
       margin: 10px 0 20px;
       background: linear-gradient(135deg, #1a6d72, #1f8a96);
@@ -1027,7 +1057,7 @@
       margin-top: 10px;
     }
 
-    /* Back-to-top button (simple) */
+    /* Back-to-top button */
     .back-to-top {
       position: fixed;
       right: 20px;
@@ -1048,6 +1078,42 @@
       width: 20px;
       height: 20px;
       fill: #fff;
+    }
+
+    /* ===== AUTH OVERLAY ===== */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .auth-overlay.active {
+      display: flex;
+    }
+
+    .auth-container {
+      background: var(--bg);
+      border: 1px solid var(--ring);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 420px;
+      width: 90%;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 24px;
+      cursor: pointer;
     }
 
     /* ===== RESPONSIVE ===== */
@@ -1090,16 +1156,16 @@
       }
 
       .content {
-        margin-left: 0;
+        margin-left: 0 !important;
+      }
+
+      .legal-footer {
+        margin-left: 0 !important;
       }
 
       .language-dropdown {
         right: 10px;
         min-width: 140px;
-      }
-
-      .legal-footer {
-        margin-left: 0;
       }
 
       .footer-inner {
@@ -1161,17 +1227,20 @@
       }
     }
   </style>
+</head>
 
+<body class="app dark">
   <div class="profile-background"></div>
 
-  <!-- DASHBOARD HEADER -->
+  <!-- ===== NAVBAR (same as accounts.html) ===== -->
   <header class="site-header" id="siteHeader">
     <div class="left">
       <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar"
         aria-expanded="false">
         <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
       </button>
-      <a href="plans.html" class="brand" data-link="accounts">
+
+      <a href="accounts.html" class="brand" data-link="accounts">
         <div class="logo">
           <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
         </div>
@@ -1194,6 +1263,7 @@
       <button class="icon-btn" id="languageBtn" aria-label="Language">
         <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
       </button>
+
       <div class="language-dropdown" id="languageDropdown" hidden>
         <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
         <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
@@ -1205,9 +1275,11 @@
       <button class="icon-btn" aria-label="Notifications">
         <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
       </button>
+
       <button class="icon-btn" aria-label="Support">
         <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
       </button>
+
       <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
         <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
       </a>
@@ -1217,15 +1289,15 @@
   <div class="backdrop" id="backdrop" hidden></div>
 
   <main class="dashboard">
-    <!-- SIDEBAR -->
+    <!-- ===== SIDEBAR ===== -->
     <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
-      <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
+      <button class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
         <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
-      </div>
+      </button>
 
       <ul class="side-menu">
         <li>
-          <a href="plans.html" data-link="accounts">
+          <a href="accounts.html" data-link="accounts">
             <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
             <span class="label" data-i18n="accounts">Accounts</span>
           </a>
@@ -1237,15 +1309,16 @@
             <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
             <iconify-icon class="ic chevron" icon="mdi:chevron-up"></iconify-icon>
           </button>
+
           <ul class="submenu" hidden>
             <li>
-              <a href="subscriptionplan.html" data-link="subscription">
+              <a href="subscriptionplan.html" data-link="subscriptionplan">
                 <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
                 <span data-i18n="subscription">Subscription Plan</span>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" data-link="transactionHistory">
                 <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
                 <span data-i18n="transactionHistory">Transaction History</span>
               </a>
@@ -1290,10 +1363,10 @@
       </ul>
     </aside>
 
-    <!-- CONTENT -->
+    <!-- ===== CONTENT ===== -->
     <section class="content" id="content">
 
-      <!-- EARLY ADOPTER HERO (SCROLLABLE CONTENT) -->
+      <!-- EARLY ADOPTER HERO -->
       <section class="early-hero" id="early-adopter">
         <div class="early-hero-grid">
           <div>
@@ -1329,7 +1402,7 @@ Two Ways to Support the Project
 For users who understand the risks and want early access to the system as it transitions into live operation.
 
 2. Support Development (Optional Contribution)
-If you’re not ready to participate in live testing but want to support development, you can contribute any amount toward production and platform completion.
+If you're not ready to participate in live testing but want to support development, you can contribute any amount toward production and platform completion.
 
 We appreciate every form of support.
 
@@ -1531,7 +1604,7 @@ Questions? Contact us at [your email].
       </section>
     </section>
 
-    <!-- FOOTER -->
+    <!-- ===== FOOTER ===== -->
     <footer class="legal-footer">
       <div class="footer-inner">
         <p class="footer-risk">
@@ -1572,7 +1645,7 @@ Questions? Contact us at [your email].
     </footer>
   </main>
 
-  <!-- CHAT WIDGET -->
+  <!-- ===== CHAT WIDGET ===== -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
       stroke-linejoin="round" aria-hidden="true">
@@ -1605,7 +1678,7 @@ Questions? Contact us at [your email].
     </svg>
   </button>
 
-  <!-- AUTH OVERLAY (kept as-is; your landing/style.css controls look) -->
+  <!-- AUTH OVERLAY -->
   <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog" aria-labelledby="authTitle"
     aria-hidden="true">
     <div class="auth-container" id="authContainer">
@@ -1668,8 +1741,7 @@ Questions? Contact us at [your email].
     </div>
   </div>
 
-
-  <!-- LANGUAGE + SIDEBAR + BALANCE LOGIC -->
+  <!-- ===== NAVBAR & LANGUAGE SCRIPT (same as accounts.html) ===== -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
@@ -1778,6 +1850,7 @@ Questions? Contact us at [your email].
         updateNavLinks();
       }
 
+      // Accordion submenu
       const accordion = document.querySelector('.accordion');
       const submenu = document.querySelector('.submenu');
       const chevron = document.querySelector('.chevron');
@@ -1797,10 +1870,11 @@ Questions? Contact us at [your email].
           const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
           accordion.setAttribute('aria-expanded', String(!isExpanded));
           submenu.hidden = isExpanded;
-          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-up' : 'mdi:chevron-down');
+          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
         });
       }
 
+      // Mobile sidebar
       const mobileSideTrigger = document.getElementById('mobileSideTrigger');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('backdrop');
@@ -1823,6 +1897,7 @@ Questions? Contact us at [your email].
         });
       }
 
+      // Desktop collapse
       const sideToggle = document.getElementById('sideToggle');
       if (sideToggle && sidebar) {
         sideToggle.addEventListener('click', (e) => {
@@ -1830,6 +1905,7 @@ Questions? Contact us at [your email].
           const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
           sideToggle.setAttribute('aria-expanded', String(!isExpanded));
           sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
+
           const chevronIcon = sideToggle.querySelector('iconify-icon');
           if (chevronIcon) {
             chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
@@ -1838,6 +1914,7 @@ Questions? Contact us at [your email].
         });
       }
 
+      // Balance toggle
       const toggleBalance = document.getElementById('toggleBalance');
       const topBalance = document.getElementById('topBalance');
       const topEye = document.getElementById('topEye');
@@ -1857,18 +1934,14 @@ Questions? Contact us at [your email].
         });
       }
 
+      // Language dropdown
       const languageBtn = document.getElementById('languageBtn');
       const languageDropdown = document.getElementById('languageDropdown');
-
-      function toggleLanguageDropdown() {
-        if (!languageDropdown) return;
-        languageDropdown.hidden = !languageDropdown.hidden;
-      }
 
       if (languageBtn && languageDropdown) {
         languageBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          toggleLanguageDropdown();
+          languageDropdown.hidden = !languageDropdown.hidden;
         });
 
         languageDropdown.addEventListener('click', (e) => e.stopPropagation());
@@ -1889,12 +1962,15 @@ Questions? Contact us at [your email].
         });
       }
 
+      // Click outside closes submenu
       document.addEventListener('click', () => closeDropdown());
+
+      // Initial language application
       applyLanguage(currentLang);
     });
   </script>
 
-  <!-- CHAT WIDGET LOGIC -->
+  <!-- ===== CHAT WIDGET SCRIPT ===== -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const chatFab = document.getElementById('chatFab');
@@ -1954,9 +2030,10 @@ Questions? Contact us at [your email].
     });
   </script>
 
-  <!-- PRICING + AUTH + BACK-TO-TOP LOGIC -->
+  <!-- ===== PRICING + AUTH + BACK-TO-TOP SCRIPT ===== -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // PRICING TOGGLE
       const billMonthlyBtn = document.getElementById('billMonthly');
       const billAnnuallyBtn = document.getElementById('billAnnually');
       const priceEls = document.querySelectorAll('[data-price]');
@@ -1996,6 +2073,7 @@ Questions? Contact us at [your email].
       })();
       setBilling(storedMode || 'monthly');
 
+      // AUTH OVERLAY
       function handleAuthClick(e, mode, planName) {
         e.preventDefault();
         e.stopPropagation();
@@ -2051,11 +2129,10 @@ Questions? Contact us at [your email].
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAuthOverlay(); });
       }
 
+      // BACK TO TOP
       const backToTop = document.getElementById('backToTop');
       if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     });
   </script>
-  
 </body>
-
 </html>
