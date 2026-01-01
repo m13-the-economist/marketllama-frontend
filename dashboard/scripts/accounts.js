@@ -235,6 +235,11 @@
   function renderTopBalance(el) {
     const active = currentTab === 'demo' ? balances.demo : balances.live;
     el.textContent = format(active.balance, active.currency);
+    
+    // Dispatch event so navbar.js can update too
+    document.dispatchEvent(new CustomEvent('ml:balance-updated', {
+      detail: { currentTab, balances }
+    }));
   }
 
   function format(amount, currency) {

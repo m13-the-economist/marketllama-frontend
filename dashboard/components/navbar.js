@@ -23,7 +23,7 @@
   const res = await fetch("components/navbar.html", { cache: "no-store" });
   mount.innerHTML = await res.text();
 
-  // ====== JS logic copied from your Profile page (same behavior) ======
+  // ====== JS logic ======
   const params = new URLSearchParams(window.location.search);
   let currentLang = params.get('lang') || 'en';
 
@@ -39,7 +39,6 @@
   if (!translations[currentLang]) currentLang = 'en';
 
   function updateNavLinks() {
-    // Use your original logic: map data-link -> page.html?lang=
     const pages = ['accounts', 'insight', 'performance', 'chart', 'instructions', 'profile'];
     pages.forEach(type => {
       mount.querySelectorAll('[data-link="' + type + '"]').forEach(a => {
@@ -47,7 +46,6 @@
       });
     });
 
-    // Keep submenu links stable but add lang when possible
     mount.querySelectorAll('[data-link="subscriptionplan"]').forEach(a => {
       a.href = 'subscriptionplan.html?lang=' + currentLang;
     });
@@ -148,16 +146,54 @@
   let balanceHidden = false;
 
   if (toggleBalance && topBalance && topEye) {
+    // Function to update balance display
+    function updateBalanceDisplay() {
+      if (balanceHidden) {
+        topBalance.textContent = '•••••';
+      } else {
+        // Try to get balance from accounts.js if it's loaded
+        if (window.__ML_ACCOUNTS_READY__ && window.currentTab && window.balances) {
+          const active = window.currentTab === 'demo' ? window.balances.demo : window.balances.live;
+          topBalance.textContent = formatBalance(active.balance, active.currency);
+        } else {
+          // Fallback: check if accounts.js already set it
+          if (topBalance.textContent !== '—' && topBalance.textContent !== '•••••') {
+            // Balance already set by accounts.js
+            return;
+          }
+          topBalance.textContent = '— USD'; // Loading state
+        }
+      }
+      
+      // Update eye icon
+      topEye.setAttribute('icon', balanceHidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
+    }
+
+    // Format balance like accounts.js does
+    function formatBalance(amount, currency) {
+      return (
+        Number(amount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) +
+        ' ' +
+        currency
+      );
+    }
+
+    // Toggle balance visibility
     toggleBalance.addEventListener('click', (e) => {
       e.stopPropagation();
       balanceHidden = !balanceHidden;
-      if (balanceHidden) {
-        topBalance.textContent = '•••••';
-        topEye.setAttribute('icon', 'mdi:eye-off-outline');
-      } else {
-        topBalance.textContent = '$ 15 400.00';
-        topEye.setAttribute('icon', 'mdi:eye-outline');
-      }
+      updateBalanceDisplay();
+    });
+
+    // Initial update
+    updateBalanceDisplay();
+    
+    // Listen for balance updates from accounts.js
+    document.addEventListener('ml:balance-updated', function() {
+      updateBalanceDisplay();
     });
   }
 

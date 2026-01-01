@@ -13,6 +13,9 @@
   
     <link rel="icon" type="image/svg+xml"
       href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
+    <!-- Navbar CSS -->
+    <link rel="stylesheet" href="./components/navbar.css" />
   </head>
   <style>
     :root {
@@ -41,10 +44,10 @@
       color: var(--text);
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       overflow-x: hidden;
-
-      /* ✅ fixed header offset (navbar is injected) */
-      padding-top: var(--header-h);
     }
+
+    /* Dashboard layout */
+    .dashboard { min-height: 100vh; padding-top: var(--header-h); }
 
     .profile-background {
       position: fixed;
@@ -55,9 +58,6 @@
       background: var(--bg);
       z-index: -1;
     }
-
-    /* ✅ remove old header/sidebar styling impact on layout */
-    .dashboard { min-height: 100vh; }
 
     /* Layout with injected sidebar */
     .content {
@@ -215,6 +215,7 @@
       font-size: 12px;
     }
 
+    /* ===== FOOTER ===== */
     .legal-footer {
       margin-left: 240px;
       margin-top: 24px;
@@ -222,22 +223,38 @@
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--muted);
       font-size: 13px;
-      transition: margin-left .25s ease;
+      transition: margin-left 0.25s ease;
     }
-    .side[data-state="collapsed"] ~ .legal-footer { margin-left: 68px; }
+
+    .side[data-state="collapsed"] ~ .legal-footer {
+      margin-left: 68px;
+    }
 
     .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: none;
+      margin: 0;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 24px;
     }
-    .footer-risk { line-height: 1.7; max-width: 720px; }
 
-    .footer-links { text-align: right; font-size: 13px; }
-    .footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .footer-risk {
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .footer-links {
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
     .footer-links a {
       color: var(--accent-plain);
@@ -245,7 +262,11 @@
       opacity: 0.9;
       transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
     }
-    .footer-links a:hover { opacity: 1; text-decoration: underline; }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
 
     /* ===== CHAT WIDGET – teal style ===== */
     .chat-fab {
@@ -306,7 +327,7 @@
       .content { margin-left: 0 !important; }
       .profile-grid { grid-template-columns: 1fr; }
       .profile-avatar { width: 100px; height: 100px; font-size: 36px; }
-      .legal-footer { margin-left: 0 !important; }
+      .legal-footer { margin-left: 0 !important; padding-inline: 12px; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
       .footer-links { text-align: left; }
     }
@@ -316,18 +337,18 @@
     }
   </style>
 
-  <!-- Iconify (navbar.js won’t double-load) -->
+  <!-- Iconify -->
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js" defer></script>
-
-  <!-- ✅ Inject shared navbar.html + sidebar -->
-  <script src="components/navbar.js" defer></script>
 </head>
 
 <body class="app dark">
   <div class="profile-background"></div>
 
-  <!-- ✅ Navbar mount (replaces old header + sidebar) -->
+  <!-- ===== NAVBAR COMPONENT ===== -->
   <div id="ml-navbar"></div>
+
+  <!-- ===== BACKDROP FOR MOBILE MENU ===== -->
+  <div class="backdrop" id="backdrop" hidden></div>
 
   <main class="dashboard">
     <section class="content" id="content">
@@ -489,44 +510,8 @@
       </div>
     </section>
 
-    <footer class="legal-footer">
-      <div class="footer-inner">
-        <p class="footer-risk">
-          <strong>⚠️ Risk Disclaimer:</strong><br><br>
-          Trading in financial markets carries inherent risks, including the potential for loss of capital.
-          Performance may vary based on market conditions, account size, risk tolerance, and execution
-          environment. While Market Llama is built to deliver consistent, data driven performance through
-          advanced automation and professional account management, no trading environment is completely
-          without risk.
-          <br><br>
-          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
-          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
-          market fluctuations more effectively, but they are still subject to market risk and temporary
-          performance deviations.
-          <br><br>
-          Market Llama operates as a technology-enabled, professional account management platform  similar
-          to institutional asset managers providing users with sophisticated trading systems, automated
-          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
-          capital, and deliver institutional-grade trading outcomes.
-          <br><br>
-          By connecting your trading account to Market Llama, you acknowledge that every investment activity
-          carries risk, and that results can vary across market conditions. We commit to operating
-          transparently, managing accounts responsibly, and applying disciplined, data driven strategies
-          designed to achieve consistent long-term performance.
-        </p>
-        <div class="footer-links">
-          <ul class="footer-links-list">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms &amp; Conditions</a></li>
-            <li><a href="#">Refund &amp; Billing Policy</a></li>
-            <li><a href="#">support</a></li>
-            <li><a href="#">Whatsapp</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">instagram</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
+    <!-- ===== FOOTER COMPONENT ===== -->
+    <div id="ml-footer"></div>
   </main>
 
   <!-- CHAT -->
@@ -555,11 +540,38 @@
     </form>
   </div>
 
+  <!-- Load navbar and footer components -->
   <script>
-    // ✅ run page logic only after navbar is injected (so IDs exist)
-    document.addEventListener("ml:navbar-ready", initProfilePage, { once: true });
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load navbar
+      fetch('./components/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-navbar').innerHTML = data;
+          // Highlight active menu item for Profile/Settings
+          const profileLink = document.querySelector('a[href*="profile.html"]');
+          if (profileLink) {
+            const li = profileLink.closest('li');
+            if (li) {
+              li.classList.add('active');
+            }
+          }
+        })
+        .catch(err => console.error('Error loading navbar:', err));
 
-    function initProfilePage() {
+      // Load footer
+      fetch('./components/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-footer').innerHTML = data;
+        })
+        .catch(err => console.error('Error loading footer:', err));
+
+      // Apply translations after components are loaded
+      setTimeout(initializeTranslations, 100);
+    });
+
+    function initializeTranslations() {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get('lang') || 'en';
 
@@ -761,16 +773,12 @@
           btn.appendChild(span);
         });
 
-        if (lang === 'ar') document.documentElement.setAttribute('dir', 'rtl');
-        else document.documentElement.setAttribute('dir', 'ltr');
+        if (lang === 'ar') {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
       }
-
-      // ✅ mark active (Settings/Profile) after injection
-      (function markActive() {
-        document.querySelectorAll(".side-menu li").forEach(li => li.classList.remove("active"));
-        const link = document.querySelector('.side-menu a[data-link="profile"]');
-        if (link && link.closest("li")) link.closest("li").classList.add("active");
-      })();
 
       applyLanguage(currentLang);
     }
@@ -835,5 +843,12 @@
     });
   </script>
 
+  <!-- ===== REQUIRED SCRIPTS (IN ORDER) ===== -->
+  <script src="./scripts/auth.js"></script>
+  <script src="./components/navbar.js"></script>
+  <!-- No profile-specific JS needed for now -->
+  <script>
+    // Footer already loaded in the main script
+  </script>
 </body>
 </html>

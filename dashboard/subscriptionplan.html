@@ -16,6 +16,7 @@
     href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
 
   <link rel="stylesheet" href="../landing/styles/style.css" />
+  <link rel="stylesheet" href="./components/navbar.css" />
 
   <style>
     :root {
@@ -71,321 +72,6 @@
       filter: blur(60px);
       opacity: 0.6;
       pointer-events: none;
-    }
-
-    /* ===== HEADER (NAVBAR) ===== */
-    .site-header {
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: var(--header-h);
-      z-index: 40;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 8px 14px;
-      background: var(--header-blue);
-      border-bottom: 1px solid var(--ring);
-      backdrop-filter: blur(8px);
-    }
-
-    .site-header .left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 220px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .logo {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex: 0 0 auto;
-    }
-
-    .logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-      display: block;
-    }
-
-    .brand-name {
-      letter-spacing: .2px;
-      font-size: 1rem;
-    }
-
-    .site-actions {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      background: transparent;
-      border: 1px solid var(--ring);
-      color: var(--text);
-      padding: 6px 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .icon-btn.sm {
-      padding: 5px;
-      border-radius: 9px;
-    }
-
-    .balance-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 8px;
-      border: 1px solid var(--ring);
-      border-radius: 10px;
-      background: var(--glass);
-    }
-
-    .balance-amount {
-      letter-spacing: .2px;
-      font-size: .95rem;
-    }
-
-    .language-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 120px;
-      background: rgba(20, 20, 20, 0.95);
-      border: 1px solid var(--ring);
-      border-radius: 12px;
-      padding: 8px;
-      min-width: 160px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      z-index: 1000;
-    }
-
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 10px 12px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      font-size: 14px;
-      text-align: left;
-    }
-
-    .lang-option:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .flag {
-      font-size: 16px;
-    }
-
-    .mobile-only {
-      display: none;
-    }
-
-    .desktop-only {
-      display: inline-flex;
-    }
-
-    .ic {
-      font-size: 18px;
-      line-height: 1;
-      vertical-align: middle;
-      opacity: 0.9;
-      transition: opacity 0.2s ease;
-    }
-
-    .icon-btn:hover .ic {
-      opacity: 1;
-    }
-
-    /* ===== LAYOUT ===== */
-    .dashboard {
-      min-height: 100vh;
-      padding-top: var(--header-h);
-    }
-
-    .side {
-      position: fixed;
-      top: var(--header-h);
-      left: 0;
-      bottom: 0;
-      z-index: 30;
-      width: 240px;
-      overflow-y: auto;
-      border-right: 1px solid var(--ring);
-      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
-      transition: left .3s ease, width .25s ease;
-    }
-
-    .side[data-state="collapsed"] {
-      width: 68px;
-    }
-
-    .side .label {
-      transition: opacity .2s ease;
-    }
-
-    .side[data-state="collapsed"] .label {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .side-toggle {
-      position: sticky;
-      top: 0;
-      width: 100%;
-      background: rgb(75, 75, 75);
-      border: none;
-      color: white;
-      padding: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-    }
-
-    .side-menu {
-      list-style: none;
-      margin: 8px 0 48px;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .side-menu a,
-    .accordion {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      text-decoration: none;
-      color: var(--accent-plain);
-      background: transparent;
-      border: 1px solid transparent;
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .side-menu li.active>a {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
-
-    .has-submenu {
-      position: relative;
-    }
-
-    .accordion {
-      background: none;
-      border: none;
-      transition: all 0.3s ease;
-      font-family: inherit;
-      font-size: inherit;
-    }
-
-    .accordion:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--ring);
-    }
-
-    .accordion .chevron {
-      margin-left: auto;
-      transition: transform 0.3s ease;
-    }
-
-    .accordion[aria-expanded="true"] .chevron {
-      transform: rotate(180deg);
-    }
-
-    .accordion[aria-expanded="true"] {
-      background: var(--glass);
-      border-color: var(--ring);
-      color: var(--text);
-    }
-
-    .submenu {
-      list-style: none;
-      padding-left: 20px;
-      margin: 4px 0 0;
-      background: rgba(0, 0, 0, 0.2);
-      border-left: 2px solid #4169E1;
-      border-radius: 0 0 8px 8px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .side[data-state="collapsed"] .submenu {
-      display: none !important;
-    }
-
-    .submenu li {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .submenu li:last-child {
-      border-bottom: none;
-    }
-
-    .submenu a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 6px;
-      margin: 2px 4px;
-      width: calc(100% - 8px);
-    }
-
-    .submenu a:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
     }
 
     /* ===== CONTENT ===== */
@@ -1118,54 +804,18 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1100px) {
-      .desktop-only {
-        display: none;
-      }
-
-      .mobile-only {
-        display: inline-flex;
-      }
-
       .plan {
         grid-column: span 6;
       }
     }
 
-    @media (max-width: 1024px) {
-      .side[data-state="expanded"] {
-        width: 200px;
-      }
-
-      .content {
-        margin-left: 200px;
-      }
-
-      .legal-footer {
-        margin-left: 200px;
-      }
-    }
-
     @media (max-width: 768px) {
-      .side {
-        left: -240px;
-        width: 240px;
-      }
-
-      .side.open {
-        left: 0;
-      }
-
       .content {
         margin-left: 0 !important;
       }
 
       .legal-footer {
         margin-left: 0 !important;
-      }
-
-      .language-dropdown {
-        right: 10px;
-        min-width: 140px;
       }
 
       .footer-inner {
@@ -1232,137 +882,13 @@
 <body class="app dark">
   <div class="profile-background"></div>
 
-  <!-- ===== NAVBAR (same as accounts.html) ===== -->
-  <header class="site-header" id="siteHeader">
-    <div class="left">
-      <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar"
-        aria-expanded="false">
-        <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
-      </button>
+  <!-- ===== NAVBAR COMPONENT ===== -->
+  <div id="ml-navbar"></div>
 
-      <a href="accounts.html" class="brand" data-link="accounts">
-        <div class="logo">
-          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
-        </div>
-        <span class="brand-name">Market Llama</span>
-      </a>
-    </div>
-
-    <nav class="site-actions">
-      <button class="icon-btn" id="qrBtn" aria-label="Scan QR">
-        <iconify-icon class="ic" icon="mdi:qrcode-scan"></iconify-icon>
-      </button>
-
-      <div class="balance-wrap">
-        <span class="balance-amount" id="topBalance">—</span>
-        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
-          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
-        </button>
-      </div>
-
-      <button class="icon-btn" id="languageBtn" aria-label="Language">
-        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
-      </button>
-
-      <div class="language-dropdown" id="languageDropdown" hidden>
-        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
-        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
-        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
-        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
-        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
-      </div>
-
-      <button class="icon-btn" aria-label="Notifications">
-        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
-      </button>
-
-      <button class="icon-btn" aria-label="Support">
-        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
-      </button>
-
-      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
-        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
-      </a>
-    </nav>
-  </header>
-
+  <!-- ===== BACKDROP FOR MOBILE MENU ===== -->
   <div class="backdrop" id="backdrop" hidden></div>
 
   <main class="dashboard">
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
-      <button class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
-        <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
-      </button>
-
-      <ul class="side-menu">
-        <li>
-          <a href="accounts.html" data-link="accounts">
-            <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
-            <span class="label" data-i18n="accounts">Accounts</span>
-          </a>
-        </li>
-
-        <li class="has-submenu active">
-          <button class="accordion" aria-expanded="true">
-            <iconify-icon class="ic" icon="mdi:wallet-outline"></iconify-icon>
-            <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
-            <iconify-icon class="ic chevron" icon="mdi:chevron-up"></iconify-icon>
-          </button>
-
-          <ul class="submenu" hidden>
-            <li>
-              <a href="subscriptionplan.html" data-link="subscriptionplan">
-                <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
-                <span data-i18n="subscription">Subscription Plan</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" data-link="transactionHistory">
-                <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
-                <span data-i18n="transactionHistory">Transaction History</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="insight.html" data-link="insight">
-            <iconify-icon class="ic" icon="mdi:map-marker-outline"></iconify-icon>
-            <span class="label" data-i18n="insight">Insight</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="performance.html" data-link="performance">
-            <iconify-icon class="ic" icon="mdi:cpu-64-bit"></iconify-icon>
-            <span class="label" data-i18n="performance">Performance</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="chart.html" data-link="chart">
-            <iconify-icon class="ic" icon="mdi:chart-bar"></iconify-icon>
-            <span class="label" data-i18n="chart">Chart</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="instructions.html" data-link="instructions">
-            <iconify-icon class="ic" icon="mdi:book-open-outline"></iconify-icon>
-            <span class="label" data-i18n="instructions">Instructions</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="profile.html" data-link="profile">
-            <iconify-icon class="ic" icon="mdi:cog-outline"></iconify-icon>
-            <span class="label" data-i18n="settings">Settings</span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-
     <!-- ===== CONTENT ===== -->
     <section class="content" id="content">
 
@@ -1604,45 +1130,8 @@ Questions? Contact us at [your email].
       </section>
     </section>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="legal-footer">
-      <div class="footer-inner">
-        <p class="footer-risk">
-          <strong>⚠️ Risk Disclaimer:</strong><br><br>
-          Trading in financial markets carries inherent risks, including the potential for loss of capital.
-          Performance may vary based on market conditions, account size, risk tolerance, and execution
-          environment. While Market Llama is built to deliver consistent, data-driven performance through
-          advanced automation and professional account management, no trading environment is completely
-          without risk.
-          <br><br>
-          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
-          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
-          market fluctuations more effectively, but they are still subject to market risk and temporary
-          performance deviations.
-          <br><br>
-          Market Llama operates as a technology-enabled, professional account management platform — similar
-          to institutional asset managers — providing users with sophisticated trading systems, automated
-          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
-          capital, and deliver institutional-grade trading outcomes.
-          <br><br>
-          By connecting your trading account to Market Llama, you acknowledge that every investment activity
-          carries risk, and that results can vary across market conditions. We commit to operating
-          transparently, managing accounts responsibly, and applying disciplined, data-driven strategies
-          designed to achieve consistent long-term performance.
-        </p>
-        <div class="footer-links">
-          <ul class="footer-links-list">
-            <li><a href="abouts.html">About</a></li>
-            <li><a href="support.html">Support</a></li>
-            <li><a href="terms.html">Terms &amp; Conditions</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="#">Whatsapp</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">Instagram</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
+    <!-- ===== FOOTER COMPONENT ===== -->
+    <div id="ml-footer"></div>
   </main>
 
   <!-- ===== CHAT WIDGET ===== -->
@@ -1741,9 +1230,11 @@ Questions? Contact us at [your email].
     </div>
   </div>
 
-  <!-- ===== NAVBAR & LANGUAGE SCRIPT (same as accounts.html) ===== -->
+  <!-- ===== SCRIPTS ===== -->
+  <!-- Translation script (updated) -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    // Translation function that will work with components
+    function initializeTranslations() {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get('lang') || 'en';
 
@@ -1822,22 +1313,6 @@ Questions? Contact us at [your email].
 
       if (!translations[currentLang]) currentLang = 'en';
 
-      function updateNavLinks() {
-        const pages = ['accounts', 'insight', 'performance', 'chart', 'instructions', 'profile'];
-        pages.forEach(type => {
-          document.querySelectorAll('[data-link="' + type + '"]').forEach(a => {
-            a.href = type + '.html?lang=' + currentLang;
-          });
-        });
-
-        document.querySelectorAll('[href^="subscriptionplan.html"]').forEach(a => {
-          const url = new URL(window.location.href);
-          url.pathname = 'subscriptionplan.html';
-          url.searchParams.set('lang', currentLang);
-          a.href = url.pathname + '?' + url.searchParams.toString();
-        });
-      }
-
       function applyLanguage(lang) {
         const t = translations[lang] || translations.en;
 
@@ -1847,126 +1322,47 @@ Questions? Contact us at [your email].
         });
 
         document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        updateNavLinks();
       }
 
-      // Accordion submenu
-      const accordion = document.querySelector('.accordion');
-      const submenu = document.querySelector('.submenu');
-      const chevron = document.querySelector('.chevron');
+      // Apply translations when components are loaded
+      setTimeout(() => applyLanguage(currentLang), 100);
+    }
 
-      function closeDropdown() {
-        if (submenu && !submenu.hidden) {
-          submenu.hidden = true;
-          if (accordion) accordion.setAttribute('aria-expanded', 'false');
-          if (chevron) chevron.setAttribute('icon', 'mdi:chevron-down');
-        }
-      }
-
-      if (accordion && submenu && chevron) {
-        accordion.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
-          accordion.setAttribute('aria-expanded', String(!isExpanded));
-          submenu.hidden = isExpanded;
-          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
-        });
-      }
-
-      // Mobile sidebar
-      const mobileSideTrigger = document.getElementById('mobileSideTrigger');
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('backdrop');
-
-      if (mobileSideTrigger && sidebar && backdrop) {
-        mobileSideTrigger.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = mobileSideTrigger.getAttribute('aria-expanded') === 'true';
-          mobileSideTrigger.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.classList.toggle('open');
-          backdrop.hidden = isExpanded;
-          if (!sidebar.classList.contains('open')) closeDropdown();
-        });
-
-        backdrop.addEventListener('click', () => {
-          mobileSideTrigger.setAttribute('aria-expanded', 'false');
-          sidebar.classList.remove('open');
-          backdrop.hidden = true;
-          closeDropdown();
-        });
-      }
-
-      // Desktop collapse
-      const sideToggle = document.getElementById('sideToggle');
-      if (sideToggle && sidebar) {
-        sideToggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
-          sideToggle.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
-
-          const chevronIcon = sideToggle.querySelector('iconify-icon');
-          if (chevronIcon) {
-            chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
+    // Load navbar and footer components
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load navbar
+      fetch('./components/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-navbar').innerHTML = data;
+          // Highlight active menu item
+          const subscriptionLink = document.querySelector('a[href*="subscriptionplan.html"]');
+          if (subscriptionLink) {
+            const li = subscriptionLink.closest('li');
+            if (li) {
+              li.classList.add('active');
+              // Also expand the parent accordion if it exists
+              const accordion = document.querySelector('.accordion');
+              if (accordion) {
+                accordion.setAttribute('aria-expanded', 'true');
+                const submenu = document.querySelector('.submenu');
+                if (submenu) submenu.hidden = false;
+              }
+            }
           }
-          if (isExpanded) closeDropdown();
-        });
-      }
+        })
+        .catch(err => console.error('Error loading navbar:', err));
 
-      // Balance toggle
-      const toggleBalance = document.getElementById('toggleBalance');
-      const topBalance = document.getElementById('topBalance');
-      const topEye = document.getElementById('topEye');
-      let balanceHidden = false;
+      // Load footer
+      fetch('./components/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-footer').innerHTML = data;
+        })
+        .catch(err => console.error('Error loading footer:', err));
 
-      if (toggleBalance && topBalance && topEye) {
-        toggleBalance.addEventListener('click', (e) => {
-          e.stopPropagation();
-          balanceHidden = !balanceHidden;
-          if (balanceHidden) {
-            topBalance.textContent = '•••••';
-            topEye.setAttribute('icon', 'mdi:eye-off-outline');
-          } else {
-            topBalance.textContent = '$ 15 400.00';
-            topEye.setAttribute('icon', 'mdi:eye-outline');
-          }
-        });
-      }
-
-      // Language dropdown
-      const languageBtn = document.getElementById('languageBtn');
-      const languageDropdown = document.getElementById('languageDropdown');
-
-      if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          languageDropdown.hidden = !languageDropdown.hidden;
-        });
-
-        languageDropdown.addEventListener('click', (e) => e.stopPropagation());
-
-        languageDropdown.querySelectorAll('.lang-option').forEach(option => {
-          option.addEventListener('click', () => {
-            const lang = option.getAttribute('data-lang');
-            if (!translations[lang]) return;
-            currentLang = lang;
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', currentLang);
-            window.location.href = url.pathname + '?' + url.searchParams.toString();
-          });
-        });
-
-        document.addEventListener('click', () => {
-          languageDropdown.hidden = true;
-        });
-      }
-
-      // Click outside closes submenu
-      document.addEventListener('click', () => closeDropdown());
-
-      // Initial language application
-      applyLanguage(currentLang);
+      // Initialize translations
+      initializeTranslations();
     });
   </script>
 
@@ -2030,108 +1426,14 @@ Questions? Contact us at [your email].
     });
   </script>
 
-  <!-- ===== PRICING + AUTH + BACK-TO-TOP SCRIPT ===== -->
+  <!-- ===== REQUIRED SCRIPTS (IN ORDER) ===== -->
+  <script src="./scripts/auth.js"></script>
+  <script src="./components/navbar.js"></script>
+  <script src="./subscriptionplan.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // PRICING TOGGLE
-      const billMonthlyBtn = document.getElementById('billMonthly');
-      const billAnnuallyBtn = document.getElementById('billAnnually');
-      const priceEls = document.querySelectorAll('[data-price]');
-      const perEls = document.querySelectorAll('[data-per]');
-      const oldPriceEls = document.querySelectorAll('[data-old-monthly]');
-
-      function setBilling(mode) {
-        priceEls.forEach(el => {
-          const monthly = el.getAttribute('data-monthly');
-          const annually = el.getAttribute('data-annually');
-          const val = (mode === 'annually') ? annually : monthly;
-          if (val) el.textContent = `$ ${val}`;
-        });
-
-        oldPriceEls.forEach(el => {
-          const oldMonthly = el.getAttribute('data-old-monthly');
-          const oldAnnually = el.getAttribute('data-old-annually');
-          const val = (mode === 'annually') ? oldAnnually : oldMonthly;
-          if (val) el.textContent = `$ ${val}`;
-        });
-
-        perEls.forEach(el => {
-          el.textContent = (mode === 'annually') ? '20% off' : '/ month';
-        });
-
-        if (billMonthlyBtn) billMonthlyBtn.setAttribute('aria-pressed', String(mode === 'monthly'));
-        if (billAnnuallyBtn) billAnnuallyBtn.setAttribute('aria-pressed', String(mode === 'annually'));
-
-        try { sessionStorage.setItem('billingMode', mode); } catch (_) { }
-      }
-
-      if (billMonthlyBtn) billMonthlyBtn.addEventListener('click', () => setBilling('monthly'));
-      if (billAnnuallyBtn) billAnnuallyBtn.addEventListener('click', () => setBilling('annually'));
-
-      const storedMode = (() => {
-        try { return sessionStorage.getItem('billingMode'); } catch (_) { return null; }
-      })();
-      setBilling(storedMode || 'monthly');
-
-      // AUTH OVERLAY
-      function handleAuthClick(e, mode, planName) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const authOverlay = document.getElementById('authOverlay');
-        const authTitle = document.getElementById('authTitle');
-        const authContainer = document.getElementById('authContainer');
-        if (!authOverlay || !authTitle || !authContainer) return;
-
-        if (mode === 'signup') {
-          authTitle.textContent = planName ? `Create Account — ${planName}` : "Create Account";
-          authContainer.classList.add('bubble');
-          document.querySelectorAll('.signup-field').forEach(el => el.style.display = 'block');
-        } else {
-          authTitle.textContent = "Sign In";
-          authContainer.classList.remove('bubble');
-          document.querySelectorAll('.signup-field').forEach(el => el.style.display = 'none');
-        }
-
-        authOverlay.classList.add('active');
-        authOverlay.setAttribute('aria-hidden', 'false');
-      }
-
-      document.querySelectorAll('[data-select-plan]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const plan = e.currentTarget.getAttribute('data-select-plan') || 'Plan';
-          if (plan === 'Basic' || plan === 'Pro') {
-            handleAuthClick(e, 'signup', plan);
-            const fb = document.getElementById('formFeedback');
-            if (fb) {
-              fb.textContent = `Selected plan: ${plan}`;
-              fb.style.color = '#7dffb3';
-              setTimeout(() => fb.textContent = '', 2500);
-            }
-          } else {
-            e.preventDefault();
-          }
-        });
-      });
-
-      const authOverlay = document.getElementById('authOverlay');
-      const closeAuth = document.getElementById('closeAuth');
-
-      function closeAuthOverlay() {
-        if (!authOverlay) return;
-        authOverlay.classList.remove('active');
-        authOverlay.setAttribute('aria-hidden', 'true');
-      }
-
-      if (closeAuth && authOverlay) {
-        closeAuth.addEventListener('click', (e) => { e.preventDefault(); closeAuthOverlay(); });
-        authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthOverlay(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAuthOverlay(); });
-      }
-
-      // BACK TO TOP
-      const backToTop = document.getElementById('backToTop');
-      if (backToTop) backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    // Footer fetch script
+    document.addEventListener('DOMContentLoaded', function() {
+      // Already loaded above, but kept for consistency
     });
   </script>
 </body>

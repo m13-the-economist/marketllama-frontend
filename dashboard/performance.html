@@ -15,6 +15,8 @@
   <link rel="icon" type="image/svg+xml"
     href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
 
+  <link rel="stylesheet" href="./components/navbar.css" />
+
   <style>
     :root {
       --header-h: 60px;
@@ -46,217 +48,8 @@
       min-height: 100vh;
     }
 
-    /* Header */
-    .site-header {
-      position: fixed;
-      inset: 0 0 auto 0;
-      height: var(--header-h);
-      z-index: 40;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 8px 14px;
-      background: #0097b2;
-      border-bottom: 1px solid var(--ring);
-      backdrop-filter: blur(8px);
-    }
-
-    .site-header .left { display: flex; align-items: center; gap: 8px; }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .logo {
-      width: 26px;
-      height: 26px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .logo-img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
-    .brand-name { letter-spacing: .2px; font-size: 1rem; }
-
-    .site-actions { position: relative; display: flex; align-items: center; gap: 8px; }
-
-    .icon-btn {
-      background: transparent;
-      border: 1px solid var(--ring);
-      color: var(--text);
-      padding: 6px 8px;
-      border-radius: 10px;
-      cursor: pointer;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .icon-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
-    .icon-btn.sm { padding: 5px; border-radius: 9px; }
-
-    .balance-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 8px;
-      border: 1px solid var(--ring);
-      border-radius: 10px;
-      background: var(--glass);
-    }
-
-    .balance-amount { letter-spacing: .2px; font-size: .95rem; }
-
-    .mobile-only { display: none; }
-    .desktop-only { display: inline-flex; }
-
-    .ic { font-size: 18px; line-height: 1; vertical-align: middle; opacity: 0.9; transition: opacity 0.2s ease; }
-    .icon-btn:hover .ic { opacity: 1; }
-
-    /* Language Dropdown */
-    .language-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 120px;
-      background: rgba(20, 20, 20, 0.95);
-      border: 1px solid var(--ring);
-      border-radius: 12px;
-      padding: 8px;
-      min-width: 160px;
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      z-index: 1000;
-    }
-    .language-dropdown[hidden] { display: none; }
-
-    .lang-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 10px 12px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      font-family: inherit;
-      font-size: 14px;
-    }
-    .lang-option:hover { background: rgba(255, 255, 255, 0.1); }
-    .flag { font-size: 16px; }
-
     /* Layout */
     .dashboard { min-height: 100vh; padding-top: var(--header-h); }
-
-    .side {
-      position: fixed;
-      top: var(--header-h);
-      left: 0;
-      bottom: 0;
-      z-index: 30;
-      width: 240px;
-      overflow-y: auto;
-      border-right: 1px solid var(--ring);
-      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
-      transition: left .3s ease, width .25s ease;
-    }
-
-    .side[data-state="collapsed"] { width: 68px; }
-    .side .label { transition: opacity .2s ease; }
-    .side[data-state="collapsed"] .label { opacity: 0; pointer-events: none; }
-
-    .side-toggle {
-      position: sticky;
-      bottom: 0;
-      width: 100%;
-      background: rgb(75, 75, 75);
-      margin-top: 6px;
-      border: none;
-      color: white;
-      padding: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .side-menu {
-      list-style: none;
-      margin: 8px 0 48px;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .side-menu a,
-    .accordion {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      text-decoration: none;
-      color: var(--accent-plain);
-      background: transparent;
-      border: 1px solid transparent;
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .side-menu li.active > a { background: var(--glass); border-color: var(--ring); color: var(--text); }
-
-    .has-submenu { position: relative; }
-    .accordion { background: none; border: none; transition: all 0.3s ease; }
-    .accordion:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--ring); }
-    .accordion .chevron { margin-left: auto; transition: transform 0.3s ease; }
-    .accordion[aria-expanded="true"] .chevron { transform: rotate(180deg); }
-    .accordion[aria-expanded="true"] { background: var(--glass); border-color: var(--ring); color: var(--text); }
-
-    .submenu {
-      list-style: none;
-      padding-left: 20px;
-      margin: 4px 0 0;
-      background: rgba(0, 0, 0, 0.2);
-      border-left: 2px solid #4169E1;
-      border-radius: 0 0 8px 8px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    .submenu[hidden] { display: none; }
-    .side[data-state="collapsed"] .submenu { display: none !important; }
-
-    .submenu li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    .submenu li:last-child { border-bottom: none; }
-
-    .submenu a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 6px;
-      margin: 2px 4px;
-      width: calc(100% - 8px);
-    }
-    .submenu a:hover { background: rgba(255, 255, 255, 0.1); color: white; }
 
     .content {
       margin-left: 260px;
@@ -563,130 +356,13 @@
 <body class="app dark">
   <div class="video-background"></div>
 
-  <header class="site-header" id="siteHeader">
-    <div class="left">
-      <button class="icon-btn mobile-only" id="mobileSideTrigger" aria-label="Toggle menu" aria-controls="sidebar" aria-expanded="false">
-        <iconify-icon class="ic" icon="mdi:menu"></iconify-icon>
-      </button>
-      <a href="accounts.html" class="brand">
-        <div class="logo">
-          <img src="llama.webp" alt="Market Llama" class="logo-img" loading="lazy" />
-        </div>
-        <span class="brand-name">Market Llama</span>
-      </a>
-    </div>
+  <!-- ===== NAVBAR COMPONENT ===== -->
+  <div id="ml-navbar"></div>
 
-    <nav class="site-actions">
-      <button class="icon-btn" id="qrBtn" aria-label="QR">
-        <iconify-icon class="ic" icon="mdi:qrcode"></iconify-icon>
-      </button>
-
-      <div class="balance-wrap">
-        <span class="balance-amount" id="topBalance">—</span>
-        <button class="icon-btn" id="toggleBalance" aria-label="Hide balance">
-          <iconify-icon class="ic" id="topEye" icon="mdi:eye-outline"></iconify-icon>
-        </button>
-      </div>
-
-      <button class="icon-btn" id="languageBtn" aria-label="Language">
-        <iconify-icon class="ic" icon="mdi:translate"></iconify-icon>
-      </button>
-      <div class="language-dropdown" id="languageDropdown" hidden>
-        <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English</button>
-        <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch</button>
-        <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
-        <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français</button>
-        <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية</button>
-      </div>
-
-      <button class="icon-btn" aria-label="Notifications">
-        <iconify-icon class="ic" icon="mdi:bell-outline"></iconify-icon>
-      </button>
-      <button class="icon-btn" aria-label="Support">
-        <iconify-icon class="ic" icon="mdi:headphones"></iconify-icon>
-      </button>
-      <a href="profile.html" class="icon-btn" aria-label="Profile" data-link="profile">
-        <iconify-icon class="ic" icon="mdi:account-circle-outline"></iconify-icon>
-      </a>
-    </nav>
-  </header>
-
+  <!-- ===== BACKDROP FOR MOBILE MENU ===== -->
   <div class="backdrop" id="backdrop" hidden></div>
 
   <main class="dashboard">
-    <aside class="side" id="sidebar" aria-label="Primary" data-state="expanded">
-      <div class="side-toggle desktop-only" id="sideToggle" aria-label="Collapse sidebar" aria-expanded="true">
-        <iconify-icon class="ic" icon="mdi:chevron-double-left"></iconify-icon>
-      </div>
-
-      <ul class="side-menu">
-        <li>
-          <a href="accounts.html" data-link="accounts">
-            <iconify-icon class="ic" icon="mdi:view-dashboard-outline"></iconify-icon>
-            <span class="label" data-i18n="accounts">Accounts</span>
-          </a>
-        </li>
-
-        <li class="has-submenu">
-          <button class="accordion" aria-expanded="false">
-            <iconify-icon class="ic" icon="mdi:wallet-outline"></iconify-icon>
-            <span class="label" data-i18n="paymentsWallet">Payments &amp; Wallet</span>
-            <iconify-icon class="ic chevron" icon="mdi:chevron-down"></iconify-icon>
-          </button>
-
-          <ul class="submenu" hidden>
-            <li>
-              <a href="subscriptionplan.html" data-link="subscriptionplan">
-                <iconify-icon class="ic" icon="mdi:currency-usd"></iconify-icon>
-                <span data-i18n="subscription">Subscription Plan</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" data-link="transactionHistory">
-                <iconify-icon class="ic" icon="mdi:history"></iconify-icon>
-                <span data-i18n="transactionHistory">Transaction History</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <a href="insight.html" data-link="insight">
-            <iconify-icon class="ic" icon="mdi:map-marker-outline"></iconify-icon>
-            <span class="label" data-i18n="insight">Insight</span>
-          </a>
-        </li>
-
-        <li class="active">
-          <a href="performance.html" data-link="performance">
-            <iconify-icon class="ic" icon="mdi:cpu-64-bit"></iconify-icon>
-            <span class="label" data-i18n="performance">Performance</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="chart.html" data-link="chart">
-            <iconify-icon class="ic" icon="mdi:chart-bar"></iconify-icon>
-            <span class="label" data-i18n="chart">Chart</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="instructions.html" data-link="instructions">
-            <iconify-icon class="ic" icon="mdi:book-open-outline"></iconify-icon>
-            <span class="label" data-i18n="instructions">Instructions</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="profile.html" data-link="profile">
-            <iconify-icon class="ic" icon="mdi:cog-outline"></iconify-icon>
-            <span class="label" data-i18n="settings">Settings</span>
-          </a>
-        </li>
-      </ul>
-    </aside>
-
     <section class="content" id="content">
       <div class="perf-shell">
         <div class="perf-head">
@@ -837,44 +513,8 @@
       </div>
     </section>
 
-    <footer class="legal-footer">
-      <div class="footer-inner">
-        <p class="footer-risk">
-          <strong>⚠️ Risk Disclaimer:</strong><br><br>
-          Trading in financial markets carries inherent risks, including the potential for loss of capital.
-          Performance may vary based on market conditions, account size, risk tolerance, and execution
-          environment. While Market Llama is built to deliver consistent, data driven performance through
-          advanced automation and professional account management, no trading environment is completely
-          without risk.
-          <br><br>
-          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
-          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
-          market fluctuations more effectively, but they are still subject to market risk and temporary
-          performance deviations.
-          <br><br>
-          Market Llama operates as a technology-enabled, professional account management platform similar
-          to institutional asset managers providing users with sophisticated trading systems, automated
-          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
-          capital, and deliver institutional-grade trading outcomes.
-          <br><br>
-          By connecting your trading account to Market Llama, you acknowledge that every investment activity
-          carries risk, and that results can vary across market conditions. We commit to operating
-          transparently, managing accounts responsibly, and applying disciplined, data driven strategies
-          designed to achieve consistent long-term performance.
-        </p>
-        <div class="footer-links">
-          <ul class="footer-links-list">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms &amp; Conditions</a></li>
-            <li><a href="#">Refund &amp; Billing Policy</a></li>
-            <li><a href="#">support</a></li>
-            <li><a href="#">Whatsapp</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">instagram</a></li>
-          </ul>
-        </div>
-      </div>
-    </footer>
+    <!-- ===== FOOTER COMPONENT ===== -->
+    <div id="ml-footer"></div>
   </main>
 
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
@@ -903,7 +543,36 @@
   </div>
 
   <script>
-    // Localization and UI management
+    // Load navbar and footer components with active state
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load navbar
+      fetch('./components/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-navbar').innerHTML = data;
+          // Highlight active menu item for Performance
+          const performanceLink = document.querySelector('a[href*="performance.html"]');
+          if (performanceLink) {
+            const li = performanceLink.closest('li');
+            if (li) {
+              li.classList.add('active');
+            }
+          }
+        })
+        .catch(err => console.error('Error loading navbar:', err));
+
+      // Load footer
+      fetch('./components/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-footer').innerHTML = data;
+        })
+        .catch(err => console.error('Error loading footer:', err));
+    });
+  </script>
+
+  <script>
+    // Localization and UI management (updated for components)
     document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get('lang') || 'en';
@@ -1143,120 +812,6 @@
         updateLinksWithLang();
       }
 
-      const accordion = document.querySelector('.accordion');
-      const submenu = document.querySelector('.submenu');
-      const chevron = document.querySelector('.chevron');
-
-      function closeDropdown() {
-        if (submenu && !submenu.hidden) {
-          submenu.hidden = true;
-          if (accordion) accordion.setAttribute('aria-expanded', 'false');
-          if (chevron) chevron.setAttribute('icon', 'mdi:chevron-down');
-        }
-      }
-
-      if (accordion && submenu && chevron) {
-        accordion.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
-          accordion.setAttribute('aria-expanded', String(!isExpanded));
-          submenu.hidden = isExpanded;
-          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
-        });
-      }
-
-      const mobileSideTrigger = document.getElementById('mobileSideTrigger');
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('backdrop');
-
-      function closeMobileSidebar() {
-        if (!sidebar || !backdrop || !mobileSideTrigger) return;
-        sidebar.classList.remove('open');
-        backdrop.hidden = true;
-        mobileSideTrigger.setAttribute('aria-expanded', 'false');
-        closeDropdown();
-      }
-
-      if (mobileSideTrigger && sidebar && backdrop) {
-        mobileSideTrigger.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const willOpen = !sidebar.classList.contains('open');
-          sidebar.classList.toggle('open');
-          backdrop.hidden = !willOpen;
-          mobileSideTrigger.setAttribute('aria-expanded', String(willOpen));
-          if (!willOpen) closeDropdown();
-        });
-
-        backdrop.addEventListener('click', closeMobileSidebar);
-      }
-
-      const sideToggle = document.getElementById('sideToggle');
-      if (sideToggle && sidebar) {
-        sideToggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
-          sideToggle.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
-          const chevronIcon = sideToggle.querySelector('iconify-icon');
-          if (chevronIcon) chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
-          if (isExpanded) closeDropdown();
-        });
-      }
-
-      const toggleBalance = document.getElementById('toggleBalance');
-      const topBalance = document.getElementById('topBalance');
-      const topEye = document.getElementById('topEye');
-      let balanceHidden = false;
-
-      if (toggleBalance && topBalance && topEye) {
-        toggleBalance.addEventListener('click', (e) => {
-          e.stopPropagation();
-          balanceHidden = !balanceHidden;
-          if (balanceHidden) {
-            topBalance.textContent = '•••••';
-            topEye.setAttribute('icon', 'mdi:eye-off-outline');
-          } else {
-            topBalance.textContent = topBalance.textContent || '—';
-            topEye.setAttribute('icon', 'mdi:eye-outline');
-          }
-        });
-      }
-
-      const languageBtn = document.getElementById('languageBtn');
-      const languageDropdown = document.getElementById('languageDropdown');
-
-      if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          languageDropdown.hidden = !languageDropdown.hidden;
-        });
-
-        languageDropdown.addEventListener('click', (e) => e.stopPropagation());
-
-        languageDropdown.querySelectorAll('.lang-option').forEach(option => {
-          option.addEventListener('click', () => {
-            const lang = option.getAttribute('data-lang');
-            if (!translations[lang]) return;
-            currentLang = lang;
-
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', currentLang);
-            window.history.replaceState({}, '', url.pathname + '?' + url.searchParams.toString());
-
-            applyLanguage(currentLang);
-            languageDropdown.hidden = true;
-          });
-        });
-
-        document.addEventListener('click', () => {
-          languageDropdown.hidden = true;
-          closeDropdown();
-        });
-      } else {
-        document.addEventListener('click', closeDropdown);
-      }
-
       const calendarLabel = document.getElementById('calendarLabel');
       const calendarDays = document.getElementById('calendarDays');
       const monthSelect = document.getElementById('monthSelect');
@@ -1417,7 +972,15 @@
     });
   </script>
 
+  <!-- ===== REQUIRED SCRIPTS (IN ORDER) ===== -->
   <script src="../scripts/auth.js"></script>
+  <script src="./components/navbar.js"></script>
   <script src="../scripts/performance.js"></script>
+  <script>
+    // Footer fetch script
+    document.addEventListener('DOMContentLoaded', function() {
+      // Already loaded above in the initial component loading script
+    });
+  </script>
 </body>
 </html>

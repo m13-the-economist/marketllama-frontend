@@ -13,6 +13,9 @@
   
     <link rel="icon" type="image/svg+xml"
       href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
+    <!-- Navbar CSS -->
+    <link rel="stylesheet" href="./components/navbar.css" />
   </head>
   <style>
     :root {
@@ -33,10 +36,11 @@
       color: var(--text);
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       overflow-x: hidden;
     }
+
+    /* Dashboard layout */
+    .dashboard { min-height: 100vh; padding-top: var(--header-h); }
 
     /* ===== PROFILE BACKGROUND (soft) ===== */
     .profile-background{
@@ -59,18 +63,17 @@
       pointer-events: none;
     }
 
-    /* ===== CONTENT AREA (works with injected sidebar collapse) ===== */
-    main {
+    /* ===== CONTENT AREA ===== */
+    .content {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 32px 16px;
-      padding-top: calc(var(--header-h) + 24px);
       transition: margin-left .25s ease;
       margin-left: 240px;
     }
-    body:has(#sidebar[data-state="collapsed"]) main { margin-left: 68px; }
+    .side[data-state="collapsed"] ~ .content { margin-left: 68px; }
 
     .coming-card {
       background: var(--glass);
@@ -111,6 +114,59 @@
       color: var(--text);
       text-decoration: none;
       opacity: .9;
+    }
+
+    /* ===== FOOTER ===== */
+    .legal-footer {
+      margin-left: 240px;
+      margin-top: 24px;
+      padding: 18px clamp(12px, 2vw, 24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 13px;
+      transition: margin-left 0.25s ease;
+    }
+
+    .side[data-state="collapsed"] ~ .legal-footer {
+      margin-left: 68px;
+    }
+
+    .footer-inner {
+      max-width: none;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .footer-risk {
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .footer-links {
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-links a {
+      color: var(--accent-plain);
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
     }
 
     /* ===========================
@@ -234,46 +290,55 @@
 
     /* Mobile */
     @media (max-width: 1024px) {
-      main { margin-left: 200px; }
-      body:has(#sidebar[data-state="collapsed"]) main { margin-left: 68px; }
+      .content { margin-left: 200px; }
+      .legal-footer { margin-left: 200px; }
     }
     @media (max-width: 768px) {
-      main { margin-left: 0 !important; padding-top: calc(var(--header-h) + 18px); }
+      .content { margin-left: 0 !important; padding-top: 24px; }
+      .legal-footer { margin-left: 0 !important; padding-inline: 12px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { text-align: left; }
     }
     @media (max-width: 640px) {
-      main { padding: 24px 12px; padding-top: calc(var(--header-h) + 18px); }
+      .content { padding: 24px 12px; }
       .coming-card { padding: 26px 20px; border-radius: 18px; }
       .chat-fab { right: 14px; }
       .chat-panel { right: 14px; }
     }
   </style>
 
-  <!-- Keep iconify; navbar.js won’t double-load -->
+  <!-- Iconify -->
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js" defer></script>
-
-  <!-- Inject shared navbar/sidebar -->
-  <script src="components/navbar.js" defer></script>
 </head>
 
 <body class="app dark">
   <div class="profile-background"></div>
 
-  <!-- Shared navbar mount -->
+  <!-- ===== NAVBAR COMPONENT ===== -->
   <div id="ml-navbar"></div>
 
-  <main>
-    <div class="coming-card">
-      <div class="coming-pill" data-i18n="insightLabel">Insight</div>
-      <h1 class="coming-title" data-i18n="comingSoon">Coming Soon</h1>
-      <p class="coming-text" data-i18n="insightDescription">
-        We’re building a full insight engine for your trading activity — session analytics, risk breakdowns,
-        and performance patterns will all be live here.
-      </p>
-      <a href="accounts.html" class="back-link" data-link="accounts">
-        <iconify-icon icon="mdi:arrow-left"></iconify-icon>
-        <span data-i18n="backToAccounts">Back to Accounts</span>
-      </a>
-    </div>
+  <!-- ===== BACKDROP FOR MOBILE MENU ===== -->
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <main class="dashboard">
+    <!-- CONTENT -->
+    <section class="content">
+      <div class="coming-card">
+        <div class="coming-pill" data-i18n="insightLabel">Insight</div>
+        <h1 class="coming-title" data-i18n="comingSoon">Coming Soon</h1>
+        <p class="coming-text" data-i18n="insightDescription">
+          We're building a full insight engine for your trading activity — session analytics, risk breakdowns,
+          and performance patterns will all be live here.
+        </p>
+        <a href="accounts.html" class="back-link" data-link="accounts">
+          <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+          <span data-i18n="backToAccounts">Back to Accounts</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER COMPONENT ===== -->
+    <div id="ml-footer"></div>
   </main>
 
   <!-- CHAT -->
@@ -302,9 +367,38 @@
     </form>
   </div>
 
-  <!-- PAGE ONLY: Insight translations (navbar handles nav translations) -->
+  <!-- Load navbar and footer components -->
   <script>
-    document.addEventListener("ml:navbar-ready", function () {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load navbar
+      fetch('./components/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-navbar').innerHTML = data;
+          // Highlight active menu item for Insight
+          const insightLink = document.querySelector('a[href*="insight.html"]');
+          if (insightLink) {
+            const li = insightLink.closest('li');
+            if (li) {
+              li.classList.add('active');
+            }
+          }
+        })
+        .catch(err => console.error('Error loading navbar:', err));
+
+      // Load footer
+      fetch('./components/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-footer').innerHTML = data;
+        })
+        .catch(err => console.error('Error loading footer:', err));
+
+      // Apply translations after components are loaded
+      setTimeout(initializeTranslations, 100);
+    });
+
+    function initializeTranslations() {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get("lang") || "en";
 
@@ -312,7 +406,7 @@
         en: {
           insightLabel: "Insight",
           comingSoon: "Coming Soon",
-          insightDescription: "We’re building a full insight engine for your trading activity — session analytics, risk breakdowns, and performance patterns will all live here.",
+          insightDescription: "We're building a full insight engine for your trading activity — session analytics, risk breakdowns, and performance patterns will all live here.",
           backToAccounts: "Back to Accounts"
         },
         de: {
@@ -330,7 +424,7 @@
         fr: {
           insightLabel: "Aperçu",
           comingSoon: "Bientôt disponible",
-          insightDescription: "Nous construisons un moteur d’analyse complet pour votre activité de trading : analyses de session, répartition des risques et modèles de performance seront disponibles ici.",
+          insightDescription: "Nous construisons un moteur d'analyse complet pour votre activité de trading : analyses de session, répartition des risques et modèles de performance seront disponibles ici.",
           backToAccounts: "Retour aux comptes"
         },
         ar: {
@@ -350,14 +444,14 @@
           if (t[key]) el.textContent = t[key];
         });
 
-        // Keep back-link lang param consistent
+        // Update back link with language parameter
         document.querySelectorAll('[data-link="accounts"]').forEach(a => {
           a.href = "accounts.html?lang=" + lang;
         });
       }
 
       applyLanguage(currentLang);
-    });
+    }
   </script>
 
   <!-- Chat wiring -->
@@ -418,6 +512,13 @@
       }
     });
   </script>
- 
+
+  <!-- ===== REQUIRED SCRIPTS (IN ORDER) ===== -->
+  <script src="./scripts/auth.js"></script>
+  <script src="./components/navbar.js"></script>
+  <!-- No insight-specific JS needed for now -->
+  <script>
+    // Footer already loaded in the main script
+  </script>
 </body>
 </html>

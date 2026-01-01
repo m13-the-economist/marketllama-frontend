@@ -16,6 +16,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml"
       href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
+
+    <!-- Navbar CSS -->
+    <link rel="stylesheet" href="./components/navbar.css" />
   </head>
   <style>
     :root {
@@ -37,24 +40,23 @@
       color: var(--text);
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       min-height: 100vh;
-
-      /* fixed header offset */
-      padding-top: var(--header-h);
       overflow-x: hidden;
     }
 
-    /* ✅ content alignment with injected sidebar */
-    main.content {
+    /* Dashboard layout */
+    .dashboard { min-height: 100vh; padding-top: var(--header-h); }
+
+    /* Content alignment with sidebar */
+    .content {
+      margin-left: 240px;
       min-height: calc(100vh - var(--header-h));
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 32px 16px;
-
-      margin-left: 240px;
       transition: margin-left .25s ease;
     }
-    .side[data-state="collapsed"] ~ main.content { margin-left: 68px; }
+    .side[data-state="collapsed"] ~ .content { margin-left: 68px; }
 
     /* Coming card */
     .coming-card {
@@ -97,6 +99,59 @@
       color: var(--text);
       text-decoration: none;
       opacity: .9;
+    }
+
+    /* ===== FOOTER ===== */
+    .legal-footer {
+      margin-left: 240px;
+      margin-top: 24px;
+      padding: 18px clamp(12px, 2vw, 24px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 13px;
+      transition: margin-left 0.25s ease;
+    }
+
+    .side[data-state="collapsed"] ~ .legal-footer {
+      margin-left: 68px;
+    }
+
+    .footer-inner {
+      max-width: none;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .footer-risk {
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .footer-links {
+      text-align: right;
+      font-size: 13px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .footer-links a {
+      color: var(--accent-plain);
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
     }
 
     /* ===== CHAT WIDGET – teal variant (unchanged) ===== */
@@ -154,9 +209,12 @@
     .chat-input-row input { flex: 1; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #fff; border-radius: 12px; padding: 10px 12px; }
     .chat-send { background: var(--nav-teal); color: #fff; border: none; border-radius: 12px; padding: 10px 14px; cursor: pointer; }
 
-    /* Mobile */
+    /* Responsive */
     @media (max-width: 768px) {
-      main.content { margin-left: 0 !important; }
+      .content { margin-left: 0 !important; }
+      .legal-footer { margin-left: 0 !important; padding-inline: 12px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .footer-links { text-align: left; }
     }
     @media (max-width:540px) {
       .chat-fab { right: 14px; bottom: 88px; }
@@ -164,31 +222,36 @@
     }
   </style>
 
-  <!-- Iconify (navbar.js won't double-load) -->
+  <!-- Iconify -->
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js" defer></script>
-
-  <!-- ✅ Inject shared navbar.html + sidebar -->
-  <script src="components/navbar.js" defer></script>
 </head>
 
 <body class="app dark">
-  <!-- Shared navbar mount -->
+  <!-- ===== NAVBAR COMPONENT ===== -->
   <div id="ml-navbar"></div>
 
-  <!-- CONTENT -->
-  <main class="content">
-    <div class="coming-card">
-      <div class="coming-pill" data-i18n="chartLabel">Chart</div>
-      <h1 class="coming-title" data-i18n="comingSoon">Coming Soon</h1>
-      <p class="coming-text" data-i18n="chartDescription">
-        Advanced charting, strategy overlays, and Market Llama’s custom views will all be live here.
-        For now, you can manage accounts while we finish the chart module.
-      </p>
-      <a href="accounts.html" class="back-link" data-link="accounts">
-        <iconify-icon icon="mdi:arrow-left"></iconify-icon>
-        <span data-i18n="backToAccounts">Back to Accounts</span>
-      </a>
-    </div>
+  <!-- ===== BACKDROP FOR MOBILE MENU ===== -->
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <main class="dashboard">
+    <!-- CONTENT -->
+    <section class="content">
+      <div class="coming-card">
+        <div class="coming-pill" data-i18n="chartLabel">Chart</div>
+        <h1 class="coming-title" data-i18n="comingSoon">Coming Soon</h1>
+        <p class="coming-text" data-i18n="chartDescription">
+          Advanced charting, strategy overlays, and Market Llama's custom views will all be live here.
+          For now, you can manage accounts while we finish the chart module.
+        </p>
+        <a href="accounts.html" class="back-link" data-link="accounts">
+          <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+          <span data-i18n="backToAccounts">Back to Accounts</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER COMPONENT ===== -->
+    <div id="ml-footer"></div>
   </main>
 
   <!-- CHAT -->
@@ -217,9 +280,38 @@
     </form>
   </div>
 
-  <!-- ✅ Page-only translations (navbar already handles nav translations) -->
+  <!-- Load navbar and footer components -->
   <script>
-    document.addEventListener("ml:navbar-ready", function () {
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load navbar
+      fetch('./components/navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-navbar').innerHTML = data;
+          // Highlight active menu item for Chart
+          const chartLink = document.querySelector('a[href*="chart.html"]');
+          if (chartLink) {
+            const li = chartLink.closest('li');
+            if (li) {
+              li.classList.add('active');
+            }
+          }
+        })
+        .catch(err => console.error('Error loading navbar:', err));
+
+      // Load footer
+      fetch('./components/footer.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('ml-footer').innerHTML = data;
+        })
+        .catch(err => console.error('Error loading footer:', err));
+
+      // Apply translations after components are loaded
+      setTimeout(initializeTranslations, 100);
+    });
+
+    function initializeTranslations() {
       const params = new URLSearchParams(window.location.search);
       let currentLang = params.get("lang") || "en";
 
@@ -227,7 +319,7 @@
         en: {
           chartLabel: "Chart",
           comingSoon: "Coming Soon",
-          chartDescription: "Advanced charting, strategy overlays, and Market Llama’s custom views will all be live here. For now, you can manage accounts while we finish the chart module.",
+          chartDescription: "Advanced charting, strategy overlays, and Market Llama's custom views will all be live here. For now, you can manage accounts while we finish the chart module.",
           backToAccounts: "Back to Accounts"
         },
         de: {
@@ -245,7 +337,7 @@
         fr: {
           chartLabel: "Graphique",
           comingSoon: "Bientôt disponible",
-          chartDescription: "Graphiques avancés, superpositions de stratégie et vues personnalisées de Market Llama seront disponibles ici. Pour l’instant, vous pouvez gérer vos comptes pendant que nous finalisons le module graphique.",
+          chartDescription: "Graphiques avancés, superpositions de stratégie et vues personnalisées de Market Llama seront disponibles ici. Pour l'instant, vous pouvez gérer vos comptes pendant que nous finalisons le module graphique.",
           backToAccounts: "Retour aux comptes"
         },
         ar: {
@@ -265,14 +357,14 @@
           if (t[key]) el.textContent = t[key];
         });
 
-        // keep the back-link consistent
+        // Update back link with language parameter
         document.querySelectorAll('[data-link="accounts"]').forEach(a => {
           a.href = "accounts.html?lang=" + lang;
         });
       }
 
       applyLanguage(currentLang);
-    });
+    }
   </script>
 
   <!-- CHAT LOGIC -->
@@ -333,6 +425,13 @@
       }
     });
   </script>
-  
+
+  <!-- ===== REQUIRED SCRIPTS (IN ORDER) ===== -->
+  <script src="./scripts/auth.js"></script>
+  <script src="./components/navbar.js"></script>
+  <!-- No chart-specific JS needed for now -->
+  <script>
+    // Footer already loaded in the main script
+  </script>
 </body>
 </html>
