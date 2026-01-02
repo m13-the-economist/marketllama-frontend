@@ -1,6 +1,8 @@
-// auth.js — single source of truth for auth
+// auth.js — CORE AUTH SERVICE (PRODUCTION SAFE)
 (() => {
   'use strict';
+
+  if (window.MLAuth) return; // idempotent
 
   const API_BASE =
     window.ML_CONFIG?.API_BASE_URL ||
@@ -14,14 +16,21 @@
     return localStorage.getItem(TOKEN_KEY);
   }
 
-  function logout() {
+  function isAuthenticated() {
+    return !!getToken();
+  }
+
+  function logout(redirect = true) {
     localStorage.removeItem(TOKEN_KEY);
-    window.location.href = '../landing/signin.html';
+    localStorage.removeItem('ml_user');
+    if (redirect) {
+      window.location.href = '../landing/signin.html';
+    }
   }
 
   async function apiFetch(path, options = {}) {
     const token = getToken();
-    if (!token) logout();
+    if (!token) throw new Error('UNAUTHENTICATED');
 
     const res = await fetch(`${API_BASE}${path}`, {
       ...options,
@@ -32,14 +41,21 @@
       }
     });
 
-    if (res.status === 401) logout();
-    if (!res.ok) throw new Error(res.status);
+    if (res.status === 401) {
+      logout();
+      throw new Error('UNAUTHORIZED');
+    }
+
+    if (!res.ok) {
+      throw new Error(`HTTP_${res.status}`);
+    }
 
     return res.json();
   }
 
   window.MLAuth = Object.freeze({
     getToken,
+    isAuthenticated,
     logout,
     apiFetch
   });

@@ -1,0 +1,54 @@
+// app.js — GLOBAL BOOTSTRAPPER (PRODUCTION SAFE)
+(() => {
+  'use strict';
+
+  if (window.__ML_APP_READY__) return;
+  window.__ML_APP_READY__ = true;
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  function init() {
+    waitForAuth();
+  }
+
+  function waitForAuth() {
+    if (!window.MLAuth) {
+      setTimeout(waitForAuth, 50);
+      return;
+    }
+
+    // Enforce auth on dashboard pages only
+    if (isDashboardPage() && !MLAuth.isAuthenticated()) {
+      MLAuth.logout();
+      return;
+    }
+
+    loadLayout();
+  }
+
+  function isDashboardPage() {
+    return location.pathname.includes('/dashboard/');
+  }
+
+  async function loadLayout() {
+    await Promise.all([
+      injectComponent('navbar', '/dashboard/components/navbar.html'),
+      injectComponent('footer', '/dashboard/components/footer.html')
+    ]);
+
+    document.dispatchEvent(new Event('ml:app-ready'));
+  }
+
+  async function injectComponent(id, url) {
+    const host = document.getElementById(id);
+    if (!host) return;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(res.status);
+      host.innerHTML = await res.text();
+    } catch (e) {
+      console.error(`Failed to load ${id}`, e);
+    }
+  }
+})();
