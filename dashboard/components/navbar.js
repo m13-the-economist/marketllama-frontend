@@ -1,4 +1,4 @@
-// components/navbar.js
+// components/navbar.js — PRODUCTION SAFE
 (async function () {
   const mount = document.getElementById("ml-navbar");
   if (!mount) return;
@@ -19,15 +19,18 @@
     document.head.appendChild(link);
   }
 
-  // Inject
+  // Inject HTML
   const res = await fetch("components/navbar.html", { cache: "no-store" });
   mount.innerHTML = await res.text();
 
-  // ====== JS logic ======
+  console.log('✅ Navbar HTML loaded');
+
+  /* =========================
+     LANGUAGE SYSTEM
+  ========================= */
   const params = new URLSearchParams(window.location.search);
   let currentLang = params.get('lang') || 'en';
 
-  // Basic translations used by the nav labels (safe defaults)
   const translations = {
     en: { accounts:"Accounts", paymentsWallet:"Payments & Wallet", subscription:"Subscription Plan", transactionHistory:"Transaction History", insight:"Insight", performance:"Performance", chart:"Chart", settings:"Settings", instructions:"Instructions" },
     de: { accounts:"Konten", paymentsWallet:"Zahlungen & Wallet", subscription:"Abonnementplan", transactionHistory:"Transaktionsverlauf", insight:"Einblicke", performance:"Leistung", chart:"Diagramm", settings:"Einstellungen", instructions:"Anleitung" },
@@ -68,7 +71,9 @@
     updateNavLinks();
   }
 
-  // Active page highlight (by filename)
+  /* =========================
+     ACTIVE PAGE HIGHLIGHT
+  ========================= */
   const page = (location.pathname.split("/").pop() || "").toLowerCase().split("?")[0];
   mount.querySelectorAll(".side-menu li").forEach(li => li.classList.remove("active"));
   mount.querySelectorAll(".side-menu a[href]").forEach(a => {
@@ -80,6 +85,9 @@
     }
   });
 
+  /* =========================
+     ACCORDION SUBMENU
+  ========================= */
   const accordion = mount.querySelector('.accordion');
   const submenu = mount.querySelector('.submenu');
   const chevron = mount.querySelector('.chevron');
@@ -103,6 +111,9 @@
     });
   }
 
+  /* =========================
+     MOBILE SIDEBAR
+  ========================= */
   const mobileSideTrigger = mount.querySelector('#mobileSideTrigger');
   const sidebar = mount.querySelector('#sidebar');
   const backdrop = mount.querySelector('#backdrop');
@@ -125,6 +136,9 @@
     });
   }
 
+  /* =========================
+     DESKTOP SIDEBAR TOGGLE
+  ========================= */
   const sideToggle = mount.querySelector('#sideToggle');
   if (sideToggle && sidebar) {
     sideToggle.addEventListener('click', (e) => {
@@ -140,36 +154,15 @@
     });
   }
 
+  /* =========================
+     TOP BALANCE (DISPLAY ONLY)
+  ========================= */
   const toggleBalance = mount.querySelector('#toggleBalance');
   const topBalance = mount.querySelector('#topBalance');
   const topEye = mount.querySelector('#topEye');
   let balanceHidden = false;
 
   if (toggleBalance && topBalance && topEye) {
-    // Function to update balance display
-    function updateBalanceDisplay() {
-      if (balanceHidden) {
-        topBalance.textContent = '•••••';
-      } else {
-        // Try to get balance from accounts.js if it's loaded
-        if (window.__ML_ACCOUNTS_READY__ && window.currentTab && window.balances) {
-          const active = window.currentTab === 'demo' ? window.balances.demo : window.balances.live;
-          topBalance.textContent = formatBalance(active.balance, active.currency);
-        } else {
-          // Fallback: check if accounts.js already set it
-          if (topBalance.textContent !== '—' && topBalance.textContent !== '•••••') {
-            // Balance already set by accounts.js
-            return;
-          }
-          topBalance.textContent = '— USD'; // Loading state
-        }
-      }
-      
-      // Update eye icon
-      topEye.setAttribute('icon', balanceHidden ? 'mdi:eye-off-outline' : 'mdi:eye-outline');
-    }
-
-    // Format balance like accounts.js does
     function formatBalance(amount, currency) {
       return (
         Number(amount).toLocaleString(undefined, {
@@ -181,34 +174,52 @@
       );
     }
 
-    // Toggle balance visibility
+    function updateBalanceDisplay() {
+      if (balanceHidden) {
+        topBalance.textContent = '•••••';
+        topEye.setAttribute('icon', 'mdi:eye-off-outline');
+      } else {
+        // Get data from accounts.js global state
+        if (window.currentTab && window.balances) {
+          const active = window.currentTab === 'demo' ? window.balances.demo : window.balances.live;
+          topBalance.textContent = formatBalance(active.balance, active.currency);
+          topEye.setAttribute('icon', 'mdi:eye-outline');
+        } else {
+          // accounts.js hasn't loaded yet
+          topBalance.textContent = '— USD';
+          topEye.setAttribute('icon', 'mdi:eye-outline');
+        }
+      }
+    }
+
+    // Toggle visibility
     toggleBalance.addEventListener('click', (e) => {
       e.stopPropagation();
       balanceHidden = !balanceHidden;
       updateBalanceDisplay();
     });
 
-    // Initial update
-    updateBalanceDisplay();
-    
-    // Listen for balance updates from accounts.js
+    // Listen for updates from accounts.js
     document.addEventListener('ml:balance-updated', function() {
-      updateBalanceDisplay();
+      if (!balanceHidden) {
+        updateBalanceDisplay();
+      }
     });
+
+    // Initial display
+    updateBalanceDisplay();
   }
 
+  /* =========================
+     LANGUAGE DROPDOWN
+  ========================= */
   const languageBtn = mount.querySelector('#languageBtn');
   const languageDropdown = mount.querySelector('#languageDropdown');
-
-  function toggleLanguageDropdown() {
-    if (!languageDropdown) return;
-    languageDropdown.hidden = !languageDropdown.hidden;
-  }
 
   if (languageBtn && languageDropdown) {
     languageBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleLanguageDropdown();
+      languageDropdown.hidden = !languageDropdown.hidden;
     });
 
     languageDropdown.addEventListener('click', (e) => e.stopPropagation());
@@ -231,10 +242,17 @@
     });
   }
 
+  /* =========================
+     GLOBAL CLICK HANDLERS
+  ========================= */
   document.addEventListener('click', () => closeDropdown());
 
+  /* =========================
+     FINALIZE
+  ========================= */
   applyLanguage(currentLang);
 
-  // Let the page run its own init AFTER navbar is present
+  // Signal that navbar is ready
   document.dispatchEvent(new CustomEvent("ml:navbar-ready"));
+  console.log('✅ Navbar ready event dispatched');
 })();

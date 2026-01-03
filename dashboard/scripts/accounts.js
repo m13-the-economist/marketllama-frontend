@@ -1,24 +1,26 @@
-// accounts.js — STABLE, SINGLE-INIT, PRODUCTION SAFE
+// accounts.js — PRODUCTION SAFE, NO INFINITE LOOPS
 (() => {
   'use strict';
 
   if (window.__ML_ACCOUNTS_READY__) return;
   window.__ML_ACCOUNTS_READY__ = true;
 
-  /* =========================
-     STATE
-  ========================= */
-  let currentTab = 'live';
-  let balances = {
+  // Expose state globally for navbar
+  window.currentTab = 'live';
+  window.balances = {
     live: { balance: 0, currency: 'USD' },
     demo: { balance: 0, currency: 'USD' }
   };
+
   let isTopBalanceHidden = false;
+  let initAttempts = 0;
+  const MAX_ATTEMPTS = 30; // 3 seconds max
 
   /* =========================
-     SAFE STARTUP
+     STARTUP - Wait for DOM
   ========================= */
   document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ DOM loaded, waiting for auth...');
     waitForAuth();
   });
 
@@ -29,15 +31,38 @@
     }
 
     if (!MLAuth.getToken()) {
+      console.log('❌ No token, redirecting to login...');
       window.location.href = '../landing/signin.html';
       return;
     }
 
+    console.log('✅ Auth ready, checking for navbar...');
+    waitForNavbar();
+  }
+
+  function waitForNavbar() {
+    const topBalance = document.getElementById('topBalance');
+    
+    if (!topBalance) {
+      initAttempts++;
+      
+      if (initAttempts >= MAX_ATTEMPTS) {
+        console.error('❌ FATAL: Navbar never loaded after 3 seconds');
+        alert('Page failed to load. Please refresh.');
+        return;
+      }
+      
+      console.log(`⏳ Waiting for navbar... (attempt ${initAttempts}/${MAX_ATTEMPTS})`);
+      setTimeout(waitForNavbar, 100);
+      return;
+    }
+
+    console.log('✅ Navbar loaded, initializing accounts...');
     init();
   }
 
   /* =========================
-     INIT
+     INIT - Single execution
   ========================= */
   function init() {
     const userNameEl = document.querySelector('.user-name');
@@ -49,52 +74,47 @@
     const toggleTopBtn = document.getElementById('toggleBalance');
     const topEye = document.getElementById('topEye');
 
-    if (!userNameEl || !topBalanceEl || !liveContainer || !demoContainer) {
-      console.warn('Dashboard elements missing, retrying...');
-      setTimeout(init, 300);
+    if (!userNameEl || !liveContainer || !demoContainer) {
+      console.error('❌ FATAL: Dashboard elements missing:', {
+        userNameEl: !!userNameEl,
+        liveContainer: !!liveContainer,
+        demoContainer: !!demoContainer
+      });
       return;
     }
 
-    /* =========================
-       USER
-    ========================= */
-    fetchUserProfile(userNameEl);
+    console.log('✅ All elements found, fetching data...');
 
-    /* =========================
-       ACCOUNTS
-    ========================= */
+    // Fetch data
+    fetchUserProfile(userNameEl);
     fetchAccounts(liveContainer, demoContainer, topBalanceEl);
 
-    /* =========================
-       TABS
-    ========================= */
+    // Tab switching
     if (tabLive) {
       tabLive.addEventListener('click', () => {
-        currentTab = 'live';
+        window.currentTab = 'live';
         renderTopBalance(topBalanceEl);
       });
     }
 
     if (tabDemo) {
       tabDemo.addEventListener('click', () => {
-        currentTab = 'demo';
+        window.currentTab = 'demo';
         renderTopBalance(topBalanceEl);
       });
     }
 
-    /* =========================
-       TOP BALANCE TOGGLE
-    ========================= */
-    if (toggleTopBtn) {
+    // Top balance toggle
+    if (toggleTopBtn && topBalanceEl && topEye) {
       toggleTopBtn.addEventListener('click', () => {
         isTopBalanceHidden = !isTopBalanceHidden;
 
         if (isTopBalanceHidden) {
-          topBalanceEl.textContent = '•••• USD';
-          if (topEye) topEye.setAttribute('icon', 'mdi:eye-off-outline');
+          topBalanceEl.textContent = '•••••';
+          topEye.setAttribute('icon', 'mdi:eye-off-outline');
         } else {
           renderTopBalance(topBalanceEl);
-          if (topEye) topEye.setAttribute('icon', 'mdi:eye-outline');
+          topEye.setAttribute('icon', 'mdi:eye-outline');
         }
       });
     }
@@ -113,9 +133,14 @@
         'Trader';
 
       userNameEl.textContent = name;
+      
+      // Store for callback.html
+      localStorage.setItem('ml_user', JSON.stringify(user));
+      
+      console.log('✅ User loaded:', name);
     } catch (e) {
-      console.error('User fetch failed', e);
-      if (e.message === '401') MLAuth.logout();
+      console.error('❌ User fetch failed', e);
+      if (e.message === 'UNAUTHORIZED') MLAuth.logout();
     }
   }
 
@@ -125,24 +150,29 @@
   async function fetchAccounts(liveContainer, demoContainer, topBalanceEl) {
     try {
       const data = await MLAuth.apiFetch('/api/accounts/summary');
+      console.log('✅ Backend response:', data);
+
       const accounts = Array.isArray(data.accounts) ? data.accounts : [];
 
       liveContainer.innerHTML = '';
       demoContainer.innerHTML = '';
 
-      balances.live.balance = 0;
-      balances.demo.balance = 0;
+      // Reset balances
+      window.balances.live.balance = data.live_balance || 0;
+      window.balances.demo.balance = data.demo_balance || 0;
+
+      // Render individual account cards
+      if (accounts.length === 0) {
+        console.warn('⚠️ No accounts found, showing placeholders');
+      }
 
       accounts.forEach(acc => {
         const isDemo = acc.is_demo === true;
         const amount = Number(acc.balance || 0);
         const currency = acc.currency || 'USD';
 
-        if (isDemo) balances.demo.balance += amount;
-        else balances.live.balance += amount;
-
         renderAccountCard({
-          id: acc.account_id || acc.id,
+          id: acc.account_id || acc.id || 'unknown',
           type: isDemo ? 'demo' : 'live',
           broker: acc.broker || 'Deriv',
           balance: amount,
@@ -150,13 +180,13 @@
         }, liveContainer, demoContainer);
       });
 
-      // Fallback placeholders
+      // Fallback placeholders if no accounts
       if (!liveContainer.children.length) {
         renderAccountCard({
           id: 'live-placeholder',
           type: 'live',
           broker: 'Deriv',
-          balance: balances.live.balance,
+          balance: window.balances.live.balance,
           currency: 'USD'
         }, liveContainer, demoContainer);
       }
@@ -166,16 +196,19 @@
           id: 'demo-placeholder',
           type: 'demo',
           broker: 'Deriv',
-          balance: balances.demo.balance,
+          balance: window.balances.demo.balance,
           currency: 'USD'
         }, liveContainer, demoContainer);
       }
 
+      // Update top balance
       if (!isTopBalanceHidden) {
         renderTopBalance(topBalanceEl);
       }
+
+      console.log('✅ Accounts rendered successfully');
     } catch (e) {
-      console.error('Accounts fetch failed', e);
+      console.error('❌ Accounts fetch failed', e);
     }
   }
 
@@ -233,12 +266,13 @@
      TOP BALANCE
   ========================= */
   function renderTopBalance(el) {
-    const active = currentTab === 'demo' ? balances.demo : balances.live;
+    if (!el) return;
+    const active = window.currentTab === 'demo' ? window.balances.demo : window.balances.live;
     el.textContent = format(active.balance, active.currency);
     
-    // Dispatch event so navbar.js can update too
+    // Notify navbar
     document.dispatchEvent(new CustomEvent('ml:balance-updated', {
-      detail: { currentTab, balances }
+      detail: { currentTab: window.currentTab, balances: window.balances }
     }));
   }
 
