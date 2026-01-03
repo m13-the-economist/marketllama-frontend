@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>Accounts — Market Llama</title>
   <meta name="description" content="Manage your live and demo trading accounts." />
 
-  <!-- Iconify Standardized (v1.0.8 with iconify-icon elements) -->
+  <!-- Iconify -->
   <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
   <!-- Fonts -->
@@ -18,7 +17,10 @@
   <link rel="icon" type="image/svg+xml"
         href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%234169E1"/><path d="M20 34h24v6H20zM20 24h18v6H20z" fill="white"/></svg>' />
   
-  <!-- Theme Stabilization CSS (moved to head) -->
+  <!-- LOAD NAVBAR CSS -->
+  <link rel="stylesheet" href="components/navbar.css">
+  
+  <!-- PAGE-SPECIFIC STYLES -->
   <style>
     :root {
       --header-h: 60px;
@@ -45,10 +47,7 @@
       font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       overflow-x: hidden;
     }
-  </style>
-    </head>
-    <body class="app dark">
-      <style>
+
     /* ===== PROFILE BACKGROUND ===== */
     .profile-background {
       position: fixed;
@@ -70,7 +69,9 @@
       pointer-events: none;
     }
 
-    /* ===== CONTENT (expands when sidebar collapses) ===== */
+    /* ===== LAYOUT ===== */
+    .dashboard { min-height: 100vh; padding-top: var(--header-h); }
+
     .content {
       margin-left: 240px;
       padding: 18px clamp(12px, 2vw, 24px);
@@ -135,7 +136,6 @@
       color: #000;
     }
 
-    /* ===== OLD BOX STYLE (FROM YOUR FINTECH CODE) ===== */
     .chip {
       display: inline-block;
       padding: 5px 10px;
@@ -159,7 +159,6 @@
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 10px;
-
       width: min(1400px, 100%);
       transition: width 0.25s ease;
     }
@@ -225,7 +224,6 @@
     .footer-inner {
       max-width: none;
       margin: 0;
-
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -242,16 +240,7 @@
     }
     .footer-links a:hover { opacity: 1; text-decoration: underline; }
 
-    /* ===== BACKDROP (mobile sidebar) ===== */
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .45);
-      z-index: 35;
-      backdrop-filter: blur(2px);
-    }
-
-    /* ===== CHAT (unchanged teal style) ===== */
+    /* ===== CHAT ===== */
     .chat-fab {
       position: fixed;
       right: 20px;
@@ -364,32 +353,19 @@
     #addAccountModal .account-card {
       position: relative;
       z-index: 2001;
-      background: var(--card-bg, #0f172a);
+      background: var(--panel);
       border-radius: 14px;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
       width: 100%;
       max-width: 420px;
     }
 
+    .icon-btn.sm { padding: 5px; border-radius: 9px; }
+
     /* ===== RESPONSIVE ===== */
-    @media (max-width: 1100px) {
-      .desktop-only { display: none; }
-      .mobile-only { display: inline-flex; }
-    }
-
-    @media (max-width: 1024px) {
-      .side[data-state="expanded"] { width: 200px; }
-      .content { margin-left: 200px; }
-      .legal-footer { margin-left: 200px; }
-    }
-
     @media (max-width: 768px) {
-      .side { left: -240px; width: 240px; }
-      .side.open { left: 0; }
       .content { margin-left: 0 !important; }
       .legal-footer { margin-left: 0 !important; }
-
-      .language-dropdown { right: 10px; min-width: 140px; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
       .footer-links { text-align: left; }
     }
@@ -399,14 +375,16 @@
       .chat-panel { right: 14px; bottom: 148px; }
     }
   </style>
-
+</head>
+<body class="app dark">
+  
   <div class="profile-background"></div>
 
-  <!-- ===== NAVBAR COMPONENT ===== -->
+  <!-- NAVBAR MOUNT POINT -->
   <div id="ml-navbar"></div>
 
   <main class="dashboard">
-    <!-- ===== CONTENT ===== -->
+    <!-- CONTENT -->
     <section class="content" id="content">
       <div class="content-top">
         <div>
@@ -427,24 +405,58 @@
         <button class="tab" id="tabDemo" role="tab" aria-selected="false" aria-controls="panelDemo" data-i18n="demo">Demo</button>
       </div>
 
-      <!-- LIVE -->
       <div id="panelLive" role="tabpanel" aria-labelledby="tabLive">
-        <div class="accounts-list" id="liveAccounts" data-type="live">
-        </div>
+        <div class="accounts-list" id="liveAccounts" data-type="live"></div>
       </div>
 
-      <!-- DEMO -->
       <div id="panelDemo" role="tabpanel" aria-labelledby="tabDemo" hidden>
-        <div class="accounts-list" id="demoAccounts" data-type="demo">
-        </div>
+        <div class="accounts-list" id="demoAccounts" data-type="demo"></div>
       </div>
     </section>
 
-    <!-- ===== FOOTER COMPONENT ===== -->
-    <div id="ml-footer"></div>
+    <!-- FOOTER -->
+    <footer class="legal-footer">
+      <div class="footer-inner">
+        <p class="footer-risk">
+          <strong>⚠️ Risk Disclaimer:</strong><br><br>
+          Trading in financial markets carries inherent risks, including the potential for loss of capital.
+          Performance may vary based on market conditions, account size, risk tolerance, and execution
+          environment. While Market Llama is built to deliver consistent, data driven performance through
+          advanced automation and professional account management, no trading environment is completely
+          without risk.
+          <br><br>
+          Users should understand that smaller accounts face higher exposure to volatility, faster drawdown
+          cycles, and reduced margin flexibility compared to larger accounts. Larger accounts can withstand
+          market fluctuations more effectively, but they are still subject to market risk and temporary
+          performance deviations.
+          <br><br>
+          Market Llama operates as a technology-enabled, professional account management platform similar
+          to institutional asset managers providing users with sophisticated trading systems, automated
+          execution, and real-time risk controls. Our purpose is to optimize performance, protect user
+          capital, and deliver institutional-grade trading outcomes.
+          <br><br>
+          By connecting your trading account to Market Llama, you acknowledge that every investment activity
+          carries risk, and that results can vary across market conditions. We commit to operating
+          transparently, managing accounts responsibly, and applying disciplined, data driven strategies
+          designed to achieve consistent long-term performance.
+        </p>
+
+        <div class="footer-links">
+          <ul class="footer-links-list">
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms &amp; Conditions</a></li>
+            <li><a href="#">Refund &amp; Billing Policy</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Whatsapp</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
   </main>
 
-  <!-- ===== CHAT WIDGET ===== -->
+  <!-- CHAT WIDGET -->
   <button id="chatFab" class="chat-fab" aria-label="Open chat" aria-controls="chatPanel">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -470,7 +482,7 @@
     </form>
   </div>
 
-  <!-- ===== ADD ACCOUNT MODAL (SINGLE INSTANCE) ===== -->
+  <!-- ADD ACCOUNT MODAL -->
   <div id="addAccountModal" hidden>
     <div class="account-card" style="max-width:420px;margin:auto;">
       <div class="card-head">
@@ -494,199 +506,16 @@
     </div>
   </div>
 
-  <!-- DASHBOARD SCRIPTS - LOAD IN CORRECT ORDER -->
-  <script src="./scripts/auth.js"></script>
-  <script src="./components/navbar.js"></script>
-  <script src="./scripts/accounts.js"></script>
+  <!-- LOAD NAVBAR.JS FIRST -->
+  <script src="components/navbar.js"></script>
+  
+  <!-- THEN PAGE SCRIPTS -->
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/accounts.js"></script>
 
-  <!-- Load footer component -->
+  <!-- TABS SCRIPT -->
   <script>
-    fetch('components/footer.html')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('ml-footer').innerHTML = html;
-      })
-      .catch(err => console.error('Footer load failed:', err));
-  </script>
-
-  <!-- Translation script MODIFIED to preserve dynamic data -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const params = new URLSearchParams(window.location.search);
-      let currentLang = params.get('lang') || 'en';
-
-      const translations = {
-        en: {
-          accounts: "Accounts",
-          greeting: "Hi, Trader.",
-          addAccount: "Add Account",
-          live: "Live",
-          demo: "Demo",
-          paymentsWallet: "Payments & Wallet",
-          subscription: "Subscription Plan",
-          transactionHistory: "Transaction History",
-          insight: "Insight",
-          performance: "Performance",
-          chart: "Chart",
-          instructions: "Instructions",
-          settings: "Settings"
-        },
-        de: {
-          accounts: "Konten",
-          greeting: "Hi, Trader.",
-          addAccount: "Konto hinzufügen",
-          live: "Live",
-          demo: "Demo",
-          paymentsWallet: "Zahlungen & Wallet",
-          subscription: "Abonnementplan",
-          transactionHistory: "Transaktionsverlauf",
-          insight: "Einblicke",
-          performance: "Leistung",
-          chart: "Diagramm",
-          instructions: "Anleitung",
-          settings: "Einstellungen"
-        },
-        es: {
-          accounts: "Cuentas",
-          greeting: "Hola, Trader.",
-          addAccount: "Agregar cuenta",
-          live: "Real",
-          demo: "Demo",
-          paymentsWallet: "Pagos & Cartera",
-          subscription: "Plan de Suscripción",
-          transactionHistory: "Historial de Transacciones",
-          insight: "Perspectiva",
-          performance: "Rendimiento",
-          chart: "Gráfico",
-          instructions: "Instrucciones",
-          settings: "Configuración"
-        },
-        fr: {
-          accounts: "Comptes",
-          greeting: "Salut, Trader.",
-          addAccount: "Ajouter un compte",
-          live: "Réel",
-          demo: "Démo",
-          paymentsWallet: "Paiements & Portefeuille",
-          subscription: "Plan d'abonnement",
-          transactionHistory: "Historique des transactions",
-          insight: "Aperçu",
-          performance: "Performance",
-          chart: "Graphique",
-          instructions: "Instructions",
-          settings: "Paramètres"
-        },
-        ar: {
-          accounts: "الحسابات",
-          greeting: "مرحباً، المتداول.",
-          addAccount: "إضافة حساب",
-          live: "حقيقي",
-          demo: "تجريبي",
-          paymentsWallet: "المدفوعات والمحفظة",
-          subscription: "خطة الاشتراك",
-          transactionHistory: "سجل المعاملات",
-          insight: "رؤى",
-          performance: "الأداء",
-          chart: "الرسم البياني",
-          instructions: "التعليمات",
-          settings: "الإعدادات"
-        }
-      };
-
-      if (!translations[currentLang]) currentLang = 'en';
-
-      function updateNavLinks() {
-        const pages = ['accounts','insight','performance','chart','instructions','profile','subscriptionplan'];
-        pages.forEach(type => {
-          document.querySelectorAll('[data-link="' + type + '"]').forEach(a => {
-            a.href = type + '.html?lang=' + currentLang;
-          });
-        });
-      }
-
-      function applyLanguage(lang) {
-        const t = translations[lang] || translations.en;
-
-        // EXCLUDE elements with dynamic data from translation overwrite
-        document.querySelectorAll('[data-i18n]:not([data-dynamic])').forEach(el => {
-          // Skip user name and balance elements - dynamic data wins
-          if (el.closest('.greeting') && el.classList.contains('user-name')) return;
-          if (el.id === 'topBalance' || el.classList.contains('balance-amount')) return;
-          if (el.closest('.account-card') && el.classList.contains('balance-value')) return;
-          
-          const key = el.getAttribute('data-i18n');
-          if (t[key]) el.textContent = t[key];
-        });
-
-        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        updateNavLinks();
-      }
-
-      // Accordion submenu
-      const accordion = document.querySelector('.accordion');
-      const submenu = document.querySelector('.submenu');
-      const chevron = document.querySelector('.chevron');
-
-      function closeDropdown() {
-        if (submenu && !submenu.hidden) {
-          submenu.hidden = true;
-          if (accordion) accordion.setAttribute('aria-expanded', 'false');
-          if (chevron) chevron.setAttribute('icon', 'mdi:chevron-down');
-        }
-      }
-
-      if (accordion && submenu && chevron) {
-        accordion.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const isExpanded = accordion.getAttribute('aria-expanded') === 'true';
-          accordion.setAttribute('aria-expanded', String(!isExpanded));
-          submenu.hidden = isExpanded;
-          chevron.setAttribute('icon', isExpanded ? 'mdi:chevron-down' : 'mdi:chevron-up');
-        });
-      }
-
-      // Mobile sidebar
-      const mobileSideTrigger = document.getElementById('mobileSideTrigger');
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('backdrop');
-
-      if (mobileSideTrigger && sidebar && backdrop) {
-        mobileSideTrigger.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = mobileSideTrigger.getAttribute('aria-expanded') === 'true';
-          mobileSideTrigger.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.classList.toggle('open');
-          backdrop.hidden = isExpanded;
-          if (!sidebar.classList.contains('open')) closeDropdown();
-        });
-
-        backdrop.addEventListener('click', () => {
-          mobileSideTrigger.setAttribute('aria-expanded', 'false');
-          sidebar.classList.remove('open');
-          backdrop.hidden = true;
-          closeDropdown();
-        });
-      }
-
-      // Desktop collapse (fills screen correctly)
-      const sideToggle = document.getElementById('sideToggle');
-      if (sideToggle && sidebar) {
-        sideToggle.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = sideToggle.getAttribute('aria-expanded') === 'true';
-          sideToggle.setAttribute('aria-expanded', String(!isExpanded));
-          sidebar.setAttribute('data-state', isExpanded ? 'collapsed' : 'expanded');
-
-          const chevronIcon = sideToggle.querySelector('iconify-icon');
-          if (chevronIcon) {
-            chevronIcon.setAttribute('icon', isExpanded ? 'mdi:chevron-double-right' : 'mdi:chevron-double-left');
-          }
-          if (isExpanded) closeDropdown();
-        });
-      }
-
-      // Tabs (Live/Demo)
+    document.addEventListener('DOMContentLoaded', () => {
       const tabLive = document.getElementById('tabLive');
       const tabDemo = document.getElementById('tabDemo');
       const panelLive = document.getElementById('panelLive');
@@ -702,43 +531,16 @@
         panelDemo.hidden = isLive;
       }
 
-      if (tabLive && tabDemo && panelLive && panelDemo) {
+      if (tabLive && tabDemo) {
         tabLive.addEventListener('click', () => setTab('live'));
         tabDemo.addEventListener('click', () => setTab('demo'));
       }
-
-      // Language dropdown
-      const languageBtn = document.getElementById('languageBtn');
-      const languageDropdown = document.getElementById('languageDropdown');
-
-      if (languageBtn && languageDropdown) {
-        languageBtn.addEventListener('click', (e) => { e.stopPropagation(); languageDropdown.hidden = !languageDropdown.hidden; });
-        languageDropdown.addEventListener('click', (e) => e.stopPropagation());
-
-        languageDropdown.querySelectorAll('.lang-option').forEach(option => {
-          option.addEventListener('click', () => {
-            const lang = option.getAttribute('data-lang');
-            if (!translations[lang]) return;
-            currentLang = lang;
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', currentLang);
-            window.location.href = url.pathname + '?' + url.searchParams.toString();
-          });
-        });
-
-        document.addEventListener('click', () => { languageDropdown.hidden = true; });
-      }
-
-      // Click outside closes submenu
-      document.addEventListener('click', () => closeDropdown());
-
-      // initial
-      applyLanguage(currentLang);
     });
   </script>
 
+  <!-- CHAT SCRIPT -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
       const chatFab = document.getElementById('chatFab');
       const chatPanel = document.getElementById('chatPanel');
       const chatClose = document.getElementById('chatClose');
@@ -757,30 +559,29 @@
       }
 
       if (chatFab) {
-        chatFab.addEventListener('click', function (e) {
+        chatFab.addEventListener('click', (e) => {
           e.stopPropagation();
           chatPanel.classList.contains('open') ? closeChat() : openChat();
         });
       }
 
       if (chatClose) {
-        chatClose.addEventListener('click', function (e) {
+        chatClose.addEventListener('click', (e) => {
           e.stopPropagation();
           closeChat();
         });
       }
 
-      document.addEventListener('click', function (e) {
+      document.addEventListener('click', (e) => {
         if (!chatPanel.classList.contains('open')) return;
-        const target = e.target;
-        if (chatPanel.contains(target) || chatFab.contains(target)) return;
+        if (chatPanel.contains(e.target) || chatFab.contains(e.target)) return;
         e.preventDefault();
         e.stopPropagation();
         closeChat();
       }, true);
 
       if (chatForm && chatInput && chatBody) {
-        chatForm.addEventListener('submit', function (e) {
+        chatForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const text = chatInput.value.trim();
           if (!text) return;
@@ -795,6 +596,7 @@
     });
   </script>
 
+  <!-- ADD ACCOUNT MODAL SCRIPT -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const addBtn = document.getElementById('addAccountBtn');
@@ -803,17 +605,14 @@
 
       if (!addBtn || !modal) return;
 
-      // Open modal
       addBtn.addEventListener('click', () => {
         modal.hidden = false;
       });
 
-      // Close via X button
       closeBtn?.addEventListener('click', () => {
         modal.hidden = true;
       });
 
-      // Close when clicking backdrop
       modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.hidden = true;
       });
